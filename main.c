@@ -35,6 +35,10 @@ int event_has_occurred = 0;
 char mac[100];
 
 
+#define MAX_WII_X 1020
+#define MAX_WII_Y 760
+
+
 void buttonpress()
 {
 	can_exit = 1;
@@ -57,16 +61,17 @@ int infrared_data(int *v)
 		ry =  (int) ( ( (float)  (h21*v[0] + h22*v[1] + h23) ) / ( (float) (h31*v[0] + h32*v[1] + 1) ) );
 		//printf ("-------------(%d %d) ------------\n",rx,ry);
 		event_has_occurred = 1;
+		
+		if (rx<0)       rx = 0; 
+		if (rx>=SIZEX)  rx = SIZEX-1;
+		if (ry<0)       ry = 0;
+		if (ry>=SIZEY)  ry = SIZEY-1;
 	}
 	else
 	{
 		rx = v[0]; ry = v[1];
 	}
 	
-	if (rx<0)       rx = 0; 
-	if (rx>=SIZEX)  rx = SIZEX-1;
-	if (ry<0)       ry = 0;
-	if (ry>=SIZEY)  ry = SIZEY-1;
 }
 
 
@@ -219,6 +224,8 @@ int main()
 	int ok=1;
 	int delta, t;
 	int lastevent = 0;	
+	int i;
+	float xm1,ym1,xm2,ym2;
 
 	read_parameters();
 
@@ -242,10 +249,11 @@ int main()
 	p_screen[3].y = SIZEY - 50;
 
 	SDL_FillRect(s,0,black_color);
-	draw_point(&p_screen[0]);	
-	draw_point(&p_screen[1]);	
-	draw_point(&p_screen[2]);	
-	draw_point(&p_screen[3]);	
+
+	xm1 = SIZEX / 2 - 100;
+	xm2 = xm1 + 200;
+	ym1 = SIZEY / 2 - 100;
+	ym2 = ym1 + 200;
 
 	while(1)
 	{
@@ -262,7 +270,25 @@ int main()
 		if (state > 4)
 			break;
 
+		for (i = (int) xm1; i < (int) xm2; i++)
+			pixel(i,ym1), pixel(i,ym2);
+
+		for (i = (int) ym1; i < (int) ym2; i++)
+			pixel(xm1,i), pixel(xm2,i);
+
+		pixel( 
+			xm1 + (int) ( ((float) rx / (float) MAX_WII_X )*200),
+			ym2 - (int) ( ((float) ry / (float) MAX_WII_Y )*200)
+		);
+
+		draw_point(&p_screen[0]);	
+		draw_point(&p_screen[1]);	
+		draw_point(&p_screen[2]);	
+		draw_point(&p_screen[3]);	
+
 		SDL_UpdateRect(s,0,0,0,0);
+		SDL_Delay(100);
+		SDL_FillRect(s,0,black_color);
 	}
 
 	SDL_QuitSubSystem(SDL_INIT_VIDEO);
