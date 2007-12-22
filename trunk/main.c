@@ -121,6 +121,18 @@ void draw_point(point_t *p)
 }
 
 
+void draw_square(point_t *p)
+{
+	int i;
+	for (i=p->x-10; i<p->x+10; i++)
+		pixel(i,p->y+10), pixel(i,p->y-10);
+
+        for (i=p->y-10; i<p->y+10; i++)
+                pixel(p->x-10,i), pixel(p->x+10,i);
+
+}
+
+
 
 void printpoints()
 {
@@ -255,6 +267,7 @@ int main()
 	ym1 = SIZEY / 2 - 100;
 	ym2 = ym1 + 200;
 
+	t = 0;
 	while(1)
 	{
 		SDL_PollEvent(&e);
@@ -285,6 +298,14 @@ int main()
 		draw_point(&p_screen[1]);	
 		draw_point(&p_screen[2]);	
 		draw_point(&p_screen[3]);	
+
+		for(i=0; i<state; i++)
+			draw_square(&p_screen[i]);
+
+		if ((state<4) && (t)) 
+			draw_square(&p_screen[state]);
+
+		t = ~ t; 
 
 		SDL_UpdateRect(s,0,0,0,0);
 		SDL_Delay(100);
