@@ -113,34 +113,9 @@ void cwiid_callback(cwiid_wiimote_t *wiimote, int mesg_count,
 	for (i=0; i < mesg_count; i++)
 	{
 		switch (mesg[i].type) {
-		case CWIID_MESG_STATUS:
-			printf("Status Report: battery=%d extension=",
-			       mesg[i].status_mesg.battery);
-			switch (mesg[i].status_mesg.ext_type) {
-			case CWIID_EXT_NONE:
-				printf("none");
-				break;
-			case CWIID_EXT_NUNCHUK:
-				printf("Nunchuk");
-				break;
-			case CWIID_EXT_CLASSIC:
-				printf("Classic Controller");
-				break;
-			default:
-				printf("Unknown Extension");
-				break;
-			}
-			printf("\n");
-			break;
 		case CWIID_MESG_BTN:
 			printf("Button Report: %.4X\n", mesg[i].btn_mesg.buttons);
 			buttonpress();
-			break;
-		case CWIID_MESG_ACC:
-			printf("Acc Report: x=%d, y=%d, z=%d\n",
-                   mesg[i].acc_mesg.acc[CWIID_X],
-			       mesg[i].acc_mesg.acc[CWIID_Y],
-			       mesg[i].acc_mesg.acc[CWIID_Z]);
 			break;
 		case CWIID_MESG_IR:
 			valid_source = 0;
@@ -162,33 +137,12 @@ void cwiid_callback(cwiid_wiimote_t *wiimote, int mesg_count,
 				infrared_data(v);
 
 			break;
-		case CWIID_MESG_NUNCHUK:
-			printf("Nunchuk Report: btns=%.2X stick=(%d,%d) acc.x=%d acc.y=%d "
-			       "acc.z=%d\n", mesg[i].nunchuk_mesg.buttons,
-			       mesg[i].nunchuk_mesg.stick[CWIID_X],
-			       mesg[i].nunchuk_mesg.stick[CWIID_Y],
-			       mesg[i].nunchuk_mesg.acc[CWIID_X],
-			       mesg[i].nunchuk_mesg.acc[CWIID_Y],
-			       mesg[i].nunchuk_mesg.acc[CWIID_Z]);
-			break;
-		case CWIID_MESG_CLASSIC:
-			printf("Classic Report: btns=%.4X l_stick=(%d,%d) r_stick=(%d,%d) "
-			       "l=%d r=%d\n", mesg[i].classic_mesg.buttons,
-			       mesg[i].classic_mesg.l_stick[CWIID_X],
-			       mesg[i].classic_mesg.l_stick[CWIID_Y],
-			       mesg[i].classic_mesg.r_stick[CWIID_X],
-			       mesg[i].classic_mesg.r_stick[CWIID_Y],
-			       mesg[i].classic_mesg.l, mesg[i].classic_mesg.r);
-			break;
 		case CWIID_MESG_ERROR:
 			if (cwiid_disconnect(wiimote)) {
 				fprintf(stderr, "Error on wiimote disconnect\n");
 				exit(-1);
 			}
 			exit(0);
-			break;
-		default:
-			printf("Unknown Report");
 			break;
 		}
 	}
