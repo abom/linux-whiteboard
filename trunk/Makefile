@@ -1,6 +1,6 @@
 
-demo: main.o wii.o
-	gcc -g main.o wii.o -o demo -lcwiid -lmeschach -lXtst \
+demo: main.o wii.o matrix.o
+	gcc -g main.o wii.o matrix.o -o demo -lcwiid -lXtst \
 		`sdl-config --cflags` `sdl-config --libs` -I/usr/include/SDL/
 
 clean:
@@ -12,4 +12,6 @@ main.o: main.c
 wii.o: wii.c
 	gcc wii.c -c -g
 
+matrix.o:
+	gcc matrix.c -c -g
 

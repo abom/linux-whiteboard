@@ -2,13 +2,9 @@
 #include <stdlib.h>
 
 #include <SDL.h>
-
-#include "meschach/matrix.h"
-
 #include <X11/extensions/XTest.h>
 
-//#include <regex.h>
-
+#include "matrix.h"
 
 extern int wii_connect(char *mac);
 extern void wii_disconnect();
@@ -48,14 +44,6 @@ void buttonpress()
 
 int infrared_data(int *v)
 {
-/*	printf (
-		"(%d %d)\n"
-		"(%d %d)\n"
-		"(%d %d)\n"
-		"(%d %d)\n", v[0],v[1],v[2],v[3],v[4],v[5],v[6],v[7]);*/
-	/* rx = SIZEX - v[0];
-	ry = SIZEY - v[1]; */
-
 	if (ready)
 	{
 		rx =  (int) ( ( (float)  (h11*v[0] + h12*v[1] + h13) ) / ( (float) (h31*v[0] + h32*v[1] + 1) ) );
@@ -153,66 +141,64 @@ void do_calcs()
 {
 	int i;
 
-	MAT *H, *LU;
-	VEC *x, *b;
-	PERM *pivot;
+	vector_t v;
+	matrix_t m,r;
 
-	H = m_get(8,8);
-	x = v_get(8);
-	b = v_get(8);
+	newMatrix(&m,8,8);
+	newVector(&v,8);
 
-	b->ve[0] = p_screen[0].x;
-	b->ve[1] = p_screen[0].y;
-	b->ve[2] = p_screen[1].x;
-	b->ve[3] = p_screen[1].y;
-	b->ve[4] = p_screen[2].x;
-	b->ve[5] = p_screen[2].y;
-	b->ve[6] = p_screen[3].x;
-	b->ve[7] = p_screen[3].y;
+	setVectorElement(&v, (float) p_screen[0].x, 0);
+	setVectorElement(&v, (float) p_screen[0].y, 1);
+	setVectorElement(&v, (float) p_screen[1].x, 2);
+	setVectorElement(&v, (float) p_screen[1].y, 3);
+	setVectorElement(&v, (float) p_screen[2].x, 4);
+	setVectorElement(&v, (float) p_screen[2].y, 5);
+	setVectorElement(&v, (float) p_screen[3].x, 6);
+	setVectorElement(&v, (float) p_screen[3].y, 7);
 
 	for (i=0; i<4; i++)
 	{
-		H->me[i*2][0] = p_wii[i].x;
-		H->me[i*2][1] = p_wii[i].y;
-		H->me[i*2][2] = 1;
-		H->me[i*2][3] = 0;
-		H->me[i*2][4] = 0;
-		H->me[i*2][5] = 0;
-		H->me[i*2][6] = -p_screen[i].x * p_wii[i].x;
-		H->me[i*2][7] = -p_screen[i].x * p_wii[i].y;
+		setMatrixElement(&m, (float) p_wii[i].x, 0, i*2);
+		setMatrixElement(&m, (float) p_wii[i].y, 1, i*2);
+		setMatrixElement(&m, (float) 1, 2, i*2);
+		setMatrixElement(&m, (float) 0, 3, i*2);
+		setMatrixElement(&m, (float) 0, 4, i*2);
+		setMatrixElement(&m, (float) 0, 5, i*2);
+		setMatrixElement(&m, (float) (-p_screen[i].x * p_wii[i].x), 6, i*2);
+		setMatrixElement(&m, (float) (-p_screen[i].x * p_wii[i].y), 7, i*2);
 
-		H->me[i*2+1][0] = 0;
-		H->me[i*2+1][1] = 0;
-		H->me[i*2+1][2] = 0;
-		H->me[i*2+1][3] = p_wii[i].x;
-		H->me[i*2+1][4] = p_wii[i].y;
-		H->me[i*2+1][5] = 1;
-		H->me[i*2+1][6] = -p_screen[i].y * p_wii[i].x;
-		H->me[i*2+1][7] = -p_screen[i].y * p_wii[i].y;
+		setMatrixElement(&m, (float) 0, 0, i*2+1);
+		setMatrixElement(&m, (float) 0, 1, i*2+1);
+		setMatrixElement(&m, (float) 0, 2, i*2+1);
+		setMatrixElement(&m, (float) p_wii[i].x, 3, i*2+1);
+		setMatrixElement(&m, (float) p_wii[i].y, 4, i*2+1);
+		setMatrixElement(&m, (float) 1, 5, i*2+1);
+		setMatrixElement(&m, (float) (-p_screen[i].y * p_wii[i].x), 6, i*2+1);
+		setMatrixElement(&m, (float) (-p_screen[i].y * p_wii[i].y), 7, i*2+1);
 	}
 
-	LU = m_get(H->m, H->n);
-	LU = m_copy(H,LU);
-	pivot = px_get(H->m);
-	LUfactor(LU,pivot);
-	x = LUsolve(LU,pivot,b,VNULL);
+	matrixInverse(&m);
+	matrixDOTvector(&m,&v,&r);
 
-	h11 = x->ve[0];
-	h12 = x->ve[1];
-	h13 = x->ve[2];
-	h21 = x->ve[3];
-	h22 = x->ve[4];
-	h23 = x->ve[5];
-	h31 = x->ve[6];
-	h32 = x->ve[7];
+	h11 = getMatrixElement(&r,0,0);
+	h12 = getMatrixElement(&r,0,1);
+	h13 = getMatrixElement(&r,0,2);
+	h21 = getMatrixElement(&r,0,3);
+	h22 = getMatrixElement(&r,0,4);
+	h23 = getMatrixElement(&r,0,5);
+	h31 = getMatrixElement(&r,0,6);
+	h32 = getMatrixElement(&r,0,7);
 
-	m_free(H);
-	m_free(LU);
-	px_free(pivot);
-	v_free(x);
-	v_free(b);
+	freeMatrix(&m);
+	freeMatrix(&r);
+	freeVector(&v);
 
 }
+
+
+
+
+
 
 
 
