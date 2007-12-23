@@ -34,6 +34,7 @@ int event_has_occurred = 0;
 
 char mac[100];
 
+Display *display;
 
 #define MAX_WII_X 1020
 #define MAX_WII_Y 760
@@ -205,23 +206,29 @@ void do_calcs()
 	h31 = x->ve[6];
 	h32 = x->ve[7];
 
+	m_free(H);
+	m_free(LU);
+	px_free(pivot);
+	v_free(x);
+	v_free(b);
+
 }
 
 
 
 void movePointer(int x, int y)
 {
-	Display *display = XOpenDisplay(0);
+        display = XOpenDisplay(0);
 	XTestFakeMotionEvent(display,-1,x,y,0);
 	XCloseDisplay(display);
 }
 
 void button(int p)
 {
-	Display *display = XOpenDisplay(0);
+        display = XOpenDisplay(0);
         XTestFakeButtonEvent(display,1,p,0);
+	//printf("BUTTON!! %d\n",p);
 	XCloseDisplay(display);
-	printf("BUTTON!! %d\n",p);
 }
 
 
@@ -313,6 +320,8 @@ int main()
 	}
 
 	SDL_QuitSubSystem(SDL_INIT_VIDEO);
+	
+	printpoints();
 
 	delta = t = SDL_GetTicks();
 	while (!can_exit)
@@ -333,10 +342,9 @@ int main()
 		}
 	}
 	
-
 	wii_disconnect();
-	
-	printpoints();
+	SDL_FreeSurface(s);
+	SDL_Quit();
 	
 	return 0;
 }
