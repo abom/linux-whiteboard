@@ -233,13 +233,13 @@ int main()
 	float xm1,ym1,xm2,ym2;
 
 	read_parameters();
-
-	SDL_Init(SDL_INIT_VIDEO);
-	s = SDL_SetVideoMode(SIZEX,SIZEY,0,SDL_HWSURFACE | SDL_FULLSCREEN);
-	black_color = SDL_MapRGB(s->format,0,0,0);
 	
 	if (wii_connect(mac) == 0)
 		exit(1);
+	
+	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER );
+	s = SDL_SetVideoMode(SIZEX,SIZEY,0,SDL_HWSURFACE | SDL_FULLSCREEN | SDL_DOUBLEBUF);
+	black_color = SDL_MapRGB(s->format,0,0,0);
 
 	p_screen[0].x = 50;	
 	p_screen[0].y = 50;
@@ -300,7 +300,8 @@ int main()
 
 		t = ~ t; 
 
-		SDL_UpdateRect(s,0,0,0,0);
+		//SDL_UpdateRect(s,0,0,0,0);
+		SDL_Flip(s);
 		SDL_Delay(100);
 		SDL_FillRect(s,0,black_color);
 	}
