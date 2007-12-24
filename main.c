@@ -324,9 +324,13 @@ int main(int argc,char *argv[])
 		SDL_FillRect(s,0,black_color);
 	}
 
-	SDL_QuitSubSystem(SDL_INIT_VIDEO);
-	
+	printf("Quitting SDL..");
+	SDL_Quit();	
+	printf("Done\n");
+
 	printpoints();
+
+	SDL_Init(SDL_INIT_TIMER);
 
 	delta = t = SDL_GetTicks();
 	while (!can_exit)
@@ -348,7 +352,7 @@ int main(int argc,char *argv[])
 	}
 	
 	wii_disconnect();
-	SDL_FreeSurface(s);
+	//SDL_FreeSurface(s);
 	SDL_Quit();
 	
 	return 0;
