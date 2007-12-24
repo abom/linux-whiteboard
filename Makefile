@@ -6,12 +6,12 @@ demo: main.o wii.o matrix.o
 clean:
 	rm -f demo *.o
 
-main.o: main.c
+main.o: main.c matrix.h
 	gcc main.c -g -c -I/usr/include/SDL/
 
 wii.o: wii.c
 	gcc wii.c -c -g
 
-matrix.o:
+matrix.o: matrix.c matrix.h
 	gcc matrix.c -c -g
 
