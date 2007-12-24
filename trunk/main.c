@@ -3,6 +3,7 @@
 
 #include <SDL.h>
 #include <X11/extensions/XTest.h>
+#include <X11/Xlib.h>
 
 #include "matrix.h"
 
@@ -64,24 +65,37 @@ int infrared_data(int *v)
 }
 
 
-void read_parameters()
+void read_parameters(int argc, char *argv[])
 {
 	char buf[255];
 	int sx,sy,bp;
-	FILE *f = fopen("config.cfg","r");
-	fscanf(f,"sizex = %d\n",&sx);
-	fscanf(f,"sizey = %d\n",&sy);
-	fscanf(f,"bpp = %d\n",&bp);
-	fscanf(f,"mac = %s\n",&mac);
-	fclose(f);
-	
-	SIZEX = sx;
-	SIZEY = sy;
-	
+
+//===========================================SIZE
+        display = XOpenDisplay(0);
+	int screen = DefaultScreen(display);	
+	SIZEX = DisplayWidth(display,screen);
+	SIZEY = DisplayHeight(display,screen);
+	XCloseDisplay(display);
+
 	printf("sizex = %d\n",SIZEX);
 	printf("sizey = %d\n",SIZEY);
+
+//============================================BP
 	printf("bpp = %d\n",bp);
-	printf("mac = %s\n",mac);
+	bp=32;	
+
+//============================================MAC
+	if(argc>1){
+		strcpy(mac,argv[1]);
+		//str2ba(argv[1],&mac);
+		printf("mac = %s\n",mac);
+	}
+	else{
+		//mac = *BDADDR_ANY;
+		mac[0]='#';
+		printf("mac = ANY \n");
+	}
+
 }
 
 
@@ -220,8 +234,12 @@ void button(int p)
 
 
 
-int main()
+int main(int argc,char *argv[])
 {
+	if(argc>2){
+		printf("ERROR: \n       Usage demo <mac> \n");
+		return 0;
+	}
 	SDL_Event e;
 	Uint32 black_color;
 	Uint8 *k;
@@ -232,7 +250,7 @@ int main()
 	int i;
 	float xm1,ym1,xm2,ym2;
 
-	read_parameters();
+	read_parameters(argc,argv);
 	
 	if (wii_connect(mac) == 0)
 		exit(1);

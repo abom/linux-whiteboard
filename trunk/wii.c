@@ -42,6 +42,13 @@ int wii_connect(char *mac)
 	cwiid_set_err(err);
 
 	str2ba(mac, &bdaddr);
+	
+	if (mac[0]!='#') {
+		str2ba(mac, &bdaddr);
+	}
+	else {
+		bdaddr = *BDADDR_ANY;
+	}
 
 	/* Connect to the wiimote */
         printf("Put Wiimote in discoverable mode now (press 1+2)...\n");
