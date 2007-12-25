@@ -236,10 +236,6 @@ void button(int p)
 
 int main(int argc,char *argv[])
 {
-	if(argc>2){
-		printf("ERROR: \n       Usage demo <mac> \n");
-		return 0;
-	}
 	SDL_Event e;
 	Uint32 black_color;
 	Uint8 *k;
@@ -249,6 +245,12 @@ int main(int argc,char *argv[])
 	int lastevent = 0;	
 	int i;
 	float xm1,ym1,xm2,ym2;
+
+	if(argc>2)
+	{
+		printf("ERROR: \n       Usage demo <mac> \n");
+		return 0;
+	}
 
 	read_parameters(argc,argv);
 	
