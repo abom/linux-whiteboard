@@ -81,8 +81,8 @@ void read_parameters(int argc, char *argv[])
 	printf("sizey = %d\n",SIZEY);
 
 //============================================BP
-	printf("bpp = %d\n",bp);
 	bp=32;	
+	printf("bpp = %d\n",bp);
 
 //============================================MAC
 	if(argc>1){
