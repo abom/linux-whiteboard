@@ -4,7 +4,7 @@
 #include <SDL.h>
 #include <X11/extensions/XTest.h>
 #include <X11/Xlib.h>
-
+#include <sys/time.h>
 #include "matrix.h"
 
 extern int wii_connect(char *mac);
@@ -79,10 +79,6 @@ void read_parameters(int argc, char *argv[])
 
 	printf("sizex = %d\n",SIZEX);
 	printf("sizey = %d\n",SIZEY);
-
-//============================================BP
-	bp=32;	
-	printf("bpp = %d\n",bp);
 
 //============================================MAC
 	if(argc>1){
@@ -232,7 +228,29 @@ void button(int p)
 }
 
 
+void the_end()
+{
+	wii_disconnect();
+	exit(0);
+}
 
+static struct timeval tst,tend;
+static struct timezone tz;
+
+unsigned long myGetTicks()
+{
+	static double t1,t2;
+
+	gettimeofday(&tend,&tz);
+	t1 = (double) tst.tv_sec*1000 + (double) tst.tv_usec/1000;
+	t2 = (double) tend.tv_sec*1000 + (double) tend.tv_usec/1000;
+	return (unsigned long int) (t2-t1);
+}
+
+static void myStartTimer()
+{
+	gettimeofday(&tst,&tz);
+}
 
 int main(int argc,char *argv[])
 {
@@ -251,13 +269,15 @@ int main(int argc,char *argv[])
 		printf("ERROR: \n       Usage demo <mac> \n");
 		return 0;
 	}
+	
+	myStartTimer();
 
 	read_parameters(argc,argv);
 	
 	if (wii_connect(mac) == 0)
 		exit(1);
 	
-	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER );
+	SDL_Init(SDL_INIT_VIDEO);
 	s = SDL_SetVideoMode(SIZEX,SIZEY,0,SDL_HWSURFACE | SDL_FULLSCREEN | SDL_DOUBLEBUF);
 	black_color = SDL_MapRGB(s->format,0,0,0);
 
@@ -291,9 +311,7 @@ int main(int argc,char *argv[])
 
 		if (state < 4) { p_wii[state].x = rx; p_wii[state].y = ry; }
 		
-		if (state == 4) { do_calcs(); state++; ready=1; }
-
-		if (state > 4)
+		if (state >= 4) 
 			break;
 
 		for (i = (int) xm1; i < (int) xm2; i++)
@@ -312,8 +330,9 @@ int main(int argc,char *argv[])
 		draw_point(&p_screen[2]);	
 		draw_point(&p_screen[3]);	
 
-		for(i=0; i<state; i++)
-			draw_square(&p_screen[i]);
+		if (state<4)
+			for(i=0; i<state; i++)
+				draw_square(&p_screen[i]);
 
 		if ((state<4) && (t)) 
 			draw_square(&p_screen[state]);
@@ -325,19 +344,26 @@ int main(int argc,char *argv[])
 		SDL_Delay(100);
 		SDL_FillRect(s,0,black_color);
 	}
-
+	
 	printf("Quitting SDL..");
+	SDL_FreeSurface(s);
 	SDL_Quit();	
 	printf("Done\n");
 
+	if (!ok)
+		the_end();
+
 	printpoints();
-
-	SDL_Init(SDL_INIT_TIMER);
-
-	delta = t = SDL_GetTicks();
-	while (!can_exit)
+	
+	printf("Calculating coefficients...");
+	do_calcs();
+	printf("Done!\n");
+	
+	ready = 1;
+	delta = t = myGetTicks();
+	while ((!can_exit) && (ok))
 	{
-		t = SDL_GetTicks();
+		t = myGetTicks();
 		if (event_has_occurred)
 		{ 
 			event_has_occurred=0;
@@ -348,15 +374,14 @@ int main(int argc,char *argv[])
 		}
 		else
 		{
-			if ( (lastevent==1) && ((SDL_GetTicks() - delta)>50)) 
+			if ( (lastevent==1) && ((myGetTicks() - delta)>50)) 
 				{ button(0); lastevent = 0; }
 		}
 	}
 	
-	wii_disconnect();
-	//SDL_FreeSurface(s);
-	SDL_Quit();
-	
+	the_end();
 	return 0;
 }
+
+
 
