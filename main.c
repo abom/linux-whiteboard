@@ -151,57 +151,56 @@ void do_calcs()
 {
 	int i;
 
-	vector_t v;
-	matrix_t m,r;
+	matrix_t *m, *n, *r;
 
-	newMatrix(&m,8,8);
-	newVector(&v,8);
+	m = matrixNew(8,8);
+	n = matrixNew(1,8);
 
-	setVectorElement(&v, (float) p_screen[0].x, 0);
-	setVectorElement(&v, (float) p_screen[0].y, 1);
-	setVectorElement(&v, (float) p_screen[1].x, 2);
-	setVectorElement(&v, (float) p_screen[1].y, 3);
-	setVectorElement(&v, (float) p_screen[2].x, 4);
-	setVectorElement(&v, (float) p_screen[2].y, 5);
-	setVectorElement(&v, (float) p_screen[3].x, 6);
-	setVectorElement(&v, (float) p_screen[3].y, 7);
+	matrixSetElement(n, (float) p_screen[0].x, 0, 0);
+	matrixSetElement(n, (float) p_screen[0].y, 0, 1);
+	matrixSetElement(n, (float) p_screen[1].x, 0, 2);
+	matrixSetElement(n, (float) p_screen[1].y, 0, 3);
+	matrixSetElement(n, (float) p_screen[2].x, 0, 4);
+	matrixSetElement(n, (float) p_screen[2].y, 0, 5);
+	matrixSetElement(n, (float) p_screen[3].x, 0, 6);
+	matrixSetElement(n, (float) p_screen[3].y, 0, 7);
 
 	for (i=0; i<4; i++)
 	{
-		setMatrixElement(&m, (float) p_wii[i].x, 0, i*2);
-		setMatrixElement(&m, (float) p_wii[i].y, 1, i*2);
-		setMatrixElement(&m, (float) 1, 2, i*2);
-		setMatrixElement(&m, (float) 0, 3, i*2);
-		setMatrixElement(&m, (float) 0, 4, i*2);
-		setMatrixElement(&m, (float) 0, 5, i*2);
-		setMatrixElement(&m, (float) (-p_screen[i].x * p_wii[i].x), 6, i*2);
-		setMatrixElement(&m, (float) (-p_screen[i].x * p_wii[i].y), 7, i*2);
+		matrixSetElement(m, (float) p_wii[i].x, 0, i*2);
+		matrixSetElement(m, (float) p_wii[i].y, 1, i*2);
+		matrixSetElement(m, (float) 1, 2, i*2);
+		matrixSetElement(m, (float) 0, 3, i*2);
+		matrixSetElement(m, (float) 0, 4, i*2);
+		matrixSetElement(m, (float) 0, 5, i*2);
+		matrixSetElement(m, (float) (-p_screen[i].x * p_wii[i].x), 6, i*2);
+		matrixSetElement(m, (float) (-p_screen[i].x * p_wii[i].y), 7, i*2);
 
-		setMatrixElement(&m, (float) 0, 0, i*2+1);
-		setMatrixElement(&m, (float) 0, 1, i*2+1);
-		setMatrixElement(&m, (float) 0, 2, i*2+1);
-		setMatrixElement(&m, (float) p_wii[i].x, 3, i*2+1);
-		setMatrixElement(&m, (float) p_wii[i].y, 4, i*2+1);
-		setMatrixElement(&m, (float) 1, 5, i*2+1);
-		setMatrixElement(&m, (float) (-p_screen[i].y * p_wii[i].x), 6, i*2+1);
-		setMatrixElement(&m, (float) (-p_screen[i].y * p_wii[i].y), 7, i*2+1);
+		matrixSetElement(m, (float) 0, 0, i*2+1);
+		matrixSetElement(m, (float) 0, 1, i*2+1);
+		matrixSetElement(m, (float) 0, 2, i*2+1);
+		matrixSetElement(m, (float) p_wii[i].x, 3, i*2+1);
+		matrixSetElement(m, (float) p_wii[i].y, 4, i*2+1);
+		matrixSetElement(m, (float) 1, 5, i*2+1);
+		matrixSetElement(m, (float) (-p_screen[i].y * p_wii[i].x), 6, i*2+1);
+		matrixSetElement(m, (float) (-p_screen[i].y * p_wii[i].y), 7, i*2+1);
 	}
 
-	matrixInverse(&m);
-	matrixDOTvector(&m,&v,&r);
+	matrixInverse(m);
+	r = matrixMultiply(m,n);
 
-	h11 = getMatrixElement(&r,0,0);
-	h12 = getMatrixElement(&r,0,1);
-	h13 = getMatrixElement(&r,0,2);
-	h21 = getMatrixElement(&r,0,3);
-	h22 = getMatrixElement(&r,0,4);
-	h23 = getMatrixElement(&r,0,5);
-	h31 = getMatrixElement(&r,0,6);
-	h32 = getMatrixElement(&r,0,7);
+	h11 = matrixGetElement(r,0,0);
+	h12 = matrixGetElement(r,0,1);
+	h13 = matrixGetElement(r,0,2);
+	h21 = matrixGetElement(r,0,3);
+	h22 = matrixGetElement(r,0,4);
+	h23 = matrixGetElement(r,0,5);
+	h31 = matrixGetElement(r,0,6);
+	h32 = matrixGetElement(r,0,7);
 
-	freeMatrix(&m);
-	freeMatrix(&r);
-	freeVector(&v);
+	matrixFree(m);
+	matrixFree(n);
+	matrixFree(r);
 
 }
 
