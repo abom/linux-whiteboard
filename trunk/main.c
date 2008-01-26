@@ -88,11 +88,7 @@ void update_cursor()
     static int lastevent = 0;
     static int delta = 0; /* WARNING: delta should be equal to t at first,
 			   * but we may get away with it now. */
-    static int semaphore = 0;
     int t;
-
-    if (semaphore == 1)
-    	return;
    
     t = get_ticks();
     if (event_has_occurred)
@@ -130,8 +126,6 @@ int main(int argc,char *argv[])
 	printf("Calculating coefficients...");
 	transform = calculate_transformation_matrix();
 	printf("Done!\n");
-
-	matrixPrint(transform);
 
 	ready = 1;
 	/* Start the timer by updating the last ticks*/
