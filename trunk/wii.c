@@ -27,7 +27,7 @@
 
 #include <cwiid.h>
 
-cwiid_mesg_callback_t cwiid_callback;
+void cwiid_callback(cwiid_wiimote_t *wiimote, int mesg_count, union cwiid_mesg mesg[]);
 
 #define toggle_bit(bf,b)	\
 	(bf) = ((bf) & b)		\
@@ -56,6 +56,7 @@ struct cwiid_state state;       /* wiimote state */
 
 extern void infrared_data(int *v);
 extern void buttonpress();
+extern void update_cursor();
 
 int wii_connect(char *mac)
 {
@@ -177,7 +178,10 @@ void cwiid_callback(cwiid_wiimote_t *wiimote, int mesg_count,
 			}
 			exit(0);
 			break;
+		default:
+			break;
 		}
 	}
+	update_cursor();
 }
 

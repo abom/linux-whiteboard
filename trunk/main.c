@@ -20,6 +20,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 #include <SDL.h>
 #include <X11/extensions/XTest.h>
@@ -63,7 +64,7 @@ void buttonpress()
 }
 
 
-int infrared_data(int *v)
+void infrared_data(int *v)
 {
 	if (ready)
 	{
@@ -87,9 +88,6 @@ int infrared_data(int *v)
 
 void read_parameters(int argc, char *argv[])
 {
-	char buf[255];
-	int sx,sy,bp;
-
 //===========================================SIZE
         display = XOpenDisplay(0);
 	int screen = DefaultScreen(display);	
@@ -176,6 +174,12 @@ void do_calcs()
 	m = matrixNew(8,8);
 	n = matrixNew(1,8);
 
+	for (i=0; i<4; i++)
+	{
+		matrixSetElement(n, (float) p_screen[i].x, 0, i*2);
+		matrixSetElement(n, (float) p_screen[i].y, 0, i*2 + 1);
+	}
+/*
 	matrixSetElement(n, (float) p_screen[0].x, 0, 0);
 	matrixSetElement(n, (float) p_screen[0].y, 0, 1);
 	matrixSetElement(n, (float) p_screen[1].x, 0, 2);
@@ -184,7 +188,7 @@ void do_calcs()
 	matrixSetElement(n, (float) p_screen[2].y, 0, 5);
 	matrixSetElement(n, (float) p_screen[3].x, 0, 6);
 	matrixSetElement(n, (float) p_screen[3].y, 0, 7);
-
+*/
 	for (i=0; i<4; i++)
 	{
 		matrixSetElement(m, (float) p_wii[i].x, 0, i*2);
@@ -271,6 +275,29 @@ static void myStartTimer()
 	gettimeofday(&tst,&tz);
 }
 
+
+
+void update_cursor()
+{
+	static int delta,t;
+	static int lastevent=0;
+
+	t = myGetTicks();
+	if (event_has_occurred)
+	{ 
+		event_has_occurred=0;
+		movePointer(rx,ry); 
+		if (lastevent == 0) { button(1); }
+		lastevent = 1;
+		delta = t; 
+	}
+	else
+	{
+		if ( (lastevent==1) && ((myGetTicks() - delta)>50)) 
+			{ button(0); lastevent = 0; }
+	}
+}
+
 int main(int argc,char *argv[])
 {
 	SDL_Event e;
@@ -278,9 +305,8 @@ int main(int argc,char *argv[])
 	Uint8 *k;
 	int state = 0;
 	int ok=1;
-	int delta, t;
-	int lastevent = 0;	
 	int i;
+	int t=0;
 	float xm1,ym1,xm2,ym2;
 
 	if(argc>2)
@@ -379,25 +405,9 @@ int main(int argc,char *argv[])
 	printf("Done!\n");
 	
 	ready = 1;
-	delta = t = myGetTicks();
-	while ((!can_exit) && (ok))
-	{
-		t = myGetTicks();
-		if (event_has_occurred)
-		{ 
-			event_has_occurred=0;
-			movePointer(rx,ry); 
-			if (lastevent == 0) { button(1); }
-			lastevent = 1;
-			delta = t; 
-		}
-		else
-		{
-			if ( (lastevent==1) && ((myGetTicks() - delta)>50)) 
-				{ button(0); lastevent = 0; }
-		}
-	}
-	
+	while (!can_exit)
+		sleep(1);
+
 	the_end();
 	return 0;
 }

@@ -1,19 +1,22 @@
+# Temporary solution until it is changed to autoconf
+CC = gcc
+CFLAGS += -Wall -Wextra -O0 -g -ggdb -pipe
 
 demo: main.o wii.o matrix.o
-	gcc -g main.o wii.o matrix.o -o demo -lcwiid -lXtst \
-		`sdl-config --cflags` `sdl-config --libs` -I/usr/include/SDL/
+	${CC} ${CFLAGS}	main.o wii.o matrix.o -o demo \
+		-lcwiid `pkg-config --libs xtst` `sdl-config --libs`
 
 clean:
-	rm -f demo release.tar.gz *.o
+	rm -vf demo release.tar.gz *.o
 
-main.o: main.c matrix.h
-	gcc main.c -g -c -I/usr/include/SDL/
+main.o: main.c matrix.h 
+	${CC} ${CFLAGS} -c main.c `sdl-config --cflags`
 
-wii.o: wii.c
-	gcc wii.c -c -g
+wii.o: wii.c matrix.h 
+	${CC} ${CFLAGS} -c wii.c
 
-matrix.o: matrix.c matrix.h
-	gcc matrix.c -c -g
+matrix.o: matrix.c
+	${CC} ${CFLAGS} -c matrix.c
 
-release: demo README.txt
-	tar zcvf release.tar.gz demo README.txt
+release: demo README.txt TODO
+	tar -zcvf release.tar.gz demo README.txt TODO
