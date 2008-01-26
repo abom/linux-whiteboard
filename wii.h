@@ -1,4 +1,6 @@
-/* Copyright (C) 2008 Pere Negre
+/* Copyright (C) 2007 L. Donnie Smith <cwiid@abstrakraft.org>
+ * 
+ *  (modified by Pere Negre)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -8,7 +10,7 @@
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ *  GNU General Public License for more details.                                                                                                              
  *
  *  You should have received a copy of the GNU General Public License
  *  along with this program; if not, write to the Free Software
@@ -17,27 +19,18 @@
  */
 
 
-
-#ifndef  __MATRIX_H__
-#define  __MATRIX_H__
-
-
-#include <stdio.h>
-#include <stdlib.h>
+#ifndef  __WII_H__
+#define  __WII_H__
 
 
-typedef struct {
-	float *d;
-	int h,v;
-} matrix_t;
+#include <cwiid.h>
+
+#include "common.h"
 
 
-extern matrix_t *   matrixNew(int h, int v);
-extern void         matrixFree(matrix_t *m);
-extern float        matrixGetElement(matrix_t *m, int i, int j);
-extern void         matrixSetElement(matrix_t *m, float e, int i, int j);
-extern void         matrixInverse(matrix_t *m);
-extern matrix_t *   matrixMultiply(matrix_t *m, matrix_t *n);
-extern void 	    matrixPrint(matrix_t *m);
+cwiid_wiimote_t* wii_connect(char *mac);
+int wii_disconnect(cwiid_wiimote_t* wiimote);
 
-#endif		// __MATRIX_H__ 
+
+#endif   /* __WII_H__ */
+
