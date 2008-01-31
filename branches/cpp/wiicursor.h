@@ -48,14 +48,13 @@ struct click_stuff {
     bool const& program_finished;
 
     click_stuff(unsigned int const move_tolerance, delta_t_t const wait_tolerance, point_t const& ir, bool const& program_finished) :
-	waited(0),
-	moved(0),
 	move_tolerance(move_tolerance),
 	wait_tolerance(wait_tolerance),
 	ir(ir),
 	program_finished(program_finished)
     {
-	set_data_at_thread_end();
+	set_data_at_thread_start();
+	set_data_at_thread_finish();
     }
 
     void set_data_at_thread_start() {
@@ -63,7 +62,7 @@ struct click_stuff {
 	moved = 0;
 	thread_finished = false;
     }
-    void set_data_at_thread_end() {
+    void set_data_at_thread_finish() {
 	thread_finished = true;
 	this_thread = 0;
     }
@@ -72,28 +71,20 @@ struct click_stuff {
 
 void* click_thread(void* ptr);
 
-void ask_thread_to_finish(click_stuff& data); // Yeah, I know it's weird
+void start_click_thread(click_stuff& data, point_t const& ir_on_mouse_down);
+void finish_click_thread(click_stuff& data);
 
 
 class WiiCursor {
 public:
     WiiCursor(cwiid_wiimote_t* wiimote, matrix_t transform) :
 	m_wiimote(wiimote),
-	m_transform(transform),
-	m_program_finished(true),
-	m_click_data( 5, 700, m_ir, m_program_finished )
+	m_transform(transform)
     { }
     void process();
 private:
     cwiid_wiimote_t* const m_wiimote;
     matrix_t const m_transform;
-
-    // NOTE: These cannot be local variables because they don't work
-    // very well with references (locals got stored on the stack -
-    // well, I know it depends, but I'd better play safe)
-    bool m_program_finished;
-    point_t m_ir;
-    click_stuff m_click_data;
 };
 
 

@@ -46,8 +46,8 @@ void draw_point(SDL_Surface* surface, point_t const& p, unsigned int radius);
  * dimensions should be unsigned */
 void draw_rectangle(SDL_Surface* surface, point_t const& p, point_t dim, Uint32 color);
 void draw_square(SDL_Surface* surface, point_t const& p, unsigned int radius, Uint32 color);
-/* Draws the 4 calibration points, paint the                                                                                                                  
- * active point a blinking square, and paint the
+/* Draws the 4 calibration points, paints the
+ * active point a blinking square, and paints the
  * calibrated ones static squares */
 void draw_calibration_points(SDL_Surface* surface, point_t const points[4], int active, int active_light_up);
 /* Get 4 calibration points from users

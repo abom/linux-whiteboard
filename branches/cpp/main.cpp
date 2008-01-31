@@ -17,7 +17,7 @@
  */
 
 
-#include <memory>
+#include <memory> // auto_ptr
 
 
 #include "gui.h"
@@ -44,13 +44,12 @@ int main(int argc,char *argv[])
 	    if (!get_calibration_points(wiimote, p_wii)) {
 		print_points(p_wii);
 		matrix_t const transform = calculate_transformation_matrix(p_wii);
-		std::auto_ptr<WiiCursor> wc ( new WiiCursor(wiimote, transform) );
+		std::auto_ptr<WiiCursor> const wc ( new WiiCursor(wiimote, transform) );
 
 		wc->process(); // The main loop
 	    }
-	    else fprintf(stderr, "User escaped on there was an error while calibrating the Wii.\n");
+	    else fprintf(stderr, "User escaped or there was an error while calibrating the Wii.\n");
 
-	    // NOTE: Weird crash at this point if we don't use the IR pointer at least once
 	    if (!wii_disconnect(wiimote))
 		return 0;
 	    else fprintf(stderr, "Error on wiimote disconnect\n");
