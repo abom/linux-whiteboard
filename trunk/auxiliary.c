@@ -23,16 +23,16 @@
 point_t screen_size()                                                                                                                                         
 {
     Display* display = XOpenDisplay(0);
-    int const screen = DefaultScreen(display);
-    point_t const scr_size = {DisplayWidth(display, screen), DisplayHeight(display, screen)};
+    int screen = DefaultScreen(display);
+    point_t scr_size = {DisplayWidth(display, screen), DisplayHeight(display, screen)};
     XCloseDisplay(display);
 
     return scr_size;
 }
-void screen_corners(point_t p_screen[4])
+static void screen_corners(point_t p_screen[4])
 {
-    point_t const scr_size = screen_size();
-    int const PADDING = 50;
+    point_t scr_size = screen_size();
+    int PADDING = 50;
 
     p_screen[0].x = PADDING;
     p_screen[0].y = PADDING;
@@ -45,98 +45,103 @@ void screen_corners(point_t p_screen[4])
 }
 
 
-void pixel(SDL_Surface* surface, int x, int y)
+static void pixel(SDL_Surface* surface, int x, int y)
 {
     Uint32* m = (Uint32*) surface->pixels + y*surface->w + x;
     *m = SDL_MapRGB(surface->format, 255, 255, 255);
 }
-void draw_point(SDL_Surface* surface, point_t p)
+static void draw_point(SDL_Surface* surface, point_t p)
 {
-    int i = 0;
+    int i;
     for (i = p.x-10; i < p.x+10; ++i)
 	pixel(surface, i, p.y);
 
     for (i = p.y-10; i < p.y+10; ++i)
 	pixel(surface, p.x, i);
 }
-void draw_square(SDL_Surface* surface, point_t p)
+static void draw_square(SDL_Surface* surface, point_t p)
 {
-    int i = 0;
+    int i;
     for (i = p.x-10; i < p.x+10; ++i) {
-	pixel(surface, i, p.y+10);
-	pixel(surface, i, p.y-10);
+		pixel(surface, i, p.y+10);
+		pixel(surface, i, p.y-10);
     }  
 
     for (i = p.y-10; i < p.y+10; ++i) {
-	pixel(surface, p.x-10, i);
-	pixel(surface, p.x+10, i);
+		pixel(surface, p.x-10, i);
+		pixel(surface, p.x+10, i);
     }  
 }
 
-void draw_calibration_points(SDL_Surface* surface, point_t points[4], int active, int active_light_up)
+static void draw_calibration_points(SDL_Surface* surface, point_t points[4], int active, int active_light_up)
 {
-    int i = 0;
-    for (i = 0; i != 4; ++i) {
-	draw_point(surface, points[i]);
-	if ( (i < active) || ((i == active) && active_light_up) )
-	    draw_square(surface, points[i]);
-    }
+    int i;
+    for (i = 0; i != 4; ++i) 
+	{
+		draw_point(surface, points[i]);
+		if ( (i < active) || ((i == active) && active_light_up) )
+		    draw_square(surface, points[i]);
+   	 }
 }
+
 int get_calibration_points()
 {
     point_t const scr_size = screen_size();
     SDL_Event e;
     Uint8 *k;
     int state = 0;
+    SDL_Surface *surface;
+    Uint32 black_color;
+    int xm1,xm2,ym1,ym2;
+    int i;
+	int MAX_WII_X = 1020;
+	int MAX_WII_Y = 760;
+	point_t p_screen[4];
 
     SDL_Init(SDL_INIT_VIDEO);
-    SDL_Surface* surface = SDL_SetVideoMode(0, 0, 0, SDL_HWSURFACE | SDL_FULLSCREEN | SDL_DOUBLEBUF);
-    Uint32 const black_color = SDL_MapRGB(surface->format,0,0,0);
+    surface = SDL_SetVideoMode(0, 0, 0, SDL_HWSURFACE | SDL_FULLSCREEN | SDL_DOUBLEBUF);
+    black_color = SDL_MapRGB(surface->format,0,0,0);
 
     SDL_FillRect(surface,0,black_color);
 
-    int const xm1 = scr_size.x / 2 - 100;
-    int const xm2 = xm1 + 200;
-    int const ym1 = scr_size.y / 2 - 100;
-    int const ym2 = ym1 + 200;
+    xm1 = scr_size.x / 2 - 100;
+    xm2 = xm1 + 200;
+    ym1 = scr_size.y / 2 - 100;
+    ym2 = ym1 + 200;
 
+	screen_corners(p_screen);
     int active_light_up  = 0;
     while(1)
     {   
-	SDL_PollEvent(&e);
-	k = SDL_GetKeyState(NULL);                                                                                                                            
-	if (k[SDLK_ESCAPE])
-	    return -1;
+		SDL_PollEvent(&e);
+		k = SDL_GetKeyState(NULL);                                                                                                                            
+		if (k[SDLK_ESCAPE])
+			return -1;
 
-	if (k[SDLK_SPACE]) { state++; k[SDLK_SPACE]=0; }
+		if (k[SDLK_SPACE]) { state++; k[SDLK_SPACE]=0; }
 
-	if (state < 4) { p_wii[state].x = ir_pos.x; p_wii[state].y = ir_pos.y; }
+		if (state < 4) { p_wii[state].x = ir_pos.x; p_wii[state].y = ir_pos.y; }
 
-	if (state >= 4)
-	    break;
+		if (state >= 4)
+			break;
 
-	int i = 0;
-	for (i = (int) xm1; i < (int) xm2; i++)
-	    pixel(surface,i,ym1), pixel(surface,i,ym2);
+		for (i = (int) xm1; i < (int) xm2; i++)
+			pixel(surface,i,ym1), pixel(surface,i,ym2);
 
-	for (i = (int) ym1; i < (int) ym2; i++)
-	    pixel(surface,xm1,i), pixel(surface,xm2,i);
+		for (i = (int) ym1; i < (int) ym2; i++)
+			pixel(surface,xm1,i), pixel(surface,xm2,i);
 
-	int const MAX_WII_X = 1020;
-	int const MAX_WII_Y = 760;
-	pixel(surface,
-		xm1 + (int) ( ((float) ir_pos.x / (float) MAX_WII_X )*200),
-		ym2 - (int) ( ((float) ir_pos.y / (float) MAX_WII_Y )*200)
-	     );
+		pixel(surface,
+			xm1 + (int) ( ((float) ir_pos.x / (float) MAX_WII_X )*200),
+			ym2 - (int) ( ((float) ir_pos.y / (float) MAX_WII_Y )*200)
+		 );
 
-	point_t p_screen[4];
-	screen_corners(p_screen);
-	draw_calibration_points(surface, p_screen, state, active_light_up);
-	active_light_up = !active_light_up;
+		draw_calibration_points(surface, p_screen, state, active_light_up);
+		active_light_up = !active_light_up;
 
-	SDL_Flip(surface);
-	SDL_Delay(100);
-	SDL_FillRect(surface,0,black_color);
+		SDL_Flip(surface);
+		SDL_Delay(100);
+		SDL_FillRect(surface,0,black_color);
     }
 
     printf("Quitting SDL..");
@@ -150,10 +155,10 @@ int get_calibration_points()
 
 void print_points()
 {
+    int i;
     point_t p_screen[4];
     screen_corners(p_screen);
 
-    int i;
     for (i=0; i<4; i++)
 	printf("Point %d --> (%d,%d) === (%d,%d)\n",
 		i, p_screen[i].x, p_screen[i].y, p_wii[i].x, p_wii[i].y);
@@ -221,11 +226,11 @@ void fake_button(int button, int is_press)
 
 unsigned long get_ticks()
 {
+	static long t1,t2;
     static struct timeval last = {0, 0};
-
-    struct timeval current = {0, 0};
+    static struct timeval current = {0, 0};
     gettimeofday(&current, 0);
-    long const t1 = last.tv_sec*1000 + last.tv_usec/1000;
-    long const t2 = current.tv_sec*1000 + current.tv_usec/1000;
+    t1 = last.tv_sec*1000 + last.tv_usec/1000;
+    t2 = current.tv_sec*1000 + current.tv_usec/1000;
     return t2-t1;
 }

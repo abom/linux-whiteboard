@@ -34,20 +34,6 @@ extern point_t ir_pos;
 extern point_t p_wii[4];
 
 point_t screen_size();
-void screen_corners(point_t p_screen[4]);
-
-/* Puts a white pixel */
-void pixel(SDL_Surface* surface, int x, int y);
-/* Draws the center of a calibration point */
-void draw_point(SDL_Surface* surface, point_t p);
-/* Draws a square around a calibration point */
-void draw_square(SDL_Surface* surface, point_t p);
-/* Draws the 4 calibration points, paint the                                                                                                                  
- * active point a blinking square, and paint the
- * calibrated ones static squares */
-void draw_calibration_points(SDL_Surface* surface, point_t points[4], int active, int active_light_up);
-/* Get 4 calibration points from users
- * Returns 0 on success, -1 on error or user escapes */
 int get_calibration_points();
 
 void print_points();

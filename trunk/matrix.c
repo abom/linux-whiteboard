@@ -57,7 +57,7 @@ void matrixPrint(matrix_t *m)
 }
 
 
-matrix_t *matrixCof1(matrix_t *m, int x, int y)
+static matrix_t *matrixCof1(matrix_t *m, int x, int y)
 {
 	int i,j;
 	int xx = 0;
@@ -111,7 +111,7 @@ float matrixDeterminant(matrix_t *m)
 }
 
 
-matrix_t *matrixCofactor(matrix_t *m)
+static matrix_t *matrixCofactor(matrix_t *m)
 {
 	int i,j;
 	float f;
