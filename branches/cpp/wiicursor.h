@@ -31,48 +31,62 @@
 #include "wii.h"
 
 
-// NOTE: Return values and error notification are still lacking, feel free to improve it
+// NOTE: The *only* reason this is not is wiimote_data is
+// because pthread is a C library
+void* thread_func(void* ptr);
 
 
-struct click_stuff {
-    point_t ir_on_mouse_down;
-    delta_t_t waited;
-    unsigned int moved;
-    bool thread_finished;
-    pthread_t this_thread;
-
-    unsigned int const move_tolerance;
-    delta_t_t const wait_tolerance;
-
-    point_t const& ir;
-    bool const& program_finished;
-
-    click_stuff(unsigned int const move_tolerance, delta_t_t const wait_tolerance, point_t const& ir, bool const& program_finished) :
-	move_tolerance(move_tolerance),
-	wait_tolerance(wait_tolerance),
-	ir(ir),
-	program_finished(program_finished)
+class wiimote_data {
+public:
+    wiimote_data(point_t const& ir, unsigned int const move_tolerance, delta_t_t const wait_tolerance, bool const& program_finished) :
+	m_ir(ir),
+	m_move_tolerance(move_tolerance),
+	m_wait_tolerance(wait_tolerance),
+	m_program_finished(program_finished)
     {
 	set_data_at_thread_start();
 	set_data_at_thread_finish();
     }
 
+    friend void* thread_func(void* ptr);
+    void start_thread(point_t const& ir_on_mouse_down);
+    void finish_thread();
+
+    point_t const& ir() const {
+	return m_ir;
+    }
+private:
+    bool click_and_drag() const {
+	return m_moved > sqr(m_move_tolerance);
+    }
+    bool right_click() const {
+	return m_waited > m_wait_tolerance;
+    }
+    bool not_finished() const {
+	return !m_program_finished && !m_thread_finished;
+    }
     void set_data_at_thread_start() {
-	waited = 0;
-	moved = 0;
-	thread_finished = false;
+	m_waited = 0;
+	m_moved = 0;
+	m_thread_finished = false;
     }
     void set_data_at_thread_finish() {
-	thread_finished = true;
-	this_thread = 0;
+	m_thread_finished = true;
+	m_this_thread = 0;
     }
+
+    point_t const& m_ir;
+    point_t m_ir_on_mouse_down;
+    delta_t_t m_waited;
+    unsigned int m_moved;
+    bool m_thread_finished;
+    pthread_t m_this_thread;
+
+    unsigned int const m_move_tolerance;
+    delta_t_t const m_wait_tolerance;
+
+    bool const& m_program_finished;
 };
-
-
-void* click_thread(void* ptr);
-
-void start_click_thread(click_stuff& data, point_t const& ir_on_mouse_down);
-void finish_click_thread(click_stuff& data);
 
 
 class WiiCursor {
