@@ -1,6 +1,6 @@
 # Temporary solution until it is changed to autoconf
 CC = gcc
-CFLAGS += -Wall -Wextra -O0 -g -ggdb -pipe
+CFLAGS += -Wall -Wextra -O0 -g -ggdb -pipe -pedantic -std=c99
 
 demo: main.o wii.o matrix.o auxiliary.o
 	${CC} ${CFLAGS}	main.o wii.o matrix.o auxiliary.o -o demo \
@@ -22,4 +22,4 @@ auxiliary.o: auxiliary.c
 	${CC} ${CFLAGS} -c auxiliary.c `sdl-config --cflags`
 
 release: demo README.txt TODO
-	tar -zcvf release.tar.gz demo README.txt TODO
+	tar -zcvf release.tar.gz demo README.txt 
