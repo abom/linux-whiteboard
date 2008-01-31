@@ -1,25 +1,31 @@
 # Temporary solution until it is changed to autoconf
-CC = gcc
+CC = g++
 CFLAGS += -Wall -Wextra -O0 -g -ggdb -pipe
 
-demo: main.o wii.o matrix.o auxiliary.o
-	${CC} ${CFLAGS}	main.o wii.o matrix.o auxiliary.o -o demo \
-		-lcwiid `pkg-config --libs xtst` `sdl-config --libs`
+demo: main.o wii.o auxiliary.o gui.o events.o wiicursor.o
+	${CC} ${CFLAGS}	main.o wii.o auxiliary.o gui.o events.o wiicursor.o -o demo \
+		-lcwiid `pkg-config --libs xtst` `sdl-config --libs` -lpthread -lSGE
 
 clean:
-	rm -vf demo release.tar.gz *.o
+	rm -vf demo release.tar.gz *.o *-tests
 
-main.o: main.c matrix.h wii.h auxiliary.h common.h
-	${CC} ${CFLAGS} -c main.c `sdl-config --cflags`
+main.o: main.cpp matrix.h
+	${CC} ${CFLAGS} -c main.cpp
 
-wii.o: wii.c matrix.h common.h
-	${CC} ${CFLAGS} -c wii.c
+wii.o: wii.cpp
+	${CC} ${CFLAGS} -c wii.cpp
 
-matrix.o: matrix.c common.h
-	${CC} ${CFLAGS} -c matrix.c
+auxiliary.o: auxiliary.cpp matrix.h
+	${CC} ${CFLAGS} -c auxiliary.cpp
 
-auxiliary.o: auxiliary.c
-	${CC} ${CFLAGS} -c auxiliary.c `sdl-config --cflags`
+gui.o: gui.cpp
+	${CC} ${CFLAGS} -c gui.cpp `sdl-config --cflags`
+
+events.o: events.cpp
+	${CC} ${CFLAGS} -c events.cpp
+
+wiicursor.o: wiicursor.cpp matrix.h
+	${CC} ${CFLAGS} -c wiicursor.cpp
 
 release: demo README.txt TODO
-	tar -zcvf release.tar.gz demo README.txt TODO
+	tar -zcvf release.tar.gz demo README.txt

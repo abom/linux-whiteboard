@@ -1,6 +1,4 @@
-/* Copyright (C) 2007 L. Donnie Smith <cwiid@abstrakraft.org>
- * 
- *  (modified by Pere Negre)
+/* Copyright (C) 2008 Pere Negre                                                                                                                              
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -10,7 +8,7 @@
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.                                                                                                              
+ *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
  *  along with this program; if not, write to the Free Software
@@ -19,20 +17,20 @@
  */
 
 
-#ifndef  __WII_H__
-#define  __WII_H__
+#include "events.h"
 
 
-#include <cwiid.h>
-
-#include "matrix.h"
-#include "common.h"
-
-
-cwiid_wiimote_t* wii_connect(char *mac);
-int wii_disconnect(cwiid_wiimote_t* wiimote);
-// User may or may not care about IR and/or button events, hence the pointers
-int process_messages(cwiid_mesg const& mesg, point_t* ir_pos, uint16_t* buttons);
-
-
-#endif /* __WII_H__ */
+void fake_move(int x, int y)
+{
+    Display* display = XOpenDisplay(0);
+    XTestFakeMotionEvent(display, -1, x, y, 0);
+    //printf("MOUSE MOVE: %d %d\n", x, y);
+    XCloseDisplay(display);
+}
+void fake_button(int button, bool pressed)
+{
+    Display* display = XOpenDisplay(0);
+    XTestFakeButtonEvent(display, button, pressed, 0);
+    printf("MOUSE %d's state changed to %d\n", button, pressed);
+    XCloseDisplay(display);
+}

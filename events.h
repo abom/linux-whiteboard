@@ -17,34 +17,18 @@
  */
 
 
-#ifndef  __AUXILIARY_H__
-#define  __AUXILIARY_H__
+#ifndef  __EVENTS_H__
+#define  __EVENTS_H__
 
 
 #include <X11/extensions/XTest.h>
-#include <sys/time.h>
+#include <cstdio>
 
-#include "matrix.h"
-#include "gui.h"
-#include "common.h" // ASSERT
-
-
-matrix_t calculate_transformation_matrix(point_t const p_wii[4]);
-
-/* Returns how long the time has passed since last event in milliseconds
- * The first function doesn't use a static variable, it updates last_time every call
- * NOTE: Both must be called ONCE before using for accurate result */
-typedef unsigned long long delta_t_t;
-delta_t_t get_delta_t(delta_t_t& last_time);
-delta_t_t get_delta_t();
-
-/* This function transforms the provided infrared coordinates to screen's
- * coordinates using the transformation matrix built earlier */
-point_t infrared_data(point_t const& ir_pos_new, matrix_t const& transform);
+// Fakes mouse move and mouse buttons events
+void fake_move(int x, int y);
+void fake_button(int button, bool pressed);
+// Fakes key events
+// {to be implemented}
 
 
-unsigned int sqr(int n);
-unsigned int squared_distance(point_t const& p1, point_t const& p2);
-
-
-#endif /* __AUXILIARY_H__ */
+#endif /* __EVENTS_H__ */

@@ -29,13 +29,31 @@
     int const p = exp; \
     if (!p) \
     { \
-	printf ("Assertion '%s' FAILED at line %d of function %s in file %s: %s\n", #exp, __LINE__, __FUNCTION__, __FILE__, msg); \
+	printf ("\nAssertion '%s' FAILED at line '%d' of function '%s' in file '%s': '%s'.\n", #exp, __LINE__, __FUNCTION__, __FILE__, msg); \
 	assert (1); \
     } \
 }
 
-typedef struct {
+
+struct Point {
+    Point() :
+	x(0),
+	y(0)
+    { }
+    Point(int x, int y) :
+	x(x),
+	y(y)
+    { }
+
     int x, y;                                                                                                                                                 
-} point_t;
+};
+typedef Point point_t;
+
+
+// To say there's no IR event, or an IR_OFF event
+#define INVALID_IR_POS static_cast<int>(-1)
+// To say there's no button event
+#define INVALID_BUTTON_MSG_ID static_cast<unsigned int>(1337)
+
 
 #endif   /* __COMMON_H__ */
