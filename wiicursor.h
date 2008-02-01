@@ -55,13 +55,14 @@ public:
     point_t const& ir() const {
 	return m_ir;
     }
-private:
+
     bool click_and_drag() const {
 	return m_moved > sqr(m_move_tolerance);
     }
     bool right_click() const {
 	return m_waited > m_wait_tolerance;
     }
+private:
     bool not_finished() const {
 	return !m_program_finished && !m_thread_finished;
     }

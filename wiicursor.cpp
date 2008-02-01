@@ -32,7 +32,6 @@ void* thread_func(void* ptr) {
     // only at most one thread will be running at any given time
     get_delta_t();
 
-    data.m_thread_finished = false;
     while ( data.not_finished() ) {
 	if ( data.right_click() ) {
 	    fake_button(3, true);
@@ -45,18 +44,6 @@ void* thread_func(void* ptr) {
 	    break;
 	}
 	else data.m_moved = squared_distance(data.m_ir, data.m_ir_on_mouse_down);
-    }
-
-    // Finished at this point
-    if ( data.click_and_drag() ) {
-	fake_button(1, false);
-    }
-    else {
-	if ( !data.right_click() ) { // Left click
-	    fake_button(1, true);
-	    fake_button(1, false);
-	}
-	else fake_button(3, false); // Right click
     }
 
     printf("Thread is finished.\n");
@@ -117,6 +104,18 @@ void WiiCursor::process() {
 	    }
 	    if ( (ir_new.x == INVALID_IR_POS) && (ir_old.x != INVALID_IR_POS) ) { // MOUSE_UP
 		wii_data.finish_thread();
+
+		// Finished at this point
+		if ( wii_data.click_and_drag() ) {
+		    fake_button(1, false);
+		}
+		else {
+		    if ( !wii_data.right_click() ) { // Left click
+			fake_button(1, true);
+			fake_button(1, false);
+		    }
+		    else fake_button(3, false); // Right click
+		}
 	    }
 	}
     }
