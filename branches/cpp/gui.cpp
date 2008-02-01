@@ -133,15 +133,17 @@ int get_calibration_points(cwiid_wiimote_t* wiimote, point_t p_wii[4]) {
 
 	// Interface stuff
 	active_light_up = !active_light_up;
+	unsigned int const WII_VIEWING_AREA_RADIUS = 100;
 	point_t const screen_center( scr_size.x/2, scr_size.y/2 );
-	draw_square(surface, screen_center, 100, SDL_COLOR_WHITE); // Wiimote's viewing area
+	draw_square(surface, screen_center, WII_VIEWING_AREA_RADIUS, SDL_COLOR_WHITE); // Wiimote's viewing area
 
-	int const MAX_WII_X = 1020;
-	int const MAX_WII_Y = 760;
-	point_t const ir_pointer_center(
-	    (scr_size.x/2-100) + (int) ( ((float) ir_pos.x / (float) MAX_WII_X )*200),
-	    (scr_size.y/2+100) - (int) ( ((float) ir_pos.y / (float) MAX_WII_Y )*200) );
-	draw_square(surface, ir_pointer_center, 1, SDL_COLOR_WHITE); // Current IR pointer's location, from the Wiimote's eye
+	if (ir_pos.x != INVALID_IR_POS) { // There's no point in drawing an invalid IR pointer
+	    point_t const MAX_WII(1020, 760);
+	    point_t const ir_pointer_center(
+		    (screen_center.x-WII_VIEWING_AREA_RADIUS) + static_cast<int>( ((float) ir_pos.x / (float) MAX_WII.x)*(WII_VIEWING_AREA_RADIUS*2)),
+		    (screen_center.y+WII_VIEWING_AREA_RADIUS) - static_cast<int>( ((float) ir_pos.y / (float) MAX_WII.y)*(WII_VIEWING_AREA_RADIUS*2)) );
+	    draw_square(surface, ir_pointer_center, 1, SDL_COLOR_WHITE); // Current IR pointer's location, from the Wiimote's eye
+	}
 
 	point_t p_screen[4];
 	screen_corners(p_screen);
