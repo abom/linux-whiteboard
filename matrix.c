@@ -16,65 +16,65 @@
  *
  */
 
-
 #include "matrix.h"
 
-matrix_t *matrixNew(int h, int v)
+matrix_t *matrixNew (int h, int v)
 {
 	matrix_t *m;
-	m = malloc(sizeof(matrix_t));
-	m->d = malloc(h*v*sizeof(float));
+	m = malloc (sizeof (matrix_t));
+	m->d = malloc (h * v * sizeof (float));
 	m->h = h;
 	m->v = v;
 	return m;
 }
 
-void matrixFree(matrix_t *m)
+void matrixFree (matrix_t * m)
 {
-	free(m->d);
-	free(m);
+	free (m->d);
+	free (m);
 }
 
-float matrixGetElement(matrix_t *m, int i, int j)
+float matrixGetElement (matrix_t * m, int i, int j)
 {
-	return (*(m->d + i + j*m->h));
+	return (*(m->d + i + j * m->h));
 }
 
-void matrixSetElement(matrix_t *m, float e, int i, int j)
+void matrixSetElement (matrix_t * m, float e, int i, int j)
 {
-	*(m->d + i + j*m->h) = e;
+	*(m->d + i + j * m->h) = e;
 }
 
-void matrixPrint(matrix_t *m)
+void matrixPrint (matrix_t * m)
 {
-	int i,j;
-	for (j=0; j<m->v; j++)
+	int i, j;
+	for (j = 0; j < m->v; j++)
 	{
-		for (i=0; i<m->h; i++)
-			printf("%03.2f ",matrixGetElement(m,i,j));
-		printf("\n");
+		for (i = 0; i < m->h; i++)
+			printf ("%03.2f ", matrixGetElement (m, i, j));
+		printf ("\n");
 	}
 }
 
-
-static matrix_t *matrixCof1(matrix_t *m, int x, int y)
+static matrix_t *matrixCof1 (matrix_t * m, int x, int y)
 {
-	int i,j;
+	int i, j;
 	int xx = 0;
 	int yy = 0;
 
 	matrix_t *c;
 
-	c = matrixNew(m->h-1, m->v-1);
+	c = matrixNew (m->h - 1, m->v - 1);
 
-	for (i=0; i<m->h; i++)
+	for (i = 0; i < m->h; i++)
 	{
-		if (i==x) continue;
+		if (i == x)
+			continue;
 		yy = 0;
-		for (j=0; j<m->v; j++)
+		for (j = 0; j < m->v; j++)
 		{
-			if (j==y) continue;
-			matrixSetElement(c, matrixGetElement(m,i,j), xx, yy);
+			if (j == y)
+				continue;
+			matrixSetElement (c, matrixGetElement (m, i, j), xx, yy);
 			yy++;
 		}
 		xx++;
@@ -82,9 +82,7 @@ static matrix_t *matrixCof1(matrix_t *m, int x, int y)
 	return c;
 }
 
-
-
-float matrixDeterminant(matrix_t *m)
+float matrixDeterminant (matrix_t * m)
 {
 	int i;
 	float r;
@@ -92,117 +90,117 @@ float matrixDeterminant(matrix_t *m)
 	matrix_t *cofactor;
 
 	if ((m->h == 2) && (m->v == 2))
-		return (matrixGetElement(m,0,0)*matrixGetElement(m,1,1) -
-			matrixGetElement(m,0,1)*matrixGetElement(m,1,0));
-	
+		return (matrixGetElement (m, 0, 0) * matrixGetElement (m, 1, 1) -
+				matrixGetElement (m, 0, 1) * matrixGetElement (m, 1, 0));
+
 	// Determinant calculation: laplace formula
 
 	r = 0.0f;
-	for (i=0; i<m->h; i++)
+	for (i = 0; i < m->h; i++)
 	{
-		cofactor = matrixCof1(m,i,0);
-		if (i % 2) p=-1; else p=1;
-		r = r + matrixGetElement(m,i,0) * p * matrixDeterminant(cofactor);
-		matrixFree(cofactor);
+		cofactor = matrixCof1 (m, i, 0);
+		if (i % 2)
+			p = -1;
+		else
+			p = 1;
+		r = r + matrixGetElement (m, i, 0) * p * matrixDeterminant (cofactor);
+		matrixFree (cofactor);
 	}
 
 	return r;
 
 }
 
-
-static matrix_t *matrixCofactor(matrix_t *m)
+static matrix_t *matrixCofactor (matrix_t * m)
 {
-	int i,j;
+	int i, j;
 	float f;
 	int p;
 	matrix_t *cc, *c;
 
-	c = matrixNew(m->h,m->v);
+	c = matrixNew (m->h, m->v);
 
-	for (i=0; i<m->h; i++)
-		for (j=0; j<m->v; j++)
+	for (i = 0; i < m->h; i++)
+		for (j = 0; j < m->v; j++)
 		{
-			p = ((i+j) % 2) ? -1: 1;
-			cc = matrixCof1(m,i,j);
-			f = p*matrixDeterminant(cc);
-			matrixSetElement(c,f,i,j);
-			matrixFree(cc);
+			p = ((i + j) % 2) ? -1 : 1;
+			cc = matrixCof1 (m, i, j);
+			f = p * matrixDeterminant (cc);
+			matrixSetElement (c, f, i, j);
+			matrixFree (cc);
 		}
-	
+
 	return c;
 
 }
 
-
-matrix_t *matrixCopy(matrix_t *source)
+matrix_t *matrixCopy (matrix_t * source)
 {
-	int i,j;
+	int i, j;
 	matrix_t *r;
-	r = matrixNew(source->h,source->v);
-	
-	for(i=0; i<source->h; i++)
-		for(j=0; j<source->v; j++)
-			matrixSetElement(r, matrixGetElement(source,i,j), i, j);
+	r = matrixNew (source->h, source->v);
+
+	for (i = 0; i < source->h; i++)
+		for (j = 0; j < source->v; j++)
+			matrixSetElement (r, matrixGetElement (source, i, j), i, j);
 
 	return r;
 }
 
-
-void matrixTranspose(matrix_t *m)
+void matrixTranspose (matrix_t * m)
 {
-	int i,j;
+	int i, j;
 	matrix_t *c;
-	c = matrixCopy(m);
+	c = matrixCopy (m);
 
-	for (i=0; i<c->h; i++)
-		for(j=0; j<c->v; j++)
-			matrixSetElement(m, matrixGetElement(c,i,j), j, i);
+	for (i = 0; i < c->h; i++)
+		for (j = 0; j < c->v; j++)
+			matrixSetElement (m, matrixGetElement (c, i, j), j, i);
 
-	matrixFree(c);
+	matrixFree (c);
 }
 
-
-void matrixInverse(matrix_t *m)
+void matrixInverse (matrix_t * m)
 {
 	float f, det;
-	int i,j;
+	int i, j;
 	matrix_t *temp;
 
-	det = matrixDeterminant(m);
-	temp = matrixCofactor(m);
-	matrixTranspose(temp);
+	det = matrixDeterminant (m);
+	temp = matrixCofactor (m);
+	matrixTranspose (temp);
 
-	for(i=0; i<temp->h; i++)
-		for(j=0; j<temp->v; j++)
+	for (i = 0; i < temp->h; i++)
+		for (j = 0; j < temp->v; j++)
 		{
-			f = matrixGetElement(temp,i,j);
+			f = matrixGetElement (temp, i, j);
 			f = f / det;
-			matrixSetElement(m,f,i,j);
+			matrixSetElement (m, f, i, j);
 		}
-	
-	matrixFree(temp);
+
+	matrixFree (temp);
 
 }
 
-matrix_t *matrixMultiply(matrix_t *m, matrix_t *n)
+matrix_t *matrixMultiply (matrix_t * m, matrix_t * n)
 {
 	matrix_t *r;
-	int i,j,k;
+	int i, j, k;
 	float f;
-	
-	r = matrixNew(n->h,m->v);
 
-	for(j=0; j<r->v; j++)
+	r = matrixNew (n->h, m->v);
+
+	for (j = 0; j < r->v; j++)
 	{
-		for(k=0; k<n->h; k++)
+		for (k = 0; k < n->h; k++)
 		{
-			f=0.0f;
-			for(i=0; i<m->h; i++)
+			f = 0.0f;
+			for (i = 0; i < m->h; i++)
 			{
-				f = f + matrixGetElement(m,i,j) * matrixGetElement(n,k,i);
+				f = f + matrixGetElement (m, i, j) * matrixGetElement (n, k,
+																	   i);
 			}
-			matrixSetElement(r,f,k,j);
+			matrixSetElement (r, f, k, j);
 		}
 	}
 
@@ -257,5 +255,3 @@ int main()
 
 
 */
-
-

@@ -16,28 +16,24 @@
  *
  */
 
-
-
 #ifndef  __MATRIX_H__
 #define  __MATRIX_H__
-
 
 #include <stdio.h>
 #include <stdlib.h>
 
-
-typedef struct {
+typedef struct
+{
 	float *d;
-	int h,v;
+	int h, v;
 } matrix_t;
 
+matrix_t *matrixNew (int h, int v);
+void matrixFree (matrix_t * m);
+float matrixGetElement (matrix_t * m, int i, int j);
+void matrixSetElement (matrix_t * m, float e, int i, int j);
+void matrixInverse (matrix_t * m);
+matrix_t *matrixMultiply (matrix_t * m, matrix_t * n);
+void matrixPrint (matrix_t * m);
 
-matrix_t *   matrixNew(int h, int v);
-void         matrixFree(matrix_t *m);
-float        matrixGetElement(matrix_t *m, int i, int j);
-void         matrixSetElement(matrix_t *m, float e, int i, int j);
-void         matrixInverse(matrix_t *m);
-matrix_t *   matrixMultiply(matrix_t *m, matrix_t *n);
-void 	    matrixPrint(matrix_t *m);
-
-#endif		// __MATRIX_H__ 
+#endif // __MATRIX_H__

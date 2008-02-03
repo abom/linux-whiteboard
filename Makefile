@@ -23,3 +23,8 @@ auxiliary.o: auxiliary.c
 
 release: demo README.txt TODO
 	tar -zcvf release.tar.gz demo README.txt 
+
+indent:
+	indent -i4 -bl -bli0 -bap -sob -npsl -ts4 *.c *.h
+
+

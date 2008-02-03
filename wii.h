@@ -18,19 +18,14 @@
  *
  */
 
-
 #ifndef  __WII_H__
 #define  __WII_H__
-
 
 #include <cwiid.h>
 
 #include "common.h"
 
+cwiid_wiimote_t *wii_connect (char *mac);
+int wii_disconnect (cwiid_wiimote_t * wiimote);
 
-cwiid_wiimote_t* wii_connect(char *mac);
-int wii_disconnect(cwiid_wiimote_t* wiimote);
-
-
-#endif   /* __WII_H__ */
-
+#endif /* __WII_H__ */
