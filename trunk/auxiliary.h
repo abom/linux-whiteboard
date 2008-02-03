@@ -16,36 +16,32 @@
  *
  */
 
-
 #ifndef  __AUXILIARY_H__
 #define  __AUXILIARY_H__
-
 
 #include <SDL.h>
 #include <X11/extensions/XTest.h>
 #include <sys/time.h>
-#include <unistd.h> /* sleep */
+#include <unistd.h>				/* sleep */
 
 #include "matrix.h"
 #include "common.h"
 
-
 extern point_t ir_pos;
 extern point_t p_wii[4];
 
-point_t screen_size();
-int get_calibration_points();
+point_t screen_size ();
+int get_calibration_points ();
 
-void print_points();
+void print_points ();
 
-matrix_t *calculate_transformation_matrix();
+matrix_t *calculate_transformation_matrix ();
 
-void fake_move(int x, int y);
-void fake_button(int button, int is_press);
+void fake_move (int x, int y);
+void fake_button (int button, int is_press);
 
 /* In microseconds
  * NOTE: Must be called ONCE before using */
-unsigned long get_ticks();
+unsigned long get_ticks ();
 
-
-#endif   /* __AUXILIARY_H__ */
+#endif /* __AUXILIARY_H__ */

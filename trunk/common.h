@@ -21,9 +21,7 @@
 #ifndef  __COMMON_H__
 #define  __COMMON_H__
 
-
-#include <assert.h> // assert
-
+#include <assert.h>				// assert
 
 #define ASSERT(exp, msg) { \
     int const p = exp; \
@@ -34,8 +32,9 @@
     } \
 }
 
-typedef struct {
-    int x, y;                                                                                                                                                 
+typedef struct
+{
+	int x, y;
 } point_t;
 
-#endif   /* __COMMON_H__ */
+#endif /* __COMMON_H__ */
