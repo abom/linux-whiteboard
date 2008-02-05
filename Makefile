@@ -21,7 +21,7 @@ matrix.o: matrix.c common.h
 auxiliary.o: auxiliary.c
 	${CC} ${CFLAGS} -c auxiliary.c `sdl-config --cflags`
 
-release: demo README.txt TODO
+release: demo README.txt 
 	tar -zcvf release.tar.gz demo README.txt 
 
 indent:
