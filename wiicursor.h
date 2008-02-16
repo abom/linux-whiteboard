@@ -31,7 +31,7 @@
 #include "wii.h"
 
 
-// NOTE: The *only* reason this is not is wiimote_data is
+// NOTE: The *only* reason this is not in wiimote_data is
 // because pthread is a C library
 void* thread_func(void* ptr);
 

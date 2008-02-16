@@ -88,16 +88,25 @@ int process_messages(cwiid_mesg const& mesg, point_t* ir_pos, uint16_t* buttons)
 	case CWIID_MESG_IR:
 	    /* NOTE: We ONLY track the first point for now.
 	     * Because process() currently only handles 1 point.
-	     * As soon as we find the first valid point, stop. */
+	     * Returns the IR point which is closest to the old IR. */
 	    if (ir_pos) {
+		// Get valid IR events
+		std::vector<point_t> irs;
+		for (unsigned int i = 0; i != CWIID_IR_SRC_COUNT; ++i)
+		    if (mesg.ir_mesg.src[i].valid)
+			irs.push_back( point_t( mesg.ir_mesg.src[i].pos[CWIID_X], mesg.ir_mesg.src[i].pos[CWIID_Y] ) );
+		// Find the closest new IR
+		point_t const ir_old = *ir_pos;
 		ir_pos->x = INVALID_IR_POS; // No valid IR events if it
-					    // isn't set till the end of the loop
-		for (int i = 0; i != CWIID_IR_SRC_COUNT; ++i)
-		    if (mesg.ir_mesg.src[i].valid) {
-			ir_pos->x = mesg.ir_mesg.src[i].pos[CWIID_X];
-			ir_pos->y = mesg.ir_mesg.src[i].pos[CWIID_Y];
-			break;
+					    // isn't set till the end of the loop (meaning irs.size() == 0)
+		unsigned int closest_distance = static_cast<unsigned int>(-1); // Max uint value, actually sqr(closest)
+		for (unsigned int i = 0; i != irs.size(); ++i) {
+		    unsigned int const distance = squared_distance(irs[i], ir_old);
+		    if ( closest_distance > distance ) {
+			closest_distance = distance;
+			*ir_pos = irs[i]; // We can also use a 'closest' index here and update later
 		    }
+		}
 	    }
 	    break;
 	case CWIID_MESG_ERROR:

@@ -27,23 +27,27 @@ void* thread_func(void* ptr) {
     wiimote_data& data = *static_cast<wiimote_data*>(ptr);
     ASSERT(data.m_this_thread != 0, "This thread has become immortal, omfg!!!1");
 
-    // Sets up our timer
-    // NOTE: get_delta_t() uses a static variable, but I guarantee
-    // only at most one thread will be running at any given time
-    get_delta_t();
+    // Sets up the timer
+    delta_t_t last_time = 0;
+    get_delta_t(last_time);
 
     while ( data.not_finished() ) {
 	if ( data.right_click() ) {
 	    fake_button(3, true);
 	    break;
 	}
-	else data.m_waited += get_delta_t();
+	else data.m_waited += get_delta_t(last_time);
 
 	if ( data.click_and_drag() ) {
 	    fake_button(1, true);
 	    break;
 	}
-	else data.m_moved = squared_distance(data.m_ir, data.m_ir_on_mouse_down);
+	else {
+	    // WARNING: A locking mechanism is needed to avoid this hack
+	    // m_ir must not be read and updated at the same time in this function and in process()
+	    if (data.m_ir.x != INVALID_IR_POS)
+		data.m_moved = squared_distance(data.m_ir, data.m_ir_on_mouse_down);
+	}
     }
 
     printf("Thread is finished.\n");
@@ -74,7 +78,7 @@ void WiiCursor::process() {
 
     unsigned int const MOVE_TOLERANCE = 5;
     unsigned int const WAIT_TOLERANCE = 700;
-    point_t ir; // To avoid having to expose wiimote_data::ir
+    point_t ir(INVALID_IR_POS, 0); // To avoid having to expose wiimote_data::ir, and to make it obvious that we're sharing
     bool program_finished = false;
     wiimote_data wii_data(ir, MOVE_TOLERANCE, WAIT_TOLERANCE, program_finished);
 

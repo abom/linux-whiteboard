@@ -75,11 +75,11 @@ delta_t_t get_delta_t(delta_t_t& last_time) {
 
     return ret;
 }
-delta_t_t get_delta_t() {
+/*delta_t_t get_delta_t() {
     static delta_t_t last_time = 0;
 
     return get_delta_t(last_time);
-}
+}*/
 
 
 point_t infrared_data(point_t const& ir_pos_new, matrix_t const& transform) {
