@@ -68,6 +68,10 @@ int get_calibration_points(cwiid_wiimote_t* wiimote, point_t p_wii[4]) {
 
     SDL_FillRect(surface,0,black_color);
 
+    // Sets up the timer
+    delta_t_t last_time = 0;
+    get_delta_t(last_time);
+
     // These are taken from wiicursor.cpp, improvements are welcome
     delta_t_t waited = 0;
     unsigned int const MOVE_TOLERANCE = 25;
@@ -85,20 +89,19 @@ int get_calibration_points(cwiid_wiimote_t* wiimote, point_t p_wii[4]) {
 	    union cwiid_mesg* msgs = 0;
 	    while (!cwiid_get_mesg(wiimote, &msg_count, &msgs))
 		for (int i = 0; i != msg_count; ++i) {
-		    point_t ir_pos_new;
-		    process_messages(msgs[i], &ir_pos_new, 0);
-		    if ( (ir_pos_new.x != INVALID_IR_POS) && (ir_pos.x == INVALID_IR_POS) ) {
-			ir_on_mouse_down = ir_pos_new;
+		    point_t const ir_old = ir_pos;
+		    process_messages(msgs[i], &ir_pos, 0);
+		    if ( (ir_old.x == INVALID_IR_POS) && (ir_pos.x != INVALID_IR_POS) ) {
+			ir_on_mouse_down = ir_pos;
 			mouse_down = true;
-			get_delta_t(); // 'Sort of' resets the timer
+			get_delta_t(last_time); // 'Sort of' resets the timer
 			printf("MOUSE DOWN\n.");
 		    }
-		    if ( (ir_pos_new.x == INVALID_IR_POS) && (ir_pos.x != INVALID_IR_POS) ) {
+		    if ( (ir_old.x != INVALID_IR_POS) && (ir_pos.x == INVALID_IR_POS) ) {
 			mouse_down = false; // NOTE: Repetitive :<
 			waited = 0; // Written in 3 different places, what if it was in C++?
 			printf("MOUSE UP\n.");
 		    }
-		    ir_pos = ir_pos_new;
 		}
 	}
 
@@ -112,7 +115,7 @@ int get_calibration_points(cwiid_wiimote_t* wiimote, point_t p_wii[4]) {
 		printf("POINT %d calibrated.\n", active_point);
 	    }
 	    else {
-		waited += get_delta_t();
+		waited += get_delta_t(last_time);
 		printf("Mouse has been down for: %lld milliseconds.\n", waited);
 	    }
 

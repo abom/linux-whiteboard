@@ -26,12 +26,15 @@
 #include <cwiid.h>
 
 #include "matrix.h"
+#include "auxiliary.h"
 #include "common.h"
 
 
 cwiid_wiimote_t* wii_connect(char *mac);
 int wii_disconnect(cwiid_wiimote_t* wiimote);
 // User may or may not care about IR and/or button events, hence the pointers
+// WARNING: ir_pos MUST be preset to the old IR location, I used this
+// as an optimization: It used to have ir_pos and ir_old.
 int process_messages(cwiid_mesg const& mesg, point_t* ir_pos, uint16_t* buttons);
 
 

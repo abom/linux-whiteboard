@@ -32,11 +32,11 @@
 matrix_t calculate_transformation_matrix(point_t const p_wii[4]);
 
 /* Returns how long the time has passed since last event in milliseconds
- * The first function doesn't use a static variable, it updates last_time every call
+ * I removed the one with static variable, it's a bad practice
  * NOTE: Both must be called ONCE before using for accurate result */
 typedef unsigned long long delta_t_t;
 delta_t_t get_delta_t(delta_t_t& last_time);
-delta_t_t get_delta_t();
+//delta_t_t get_delta_t();
 
 /* This function transforms the provided infrared coordinates to screen's
  * coordinates using the transformation matrix built earlier */
