@@ -88,7 +88,7 @@ void WiiCursor::process() {
 	union cwiid_mesg* msgs = 0;
 	// NOTE: The API's been changed, I don't know what to do with the last argument
 	timespec tspec;
-	cwiid_get_mesg(m_wiimote, &msg_count, &msgs, &tspec);
+	cwiid_get_mesg(m_wiimote, &msg_count, &msgs);
 
 	for (int i = 0; i != msg_count; ++i) {
 	    point_t const ir_old = wii_data.ir();

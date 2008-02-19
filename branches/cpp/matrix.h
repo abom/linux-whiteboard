@@ -144,11 +144,8 @@ template<typename T>
 std::ostream& operator<<(std::ostream& out, Matrix<T> const& m) {
     unsigned int const n_elems = m.rows()*m.cols();
     T const*const elems = m.elems();
-    std::cout << "LAODING...\n";
-    for (unsigned int i = 0; i != n_elems; ++i) {
-	std::cout << elems[i] << std::endl;
+    for (unsigned int i = 0; i != n_elems; ++i)
 	out << elems[i] << " ";
-    }
 
     return out;
 }
@@ -156,11 +153,8 @@ template<typename T>
 std::istream& operator>>(std::istream& in, Matrix<T>& m) {
     // WARNING: Assuming the data is correct!
     T* elems = m.elems();
-    std::cout << "SAVING...\n";
-    while (in >> *elems) {
-	std::cout << *elems << std::endl;
+    while (in >> *elems)
 	++elems;
-    }
 
     return in;
 }
