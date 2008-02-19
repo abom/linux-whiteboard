@@ -89,7 +89,7 @@ int get_calibration_points(cwiid_wiimote_t* wiimote, point_t p_wii[4]) {
 	    union cwiid_mesg* msgs = 0;
 	    // NOTE: See wiicursor.cpp's NOTE about this
 	    timespec tspec;
-	    while (!cwiid_get_mesg(wiimote, &msg_count, &msgs, &tspec))
+	    while (!cwiid_get_mesg(wiimote, &msg_count, &msgs))
 		for (int i = 0; i != msg_count; ++i) {
 		    point_t const ir_old = ir_pos;
 		    process_messages(msgs[i], &ir_pos, 0);
