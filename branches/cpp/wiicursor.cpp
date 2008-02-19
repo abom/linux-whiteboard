@@ -21,7 +21,7 @@
 
 
 void* thread_func(void* ptr) {
-    printf("Thread has been created.\n");
+    //printf("Thread has been created.\n");
 
     ASSERT(ptr != 0, "No data has been passed along");
     wiimote_data& data = *static_cast<wiimote_data*>(ptr);
@@ -50,7 +50,7 @@ void* thread_func(void* ptr) {
 	}
     }
 
-    printf("Thread is finished.\n");
+    //printf("Thread is finished.\n");
 
     return 0;
 }
@@ -86,7 +86,9 @@ void WiiCursor::process() {
     while (!program_finished) {
 	int msg_count = 0;
 	union cwiid_mesg* msgs = 0;
-	cwiid_get_mesg(m_wiimote, &msg_count, &msgs);
+	// NOTE: The API's been changed, I don't know what to do with the last argument
+	timespec tspec;
+	cwiid_get_mesg(m_wiimote, &msg_count, &msgs, &tspec);
 
 	for (int i = 0; i != msg_count; ++i) {
 	    point_t const ir_old = wii_data.ir();

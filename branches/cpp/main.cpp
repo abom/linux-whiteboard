@@ -40,15 +40,25 @@ int main(int argc,char *argv[])
 
 	cwiid_wiimote_t* wiimote = wii_connect(mac);
 	if (wiimote) {
-	    point_t p_wii[4];
-	    if (!get_calibration_points(wiimote, p_wii)) {
-		print_points(p_wii);
-		matrix_t const transform = calculate_transformation_matrix(p_wii);
-		std::auto_ptr<WiiCursor> const wc ( new WiiCursor(wiimote, transform) );
+	    bool transform_matrix_correct = false;
+	    matrix_t transform(3, 3); // NOTE: We shouldn't have to know about its dimensions :-s
 
+	    if ( !load_config(transform) ) {
+		point_t p_wii[4];
+		if ( !get_calibration_points(wiimote, p_wii) ) {
+		    print_points(p_wii);
+		    transform = calculate_transformation_matrix(p_wii);
+		    save_config(transform);
+		    transform_matrix_correct = true;
+		}
+		else fprintf(stderr, "User escaped or there was an error while calibrating the Wii.\n");
+	    }
+	    else transform_matrix_correct = true;
+
+	    if (transform_matrix_correct) {
+		std::auto_ptr<WiiCursor> const wc ( new WiiCursor(wiimote, transform) );
 		wc->process(); // The main loop
 	    }
-	    else fprintf(stderr, "User escaped or there was an error while calibrating the Wii.\n");
 
 	    if (!wii_disconnect(wiimote))
 		return 0;

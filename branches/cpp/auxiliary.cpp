@@ -109,3 +109,37 @@ unsigned int sqr(int n) {
 unsigned int squared_distance(point_t const& p1, point_t const& p2) {
     return sqr(p1.x - p2.x) + sqr(p1.y - p2.y);
 }
+
+
+/* NOTE: Not necessary because load_config is going to fail if 'false' anyway */
+/* bool config_file_exists() {
+    // WARNING: Actually I only check whether the file can be opened for reading,
+    // it doesn't return the correct error message if it was caused by something
+    // else (permissions, I/O errors, etc)
+    std::ifstream in(".whiteboardrc"); // WARNING: Hard-coding the file for now
+    return in.is_open();
+} */
+bool load_config(matrix_t& transform) {
+    std::ifstream in(".whiteboardrc"); // WARNING: Hard-coding the file for now
+    if ( in.is_open() ) {
+	in >> transform;
+
+	std::cout << "Finished loading configurations" << std::endl;
+	return true;
+    }
+
+    std::cout << "Loading configuration file failed" << std::endl;
+    return false;
+}
+bool save_config(matrix_t const& transform) {
+    std::ofstream out(".whiteboardrc"); // WARNING: Hard-coding the file for now
+    if ( out.is_open() ) {
+	out << transform;
+
+	std::cout << "Finished saving configurations" << std::endl;
+	return true;
+    }
+
+    std::cout << "Saving configuration file failed" << std::endl;
+    return false;
+}
