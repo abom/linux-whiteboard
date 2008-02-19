@@ -22,6 +22,7 @@
 
 
 #include <vector>
+#include <iostream>
 
 #include "common.h" // ASSERT
 
@@ -31,6 +32,7 @@ template<typename T>
 struct Matrix {
 public:
     Matrix(unsigned int rows, unsigned int cols);
+    Matrix(Matrix<T> const& m);
 
     T* operator[](unsigned int rows);
     T const* operator[](unsigned int rows) const;
@@ -43,8 +45,11 @@ public:
     unsigned int rows() const;
     unsigned int cols() const;
 private:
-    unsigned int const m_rows;
-    unsigned int const m_cols;
+    // WARNING: The two below are *supposed* to be constants,
+    // if not for the copy constructor
+    unsigned int m_rows;
+    unsigned int m_cols;
+
     std::vector<T> m_e;
 };
 
@@ -69,6 +74,12 @@ Matrix<T>::Matrix(unsigned int rows, unsigned int cols) :
     m_e( rows*cols )
 {
     ASSERT( (rows != 0) && (cols != 0), "Invalid rows/cols number." );
+}
+template<typename T>
+Matrix<T>::Matrix(Matrix<T> const& m) {
+    m_rows = m.rows();
+    m_cols = m.cols();
+    m_e.assign( m.elems(), m.elems() + m.rows()*m.cols() );
 }
 
 
@@ -127,6 +138,31 @@ unsigned int Matrix<T>::cols() const {
 template<typename T>
 Matrix<T> operator*(Matrix<T> const m1, Matrix<T> const m2) {
     return matrixMul(m1, m2);
+}
+
+template<typename T>
+std::ostream& operator<<(std::ostream& out, Matrix<T> const& m) {
+    unsigned int const n_elems = m.rows()*m.cols();
+    T const*const elems = m.elems();
+    std::cout << "LAODING...\n";
+    for (unsigned int i = 0; i != n_elems; ++i) {
+	std::cout << elems[i] << std::endl;
+	out << elems[i] << " ";
+    }
+
+    return out;
+}
+template<typename T>
+std::istream& operator>>(std::istream& in, Matrix<T>& m) {
+    // WARNING: Assuming the data is correct!
+    T* elems = m.elems();
+    std::cout << "SAVING...\n";
+    while (in >> *elems) {
+	std::cout << *elems << std::endl;
+	++elems;
+    }
+
+    return in;
 }
 
 

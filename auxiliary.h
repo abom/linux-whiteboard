@@ -23,6 +23,8 @@
 
 #include <X11/extensions/XTest.h>
 #include <sys/time.h>
+#include <iostream>
+#include <fstream>
 
 #include "matrix.h"
 #include "gui.h"
@@ -45,6 +47,12 @@ point_t infrared_data(point_t const& ir_pos_new, matrix_t const& transform);
 
 unsigned int sqr(int n);
 unsigned int squared_distance(point_t const& p1, point_t const& p2);
+
+//bool config_file_exists();
+/* Isn't it obvious? :)
+ * Returns true on success */
+bool load_config(matrix_t& transform);
+bool save_config(matrix_t const& transform);
 
 
 #endif /* __AUXILIARY_H__ */
