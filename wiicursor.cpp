@@ -44,6 +44,7 @@ void* thread_func(void* ptr) {
 	}
 	else {
 	    // WARNING: A locking mechanism is needed to avoid this hack
+	    // data.m_ir.x should never be invalid
 	    // m_ir must not be read and updated at the same time in this function and in process()
 	    if (data.m_ir.x != INVALID_IR_POS)
 		data.m_moved = squared_distance(data.m_ir, data.m_ir_on_mouse_down);

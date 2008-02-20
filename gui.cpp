@@ -170,6 +170,7 @@ int get_calibration_points(cwiid_wiimote_t* wiimote, point_t p_wii[4]) {
     printf("Quitting SDL..");
     SDL_Quit();
     printf("Done\n");
+    print_points(p_wii);
 
     return 0;
 }

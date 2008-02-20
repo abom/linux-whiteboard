@@ -20,6 +20,14 @@
 #include "auxiliary.h"
 
 
+void show_help() {
+    printf( "\n"
+	    "Usage: whiteboard [-h] [-c] [-mADDRESS]\n"
+	    "	-h: This message.\n"
+	    "	-c: Forces (re)calibrating the Wiimote.\n"
+	    "	-m: Forces using the specified MAC address ADDRESS.\n" );
+}
+
 matrix_t calculate_transformation_matrix(point_t const p_wii[4]) {
     printf("Calculating coefficients... ");
 
@@ -76,10 +84,10 @@ delta_t_t get_delta_t(delta_t_t& last_time) {
     return ret;
 }
 /*delta_t_t get_delta_t() {
-    static delta_t_t last_time = 0;
+  static delta_t_t last_time = 0;
 
-    return get_delta_t(last_time);
-}*/
+  return get_delta_t(last_time);
+  }*/
 
 
 point_t infrared_data(point_t const& ir_pos_new, matrix_t const& transform) {
@@ -111,16 +119,11 @@ unsigned int squared_distance(point_t const& p1, point_t const& p2) {
 }
 
 
-/* NOTE: Not necessary because load_config is going to fail if 'false' anyway */
-/* bool config_file_exists() {
-    // WARNING: Actually I only check whether the file can be opened for reading,
-    // it doesn't return the correct error message if it was caused by something
-    // else (permissions, I/O errors, etc)
-    std::ifstream in(".whiteboardrc"); // WARNING: Hard-coding the file for now
-    return in.is_open();
-} */
+std::string config_file_path() {
+    return std::string( getenv("HOME") ) + "/.whiteboardrc";
+}
 bool load_config(matrix_t& transform) {
-    std::ifstream in(".whiteboardrc"); // WARNING: Hard-coding the file for now
+    std::ifstream in( config_file_path().c_str() );
     if ( in.is_open() ) {
 	in >> transform;
 
@@ -132,7 +135,7 @@ bool load_config(matrix_t& transform) {
     return false;
 }
 bool save_config(matrix_t const& transform) {
-    std::ofstream out(".whiteboardrc"); // WARNING: Hard-coding the file for now
+    std::ofstream out( config_file_path().c_str() );
     if ( out.is_open() ) {
 	out << transform;
 
@@ -142,4 +145,25 @@ bool save_config(matrix_t const& transform) {
 
     std::cout << "Saving configuration file failed" << std::endl;
     return false;
+}
+
+bool process_options(int argc,char *argv[], OptionStates& opt_states) {
+    // NOTE: Only accepts short options for now
+    int opt = 0;
+    while ( (opt = getopt(argc, argv, "cm:h")) != -1 ) {
+	switch (opt) {
+	    case 'c':
+		opt_states.will_calibrate = true;
+		break;
+	    case 'm':
+		strncpy(opt_states.mac, optarg, sizeof(opt_states.mac)); // WARNING: Not tested
+		break;
+	    case 'h':
+		opt_states.show_help = true;
+	    default:
+		break;
+	}
+    }
+
+    return true; // NOTE: Always returns true for now
 }

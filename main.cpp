@@ -26,27 +26,21 @@
 
 int main(int argc,char *argv[])
 {
-    if (argc < 3)
+    OptionStates opt_states;
+    if ( process_options(argc, argv, opt_states) && !opt_states.show_help ) // WARNING: May not run correctly on some compilers
     {
 	/* Size */
 	point_t const scr_size = screen_size();
 	printf("Screen dimentions: %dx%d\n", scr_size.x, scr_size.y);
-	/* MAC address - We must make a copy since wii_connect may change it
-	 * '#' means any address and MAC addresses are exactly 17 characters */
-	char mac[18] = {'#'};
-	if (argc == 2)
-	    strncpy(mac, argv[1], sizeof(mac));
-	printf("MAC address: %s\n", mac);
 
-	cwiid_wiimote_t* wiimote = wii_connect(mac);
+	cwiid_wiimote_t* wiimote = wii_connect(opt_states.mac);
 	if (wiimote) {
 	    bool transform_matrix_correct = false;
 	    matrix_t transform(3, 3); // NOTE: We shouldn't have to know about its dimensions :-s
 
-	    if ( !load_config(transform) ) {
+	    if ( !load_config(transform) || opt_states.will_calibrate ) {
 		point_t p_wii[4];
 		if ( !get_calibration_points(wiimote, p_wii) ) {
-		    print_points(p_wii);
 		    transform = calculate_transformation_matrix(p_wii);
 		    save_config(transform);
 		    transform_matrix_correct = true;
@@ -66,7 +60,7 @@ int main(int argc,char *argv[])
 	}
 	else fprintf(stderr, "Error on wiimote connect\n");
     }
-    else printf("ERROR - Usage: demo [MAC-address]\n");
+    else show_help();
 
     return -1;
 }
