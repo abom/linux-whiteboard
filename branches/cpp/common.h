@@ -54,6 +54,8 @@ typedef Point point_t;
 #define INVALID_IR_POS static_cast<int>(-1)
 // To say there's no button event
 #define INVALID_BUTTON_MSG_ID static_cast<unsigned int>(1337)
+// To say the MAC address is invalid
+#define INVALID_MAC_ADDRESS static_cast<char>('#')
 
 
 #endif   /* __COMMON_H__ */

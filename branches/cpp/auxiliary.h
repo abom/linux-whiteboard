@@ -25,11 +25,29 @@
 #include <sys/time.h>
 #include <iostream>
 #include <fstream>
+#include <string>
+#include <cstdlib>
+#include <unistd.h>
 
 #include "matrix.h"
 #include "gui.h"
 #include "common.h" // ASSERT
 
+
+struct OptionStates {
+    char mac[18];
+    bool will_calibrate;
+    bool show_help;
+
+    OptionStates() :
+	will_calibrate(false),
+	show_help(false)
+    {
+	mac[0] = INVALID_MAC_ADDRESS;
+    }
+};
+
+void show_help();
 
 matrix_t calculate_transformation_matrix(point_t const p_wii[4]);
 
@@ -48,11 +66,14 @@ point_t infrared_data(point_t const& ir_pos_new, matrix_t const& transform);
 unsigned int sqr(int n);
 unsigned int squared_distance(point_t const& p1, point_t const& p2);
 
-//bool config_file_exists();
+std::string config_file_path();
 /* Isn't it obvious? :)
  * Returns true on success */
 bool load_config(matrix_t& transform);
 bool save_config(matrix_t const& transform);
+
+/* Returns true on success */
+bool process_options(int argc,char *argv[], OptionStates& opt_states);
 
 
 #endif /* __AUXILIARY_H__ */

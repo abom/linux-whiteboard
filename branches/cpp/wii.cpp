@@ -41,7 +41,7 @@ cwiid_wiimote_t* wii_connect(char *mac)
     /* cwiid_set_err(err); */
 
     bdaddr_t bdaddr; /* bluetooth device address */
-    if (mac[0] == '#')
+    if (mac[0] == INVALID_MAC_ADDRESS)
 	bdaddr = *BDADDR_ANY;
     else
 	str2ba(mac, &bdaddr);
