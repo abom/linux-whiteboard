@@ -1,6 +1,10 @@
 Linux Electronic Whiteboard with Wiimote
 ----------------------------------------
 
+<vanhtu1987: This needs updating>
+ - Run 'autoreconf -i'
+ - Run './configure && make' to compile and 'make install' to install
+
 If using Ubuntu 7.10 (gutsy gibbon):
 
     * First, make sure bluetooth is working
