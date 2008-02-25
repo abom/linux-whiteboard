@@ -60,6 +60,9 @@ void draw_calibration_points(SDL_Surface* surface, point_t const points[4], int 
 }
 // NOTE: Needs MUCH improvement, it's too long and monolithic
 int get_calibration_points(cwiid_wiimote_t* wiimote, point_t p_wii[4]) {
+    // Sets up the Wiimote
+    cwiid_enable(wiimote, CWIID_FLAG_MESG_IFC | CWIID_FLAG_NONBLOCK);
+
     point_t const scr_size = screen_size();
 
     SDL_Init(SDL_INIT_VIDEO);
@@ -171,6 +174,9 @@ int get_calibration_points(cwiid_wiimote_t* wiimote, point_t p_wii[4]) {
     SDL_Quit();
     printf("Done\n");
     print_points(p_wii);
+
+    // Resets the Wiimote to its original state
+    cwiid_disable(wiimote, CWIID_FLAG_MESG_IFC);
 
     return 0;
 }
