@@ -84,8 +84,8 @@ int get_calibration_points(cwiid_wiimote_t* wiimote, point_t p_wii[4]) {
     // ...
     int active_light_up  = 0;
     point_t ir_pos(INVALID_IR_POS, 0);
-    int active_point = 0;
-    while (active_point != 4) {
+    int active_point = 0, error = 0;
+    while ( (active_point != 4) && !error ) {
 	// IR events
 	{   
 	    int msg_count = 0;
@@ -137,7 +137,7 @@ int get_calibration_points(cwiid_wiimote_t* wiimote, point_t p_wii[4]) {
 
 	Uint8 const*const k = SDL_GetKeyState(0);
 	if (k[SDLK_ESCAPE])
-	    return -1;
+	    error = 1;
 
 	// Interface stuff
 	active_light_up = !active_light_up;
@@ -175,10 +175,7 @@ int get_calibration_points(cwiid_wiimote_t* wiimote, point_t p_wii[4]) {
     printf("Done\n");
     print_points(p_wii);
 
-    // Resets the Wiimote to its original state
-    cwiid_disable(wiimote, CWIID_FLAG_MESG_IFC);
-
-    return 0;
+    return error;
 }
 
 

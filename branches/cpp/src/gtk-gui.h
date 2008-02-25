@@ -33,7 +33,7 @@
 #include "wiicursor.h"
 
 
-// NOTE: GUIs stuff are allowed to be a bit messy since they are disposable
+// NOTE: GUI stuff is allowed to be a bit messy since they are disposable
 
 // NOTE: The *only* reason this is not in wiimote_data is
 // because pthread is a C library
@@ -52,6 +52,9 @@ private:
     void toggle_wiimote_clicked();
     void toggle_activation_clicked();
     void calibrate_clicked();
+    void status_icon_clicked();
+    void status_icon_popup(guint button, guint32 activate_time);
+    void sim_quit_clicked();
     void start_wii_thread();
     void finish_wii_thread();
     /* Helpers */
@@ -71,6 +74,13 @@ private:
     Gtk::Button* m_gtk_toggle_wiimote;
     Gtk::Button* m_gtk_toggle_activation;
     Gtk::Button* m_gtk_calibrate;
+    Glib::RefPtr<Gtk::StatusIcon> m_gtk_status_icon;
+    Gtk::Menu* m_gtk_status_icon_menu;
+    Gtk::MenuItem* m_gtk_sim_toggle_wiimote;
+    Gtk::MenuItem* m_gtk_sim_toggle_activation;
+    Gtk::MenuItem* m_gtk_sim_calibrate;
+    Gtk::MenuItem* m_gtk_sim_quit;
+    Gtk::MessageDialog* m_gtk_msg_connect_wiimote;
     /* Data */
     bool m_transform_matrix_correct;
     matrix_t m_transform;

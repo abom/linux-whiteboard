@@ -77,6 +77,7 @@ void wiimote_data::finish_thread() {
 
 void WiiCursor::process(bool& running) {
     // Sets up the Wiimote
+    cwiid_enable(m_wiimote, CWIID_FLAG_MESG_IFC);
     cwiid_disable(m_wiimote, CWIID_FLAG_NONBLOCK);
 
     unsigned int const MOVE_TOLERANCE = 5;
