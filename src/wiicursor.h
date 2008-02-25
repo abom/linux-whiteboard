@@ -38,17 +38,17 @@ void* thread_func(void* ptr);
 
 class wiimote_data {
 public:
-    wiimote_data(point_t const& ir, unsigned int const move_tolerance, delta_t_t const wait_tolerance, bool const& program_finished) :
+    wiimote_data(point_t const& ir, unsigned int const move_tolerance, delta_t_t const wait_tolerance, bool const& running) :
 	m_ir(ir),
 	m_move_tolerance(move_tolerance),
 	m_wait_tolerance(wait_tolerance),
-	m_program_finished(program_finished)
+	m_running(running)
     {
 	set_data_at_thread_start();
 	set_data_at_thread_finish();
     }
 
-    friend void* thread_func(void* ptr);
+    friend void* thread_func(void* ptr); // NOTE: Friends can see your private :-<
     void start_thread(point_t const& ir_on_mouse_down);
     void finish_thread();
 
@@ -63,16 +63,16 @@ public:
 	return m_waited > m_wait_tolerance;
     }
 private:
-    bool not_finished() const {
-	return !m_program_finished && !m_thread_finished;
+    bool running() const {
+	return m_running && m_thread_running;
     }
     void set_data_at_thread_start() {
 	m_waited = 0;
 	m_moved = 0;
-	m_thread_finished = false;
+	m_thread_running = true;
     }
     void set_data_at_thread_finish() {
-	m_thread_finished = true;
+	m_thread_running = false;
 	m_this_thread = 0;
     }
 
@@ -80,13 +80,13 @@ private:
     point_t m_ir_on_mouse_down;
     delta_t_t m_waited;
     unsigned int m_moved;
-    bool m_thread_finished;
+    bool m_thread_running;
     pthread_t m_this_thread;
 
     unsigned int const m_move_tolerance;
     delta_t_t const m_wait_tolerance;
 
-    bool const& m_program_finished;
+    bool const& m_running;
 };
 
 
@@ -96,7 +96,7 @@ public:
 	m_wiimote(wiimote),
 	m_transform(transform)
     { }
-    void process();
+    void process(bool& running);
 private:
     cwiid_wiimote_t* const m_wiimote;
     matrix_t const m_transform;

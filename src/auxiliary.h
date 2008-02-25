@@ -21,7 +21,6 @@
 #define  __AUXILIARY_H__
 
 
-#include <X11/extensions/XTest.h>
 #include <sys/time.h>
 #include <iostream>
 #include <fstream>
@@ -33,6 +32,10 @@
 #include "gui.h"
 #include "common.h" // ASSERT
 
+// NOTE: Due to glibmm, it must be included after glibmm.h. Try moving to the top.
+// Yeah, this is bad.
+#include <X11/extensions/XTest.h>
+
 
 struct OptionStates {
     char mac[18];
@@ -42,9 +45,7 @@ struct OptionStates {
     OptionStates() :
 	will_calibrate(false),
 	show_help(false)
-    {
-	mac[0] = INVALID_MAC_ADDRESS;
-    }
+    { }
 };
 
 void show_help();

@@ -31,7 +31,7 @@ void* thread_func(void* ptr) {
     delta_t_t last_time = 0;
     get_delta_t(last_time);
 
-    while ( data.not_finished() ) {
+    while ( data.running() ) {
 	if ( data.right_click() ) {
 	    fake_button(3, true);
 	    break;
@@ -60,10 +60,11 @@ void wiimote_data::start_thread(point_t const& ir_on_mouse_down) {
     m_ir_on_mouse_down = ir_on_mouse_down;
     set_data_at_thread_start();
     // NOTE: The order of the lines is important, don't mess with it
+    // NOTE: Not checking for any return values here
     pthread_create(&m_this_thread, 0, &thread_func, this);
 }
 void wiimote_data::finish_thread() {
-    if (!m_thread_finished) {
+    if (m_thread_running) {
 	ASSERT(m_this_thread != 0, "Thread ID should NOT be 0 if its data tells us it hasn't finished");
 
 	pthread_t const this_thread = m_this_thread; // Backs up the thread ID before it gets cleared, not elegant
@@ -74,17 +75,16 @@ void wiimote_data::finish_thread() {
 }
 
 
-void WiiCursor::process() {
+void WiiCursor::process(bool& running) {
+    // Sets up the Wiimote
     cwiid_disable(m_wiimote, CWIID_FLAG_NONBLOCK);
 
     unsigned int const MOVE_TOLERANCE = 5;
     unsigned int const WAIT_TOLERANCE = 700;
     point_t ir(INVALID_IR_POS, 0); // To avoid having to expose wiimote_data::ir, and to make it obvious that we're sharing
-    bool program_finished = false;
-    wiimote_data wii_data(ir, MOVE_TOLERANCE, WAIT_TOLERANCE, program_finished);
+    wiimote_data wii_data(ir, MOVE_TOLERANCE, WAIT_TOLERANCE, running);
 
-    program_finished = false;
-    while (!program_finished) {
+    while (running) {
 	int msg_count = 0;
 	union cwiid_mesg* msgs = 0;
 	// NOTE: The API's been changed, I don't know what to do with the last argument
@@ -98,7 +98,7 @@ void WiiCursor::process() {
 	    point_t const& ir_new = ir; // Readability
 
 	    if (button != INVALID_BUTTON_MSG_ID) {
-		program_finished = true;
+		running = false;
 		break; // Quits early
 	    }
 

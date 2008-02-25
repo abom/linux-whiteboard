@@ -127,11 +127,11 @@ bool load_config(matrix_t& transform) {
     if ( in.is_open() ) {
 	in >> transform;
 
-	std::cout << "Finished loading configurations" << std::endl;
+	printf("Finished loading configurations\n");
 	return true;
     }
 
-    std::cout << "Loading configuration file failed" << std::endl;
+    fprintf(stderr, "Loading configuration file failed\n");
     return false;
 }
 bool save_config(matrix_t const& transform) {
@@ -139,11 +139,11 @@ bool save_config(matrix_t const& transform) {
     if ( out.is_open() ) {
 	out << transform;
 
-	std::cout << "Finished saving configurations" << std::endl;
+	printf("Finished saving configurations\n");
 	return true;
     }
 
-    std::cout << "Saving configuration file failed" << std::endl;
+    fprintf(stderr, "Saving configuration file failed\n");
     return false;
 }
 

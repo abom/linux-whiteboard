@@ -41,7 +41,7 @@ cwiid_wiimote_t* wii_connect(char *mac)
     /* cwiid_set_err(err); */
 
     bdaddr_t bdaddr; /* bluetooth device address */
-    if (mac[0] == INVALID_MAC_ADDRESS)
+    if (!mac)
 	bdaddr = *BDADDR_ANY;
     else
 	str2ba(mac, &bdaddr);
@@ -54,7 +54,6 @@ cwiid_wiimote_t* wii_connect(char *mac)
 
 	set_led_state(wiimote, 1); /* Notifies the user */
 	set_rpt_mode(wiimote, CWIID_RPT_IR | CWIID_RPT_BTN);
-	cwiid_enable(wiimote, CWIID_FLAG_MESG_IFC | CWIID_FLAG_NONBLOCK);
 
 	return wiimote;
     }
