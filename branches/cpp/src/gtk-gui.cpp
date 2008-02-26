@@ -45,7 +45,6 @@ MainGtkWindow::MainGtkWindow(int argc,char *argv[]) :
     m_gtk_status_icon( Gtk::StatusIcon::create("whiteboard-status-icon") ),
     m_gtk_status_icon_menu(0),
     m_gtk_sim_quit(0),
-    m_gtk_msg_connect_wiimote(0),
     m_transform_matrix_correct(false),
     m_transform(3, 3), // NOTE: We shouldn't have to know about its dimensions :-s . New class?.
     m_wiimote(0), // Also tells us whether the Wiimote has been connected or not
@@ -55,8 +54,7 @@ MainGtkWindow::MainGtkWindow(int argc,char *argv[]) :
     // WARNING: Not checking for *any* return values here
 
     /* GUI */
-    char const*const GLADE_MAIN_WINDOW_PATH = "main-window.glade";
-    Glib::RefPtr<Gnome::Glade::Xml> refXml = Gnome::Glade::Xml::create(GLADE_MAIN_WINDOW_PATH);
+    Glib::RefPtr<Gnome::Glade::Xml> refXml = Gnome::Glade::Xml::create( g_build_filename(DATADIR, "main-window.glade", 0) );
 
     refXml->get_widget("main-window", m_gtk_main_window);
     refXml->get_widget("output", m_gtk_output);
@@ -68,7 +66,6 @@ MainGtkWindow::MainGtkWindow(int argc,char *argv[]) :
     refXml->get_widget("sim-toggle-activation", m_gtk_sim_toggle_activation);
     refXml->get_widget("sim-calibrate", m_gtk_sim_calibrate);
     refXml->get_widget("sim-quit", m_gtk_sim_quit);
-    refXml->get_widget("msg-connect-wiimote", m_gtk_msg_connect_wiimote);
 
     m_gtk_toggle_wiimote->signal_clicked().connect(sigc::mem_fun(*this, &MainGtkWindow::toggle_wiimote_clicked));
     m_gtk_toggle_activation->signal_clicked().connect(sigc::mem_fun(*this, &MainGtkWindow::toggle_activation_clicked));
@@ -82,7 +79,7 @@ MainGtkWindow::MainGtkWindow(int argc,char *argv[]) :
 
     m_gtk_output->set_buffer(m_output_buffer);
 
-    m_gtk_status_icon->set_from_file("icon.svg");
+    m_gtk_status_icon->set_from_file( g_build_filename(DATADIR, "icon.svg", 0) );
 
     /* Data */
     if ( load_config(m_transform) ) {
