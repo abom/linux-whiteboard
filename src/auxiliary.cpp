@@ -121,7 +121,7 @@ unsigned int squared_distance(point_t const& p1, point_t const& p2) {
 
 std::string config_file_path() {
     // WARNING: Unsafe, one should use something like g_build_filename() and g_get_home_dir()
-    return std::string(getenv("$HOME")) + "/.whiteboardrc";
+    return std::string(getenv("HOME")) + "/.whiteboardrc";
 }
 bool load_config(matrix_t& transform) {
     std::ifstream in( config_file_path().c_str() );
