@@ -52,9 +52,11 @@ MainGtkWindow::MainGtkWindow(int argc,char *argv[]) :
     m_thread_running(false)
 {
     // WARNING: Not checking for *any* return values here
+    // WARNING: Constructing paths this way is not safe/portable, but I don't want to bother with g_free()
 
     /* GUI */
-    Glib::RefPtr<Gnome::Glade::Xml> refXml = Gnome::Glade::Xml::create( g_build_filename(DATADIR, "main-window.glade", 0) );
+    std::string const DATA_DIR(DATADIR);
+    Glib::RefPtr<Gnome::Glade::Xml> refXml = Gnome::Glade::Xml::create(DATA_DIR + "/main-window.glade");
 
     refXml->get_widget("main-window", m_gtk_main_window);
     refXml->get_widget("output", m_gtk_output);
@@ -79,7 +81,7 @@ MainGtkWindow::MainGtkWindow(int argc,char *argv[]) :
 
     m_gtk_output->set_buffer(m_output_buffer);
 
-    m_gtk_status_icon->set_from_file( g_build_filename(DATADIR, "icon.svg", 0) );
+    m_gtk_status_icon->set_from_file(DATA_DIR + "/icon.svg");
 
     /* Data */
     if ( load_config(m_transform) ) {
