@@ -25,6 +25,7 @@
 #include <libglademm.h>
 #include <pthread.h>
 #include <memory>
+#include <string>
 
 #include "common.h"
 #include "matrix.h"
@@ -80,7 +81,6 @@ private:
     Gtk::MenuItem* m_gtk_sim_toggle_activation;
     Gtk::MenuItem* m_gtk_sim_calibrate;
     Gtk::MenuItem* m_gtk_sim_quit;
-    Gtk::MessageDialog* m_gtk_msg_connect_wiimote;
     /* Data */
     bool m_transform_matrix_correct;
     matrix_t m_transform;

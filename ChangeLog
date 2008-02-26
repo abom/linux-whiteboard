@@ -1,4 +1,7 @@
 2008/02/25:
+ - Icons and data files should now go into appropriate places when properly installed.
+
+2008/02/25:
  - Added an icon in the notification area.
  - Needs more polishing.
 
