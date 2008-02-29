@@ -26,3 +26,15 @@ For all users:
 To install whiteboard, run this command as root:
 {{{
 make install
+}}}
+
+---- 
+
+To build a Debian/Ubuntu package:
+  * Download the appropriate 'debian' tarball (currently only Ubuntu Hardy and Ubuntu Gutsy are supported, users of other systems may have to modify it a bit).
+  * Navigate and extract it to the program's root directory.
+  * Install 'fakeroot' if you haven't got it already.
+  * Issue these commands:
+{{{
+dpkg-buildpackage -us -uc -b -rfakeroot
+}}}
