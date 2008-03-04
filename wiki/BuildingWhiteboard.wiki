@@ -23,6 +23,11 @@ If it was a SVN snapshot, do these first:
 autoconf --install
 }}}
 
+For Ubuntu Gutsy users:
+{{{
+./configure CXXFLAGS="-DCOMPATIBILITY_GUTSY" && make
+}}}
+
 For all users:
 {{{
 ./configure && make
