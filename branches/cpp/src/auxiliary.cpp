@@ -28,6 +28,25 @@ void show_help() {
 	    "	-m: Forces using the specified MAC address ADDRESS.\n" );
 }
 
+point_t screen_size() {
+    Display* display = XOpenDisplay(0);
+    int const screen = DefaultScreen(display);
+    point_t const scr_size( DisplayWidth(display, screen), DisplayHeight(display, screen) );
+    XCloseDisplay(display);                                                                                                                                    
+
+    return scr_size;
+}
+void screen_corners(point_t p_screen[4]) {
+    point_t const scr_size = screen_size();
+    int const PADDING = 50;
+
+    // By a user's request
+    p_screen[0] = point_t(PADDING, PADDING);
+    p_screen[1] = point_t(scr_size.x - PADDING, PADDING);
+    p_screen[3] = point_t(PADDING, scr_size.y - PADDING);
+    p_screen[2] = point_t(scr_size.x - PADDING, scr_size.y - PADDING);
+}
+
 matrix_t calculate_transformation_matrix(point_t const p_wii[4]) {
     printf("Calculating coefficients... ");
 

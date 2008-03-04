@@ -24,19 +24,21 @@
 #include <gtkmm.h>
 #include <libglademm.h>
 #include <pthread.h>
-#include <memory>
 #include <string>
+#include <ctime>
+#include <cstdio>
 
 #include "common.h"
 #include "matrix.h"
 #include "auxiliary.h"
 #include "gui.h"
 #include "wiicursor.h"
+#include "events.h"
 
 
 // NOTE: GUI stuff is allowed to be a bit messy since they are disposable
 
-// NOTE: The *only* reason this is not in wiimote_data is
+// NOTE: The *only* reason this is not in MainGtkWindow is
 // because pthread is a C library
 void* wii_thread_func(void* ptr);
 
@@ -49,6 +51,8 @@ public:
     /* Returns 0 on success */
     int run();
 private:
+    friend void* wii_thread_func(void* ptr); // NOTE: Friends can see your private :-<
+
     /* Event handlers */
     void toggle_wiimote_clicked();
     void toggle_activation_clicked();
@@ -58,6 +62,7 @@ private:
     void sim_quit_clicked();
     void start_wii_thread();
     void finish_wii_thread();
+
     /* Helpers */
     void print_to_output(char const* text);
     void sync_configuration_state(bool configuration_is_valid);
@@ -65,11 +70,10 @@ private:
     void sync_wiimote_state(bool wiimote_is_connected);
     bool wiimote_connected() const;
 
-    friend void* wii_thread_func(void* ptr); // NOTE: Friends can see your private :-<
-
     /* GUI */
-    Gtk::Main m_kit;
+    Gtk::Main m_gtk_kit;
     Gtk::Window* m_gtk_main_window;
+    Gtk::ScrolledWindow* m_gtk_output_scroll;
     Gtk::TextView* m_gtk_output;
     Glib::RefPtr<Gtk::TextBuffer> m_output_buffer;
     Gtk::Button* m_gtk_toggle_wiimote;
@@ -81,6 +85,9 @@ private:
     Gtk::MenuItem* m_gtk_sim_toggle_activation;
     Gtk::MenuItem* m_gtk_sim_calibrate;
     Gtk::MenuItem* m_gtk_sim_quit;
+
+    Glib::RefPtr<Gtk::TextTag> m_time_text_tag;
+
     /* Data */
     bool m_transform_matrix_correct;
     matrix_t m_transform;

@@ -29,7 +29,6 @@
 #include <unistd.h>
 
 #include "matrix.h"
-#include "gui.h"
 #include "common.h" // ASSERT
 
 // NOTE: Due to glibmm, it must be included after glibmm.h. Try moving to the top.
@@ -49,6 +48,9 @@ struct OptionStates {
 };
 
 void show_help();
+
+point_t screen_size();
+void screen_corners(point_t p_screen[4]);
 
 matrix_t calculate_transformation_matrix(point_t const p_wii[4]);
 
