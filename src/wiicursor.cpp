@@ -20,26 +20,27 @@
 #include "wiicursor.h"
 
 
-void* thread_func(void* ptr) {
-    //printf("Thread has been created.\n");
-
+void* wiicursor_thread_func(void* ptr) {
     ASSERT(ptr != 0, "No data has been passed along");
-    wiimote_data& data = *static_cast<wiimote_data*>(ptr);
+    WiiCursor& data = *static_cast<WiiCursor*>(ptr);
     ASSERT(data.m_this_thread != 0, "This thread has become immortal, omfg!!!1");
 
     // Sets up the timer
     delta_t_t last_time = 0;
     get_delta_t(last_time);
 
-    while ( data.running() ) {
+    while ( data.all_running() ) {
+	WiimoteEventData const wii_event_data =
+	    {data.m_ir, data.m_ir_on_mouse_down, point_t(), data.m_waited};
+
 	if ( data.right_click() ) {
-	    fake_button(3, true);
+		data.m_fn_right_button_down(wii_event_data);
 	    break;
 	}
 	else data.m_waited += get_delta_t(last_time);
 
 	if ( data.click_and_drag() ) {
-	    fake_button(1, true);
+		data.m_fn_begin_click_and_drag(wii_event_data);
 	    break;
 	}
 	else {
@@ -51,78 +52,88 @@ void* thread_func(void* ptr) {
 	}
     }
 
-    //printf("Thread is finished.\n");
-
     return 0;
 }
 
-void wiimote_data::start_thread(point_t const& ir_on_mouse_down) {
+void WiiCursor::start_thread(point_t const& ir_on_mouse_down) {
     m_ir_on_mouse_down = ir_on_mouse_down;
     set_data_at_thread_start();
     // NOTE: The order of the lines is important, don't mess with it
     // NOTE: Not checking for any return values here
-    pthread_create(&m_this_thread, 0, &thread_func, this);
+    pthread_create(&m_this_thread, 0, &wiicursor_thread_func, this);
 }
-void wiimote_data::finish_thread() {
+void WiiCursor::finish_thread() {
     if (m_thread_running) {
-	ASSERT(m_this_thread != 0, "Thread ID should NOT be 0 if its data tells us it hasn't finished");
-
-	pthread_t const this_thread = m_this_thread; // Backs up the thread ID before it gets cleared, not elegant
 	set_data_at_thread_finish();
-	pthread_join(this_thread, 0);
+	pthread_join(m_this_thread, 0);
     }
-    else ASSERT(m_this_thread == 0, "Thread ID should be 0 if there's none running");
 }
 
 
-void WiiCursor::process(bool& running) {
+void WiiCursor::process(
+	cwiid_wiimote_t* wiimote, matrix_t transform,
+        unsigned int move_tolerance, unsigned int wait_tolerance,
+        bool& running)
+{
     // Sets up the Wiimote
-    cwiid_enable(m_wiimote, CWIID_FLAG_MESG_IFC);
-    cwiid_disable(m_wiimote, CWIID_FLAG_NONBLOCK);
+    cwiid_enable(wiimote, CWIID_FLAG_MESG_IFC);
+    cwiid_disable(wiimote, CWIID_FLAG_NONBLOCK);
 
-    unsigned int const MOVE_TOLERANCE = 5;
-    unsigned int const WAIT_TOLERANCE = 700;
-    point_t ir(INVALID_IR_POS, 0); // To avoid having to expose wiimote_data::ir, and to make it obvious that we're sharing
-    wiimote_data wii_data(ir, MOVE_TOLERANCE, WAIT_TOLERANCE, running);
+    // Sets up itself
+    m_move_tolerance = move_tolerance;
+    m_wait_tolerance = wait_tolerance;
+    m_running = &running; // No need to check anything here since running is a reference
+    set_data_at_thread_start();
+    set_data_at_thread_finish();
 
     while (running) {
 	int msg_count = 0;
 	union cwiid_mesg* msgs = 0;
 	// NOTE: The API's been changed, I don't know what to do with the last argument
+#ifdef COMPATIBILITY_GUTSY
+	cwiid_get_mesg(wiimote, &msg_count, &msgs);
+#else
 	timespec tspec;
-	cwiid_get_mesg(m_wiimote, &msg_count, &msgs);
+	cwiid_get_mesg(wiimote, &msg_count, &msgs, &tspec);
+#endif // COMPATIBILITY_GUTSY
 
 	for (int i = 0; i != msg_count; ++i) {
-	    point_t const ir_old = wii_data.ir();
+	    point_t const ir_old = m_ir;
+	    point_t& ir_new = m_ir; // Read wii.cpp if you're not sure about this
 	    uint16_t button = INVALID_BUTTON_MSG_ID;
-	    process_messages(msgs[i], &ir, &button);
-	    point_t const& ir_new = ir; // Readability
+	    process_messages(msgs[i], &ir_new, &button);
+	    WiimoteEventData wii_event_data = {ir_new, point_t(), point_t(), m_waited};
 
 	    if (button != INVALID_BUTTON_MSG_ID) {
-		running = false;
+		//running = false; // NOTE: Not handling any key events for now
 		break; // Quits early
 	    }
 
 	    if (ir_new.x != INVALID_IR_POS) { // Only updates if the IR data is valid
-		point_t const cursor = infrared_data(ir_new, m_transform);
-		fake_move(cursor.x, cursor.y);
+		point_t const cursor = infrared_data(ir_new, transform);
+		wii_event_data.cursor_pos = cursor;
+		// NOTE: The event fires even if the cursor doesn't move,
+		// this is my design decision since it makes other things easier.
+		m_fn_mouse_moved(wii_event_data);
 	    }
 	    if ( (ir_new.x != INVALID_IR_POS) && (ir_old.x == INVALID_IR_POS) ) { // MOUSE_DOWN
-		wii_data.start_thread(ir_new);
+		start_thread(ir_new);
+		wii_event_data.ir_on_mouse_down = ir_new;
+		m_fn_mouse_down(wii_event_data);
 	    }
 	    if ( (ir_new.x == INVALID_IR_POS) && (ir_old.x != INVALID_IR_POS) ) { // MOUSE_UP
-		wii_data.finish_thread();
+		m_fn_mouse_up(wii_event_data);
+		finish_thread();
 
 		// Finished at this point
-		if ( wii_data.click_and_drag() ) {
-		    fake_button(1, false);
+		if ( click_and_drag() ) {
+		    m_fn_end_click_and_drag(wii_event_data);
 		}
 		else {
-		    if ( !wii_data.right_click() ) { // Left click
-			fake_button(1, true);
-			fake_button(1, false);
+		    if ( !right_click() ) { // Left click
+			m_fn_left_clicked(wii_event_data);
 		    }
-		    else fake_button(3, false); // Right click
+		    else m_fn_right_button_up(wii_event_data); // Right click
 		}
 	    }
 	}

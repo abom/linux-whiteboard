@@ -20,13 +20,40 @@
 #include "gtk-gui.h"
 
 
+void wii_left_clicked(WiimoteEventData const& data) {
+    fake_button(LEFT_BUTTON, true);
+    fake_button(LEFT_BUTTON, false);
+}
+void wii_right_button_down(WiimoteEventData const& data) {
+    fake_button(RIGHT_BUTTON, true);
+}
+void wii_right_button_up(WiimoteEventData const& data) {
+    fake_button(RIGHT_BUTTON, false);
+}
+void wii_begin_click_and_drag(WiimoteEventData const& data) {
+    fake_button(LEFT_BUTTON, true);
+}
+void wii_end_click_and_drag(WiimoteEventData const& data) {
+    fake_button(LEFT_BUTTON, false);
+}
+void wii_mouse_moved(WiimoteEventData const& data) {
+    fake_move(data.cursor_pos.x, data.cursor_pos.y);
+}
 void* wii_thread_func(void* ptr) {
     ASSERT(ptr != 0, "No data has been passed along");
     MainGtkWindow& data = *static_cast<MainGtkWindow*>(ptr);
     ASSERT(data.m_wii_thread != 0, "This thread has become immortal, omfg!!!1");
 
-    std::auto_ptr<WiiCursor> const wc ( new WiiCursor(data.m_wiimote, data.m_transform) );
-    wc->process(data.m_thread_running); // The main loop
+    unsigned int const MOVE_TOLERANCE = 5;
+    unsigned int const WAIT_TOLERANCE = 700;
+    WiiCursor wc;
+    wc.signal_left_clicked() = sigc::ptr_fun(&wii_left_clicked);
+    wc.signal_right_button_down() = sigc::ptr_fun(&wii_right_button_down);
+    wc.signal_right_button_up() = sigc::ptr_fun(&wii_right_button_up);
+    wc.signal_begin_click_and_drag() = sigc::ptr_fun(&wii_begin_click_and_drag);
+    wc.signal_end_click_and_drag() = sigc::ptr_fun(&wii_end_click_and_drag);
+    wc.signal_mouse_moved() = sigc::ptr_fun(&wii_mouse_moved);
+    wc.process( data.m_wiimote, data.m_transform, MOVE_TOLERANCE, WAIT_TOLERANCE, data.m_thread_running); // The main loop
 
     cwiid_disable(data.m_wiimote, CWIID_FLAG_MESG_IFC);
 
@@ -35,8 +62,9 @@ void* wii_thread_func(void* ptr) {
 
 
 MainGtkWindow::MainGtkWindow(int argc,char *argv[]) :
-    m_kit(argc, argv),
+    m_gtk_kit(argc, argv),
     m_gtk_main_window(0),
+    m_gtk_output_scroll(0),
     m_gtk_output(0),
     m_output_buffer( Gtk::TextBuffer::create() ),
     m_gtk_toggle_wiimote(0),
@@ -45,6 +73,7 @@ MainGtkWindow::MainGtkWindow(int argc,char *argv[]) :
     m_gtk_status_icon( Gtk::StatusIcon::create("whiteboard-status-icon") ),
     m_gtk_status_icon_menu(0),
     m_gtk_sim_quit(0),
+    m_time_text_tag( m_output_buffer->create_tag("bold") ),
     m_transform_matrix_correct(false),
     m_transform(3, 3), // NOTE: We shouldn't have to know about its dimensions :-s . New class?.
     m_wiimote(0), // Also tells us whether the Wiimote has been connected or not
@@ -59,6 +88,7 @@ MainGtkWindow::MainGtkWindow(int argc,char *argv[]) :
     Glib::RefPtr<Gnome::Glade::Xml> refXml = Gnome::Glade::Xml::create(DATA_DIR + "/main-window.glade");
 
     refXml->get_widget("main-window", m_gtk_main_window);
+    refXml->get_widget("output-scroll", m_gtk_output_scroll);
     refXml->get_widget("output", m_gtk_output);
     refXml->get_widget("toggle-wiimote", m_gtk_toggle_wiimote);
     refXml->get_widget("toggle-activation", m_gtk_toggle_activation);
@@ -80,13 +110,16 @@ MainGtkWindow::MainGtkWindow(int argc,char *argv[]) :
     m_gtk_sim_quit->signal_activate().connect(sigc::mem_fun(*this, &MainGtkWindow::sim_quit_clicked));
 
     m_gtk_output->set_buffer(m_output_buffer);
+    m_time_text_tag->property_font() = "bold";
 
     m_gtk_status_icon->set_from_file(DATA_DIR + "/icon.svg");
 
     /* Data */
     if ( load_config(m_transform) ) {
 	sync_configuration_state(true);
-	print_to_output("Configuration file successfully loaded.\n");
+	print_to_output("Configuration file successfully loaded."
+			" To connect the Wiimote, press 1+2 on the Wiimote"
+			" then click the 'Connect' button.\n");
     }
     else {
 	sync_configuration_state(false);
@@ -95,7 +128,7 @@ MainGtkWindow::MainGtkWindow(int argc,char *argv[]) :
 }
 
 int MainGtkWindow::run() {
-    m_kit.run();
+    m_gtk_kit.run();
 
     // NOTE: Always return 0 for now
     return 0;
@@ -107,7 +140,8 @@ void MainGtkWindow::toggle_wiimote_clicked() {
 	m_wiimote = wii_connect(0); // NOTE: We don't care about any command-line parameters for now
 	if (m_wiimote) {
 	    sync_wiimote_state(true);
-	    print_to_output("Successfully connected to the Wiimote.\n");
+	    print_to_output("Successfully connected to the Wiimote."
+			    " Click 'Activate' to use your infrared pen.\n");
 	}
 	else print_to_output("Failed to connect to the Wiimote.\n");
     }
@@ -133,9 +167,10 @@ void MainGtkWindow::toggle_activation_clicked() {
     }
 }
 void MainGtkWindow::calibrate_clicked() {
-    point_t p_wii[4];
-    if ( !get_calibration_points(m_wiimote, p_wii) ) {
-	m_transform = calculate_transformation_matrix(p_wii);                                                                                       
+    CalibrationData cal_data;
+    CalibrationWindow cal_window(m_wiimote, cal_data);
+    if ( !cal_window.get_calibration_points() ) {
+	m_transform = calculate_transformation_matrix(cal_data.p_wii);
 	save_config(m_transform);
 	sync_configuration_state(true);
 	print_to_output("Successfully calibrated and configuration file has been saved.\n");
@@ -157,21 +192,45 @@ void MainGtkWindow::sim_quit_clicked() {
     if ( wiimote_connected() )
 	toggle_wiimote_clicked();
 
-    m_kit.quit();
+    m_gtk_kit.quit();
 }
 
 void MainGtkWindow::start_wii_thread() {
     // NOTE: Not checking for any return value here
+    // NOTE: Remember to find out how to clear the Wiimote cache
     m_thread_running = true;
     pthread_create(&m_wii_thread, 0, &wii_thread_func, this);
 }
 void MainGtkWindow::finish_wii_thread() {
-    m_thread_running = false;
-    pthread_join(m_wii_thread, 0);
+    if (m_thread_running) {
+	m_thread_running = false;
+	pthread_join(m_wii_thread, 0);
+    }
 }
 
 void MainGtkWindow::print_to_output(char const* text) {
+    // Gets current time of day
+    time_t const current_time = time(0);
+    tm const* const _tm = localtime(&current_time);
+
+    // NOTE: C funtion, sign...
+    char current_time_text[12];
+    sprintf(current_time_text, "<%.2d:%.2d:%.2d> ", _tm->tm_hour, _tm->tm_min, _tm->tm_sec);
+
+    // Moves to the end first
+    m_output_buffer->place_cursor( m_output_buffer->end() );
+
+    // Makes the time more visible
+    m_output_buffer->insert_at_cursor(current_time_text);
+    Gtk::TextBuffer::iterator time_text_begin = m_output_buffer->end();
+    time_text_begin.backward_chars( sizeof(current_time_text) );
+    m_output_buffer->apply_tag( m_time_text_tag, time_text_begin, m_output_buffer->end() );
+
     m_output_buffer->insert_at_cursor(text);
+
+    // Moves to the end again to show the newest text
+    Gtk::Adjustment *const vadj = m_gtk_output_scroll->get_vadjustment();
+    vadj->set_value( vadj->get_upper() );
 }
 void MainGtkWindow::sync_configuration_state(bool configuration_is_valid) {
     m_transform_matrix_correct = configuration_is_valid;
@@ -183,7 +242,7 @@ void MainGtkWindow::sync_activation_state(bool activated) {
     m_gtk_sim_calibrate->set_sensitive(!activated);
 }
 void MainGtkWindow::sync_wiimote_state(bool wiimote_is_connected) {
-    m_gtk_toggle_wiimote->set_label(wiimote_is_connected ? "Dis_connect" : "_Connect");
+    m_gtk_toggle_wiimote->set_label(wiimote_is_connected ? "gtk-disconnect" : "gtk-connect");
     //m_gtk_sim_toggle_wiimote->set_label(wiimote_is_connected ? "Dis_connect" : "_Connect");
     m_gtk_toggle_activation->set_sensitive(wiimote_is_connected);
     m_gtk_sim_toggle_activation->set_sensitive(wiimote_is_connected);

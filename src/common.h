@@ -50,6 +50,11 @@ struct Point {
 typedef Point point_t;
 
 
+// Mouse button IDs
+#define LEFT_BUTTON static_cast<int>(1)
+#define RIGHT_BUTTON static_cast<int>(3)
+
+
 // To say there's no IR event, or an IR_OFF event
 #define INVALID_IR_POS static_cast<int>(-1)
 // To say there's no button event

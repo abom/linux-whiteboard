@@ -20,171 +20,210 @@
 #include "gui.h"
 
 
-point_t screen_size() {
-    Display* display = XOpenDisplay(0);
-    int const screen = DefaultScreen(display);
-    point_t const scr_size( DisplayWidth(display, screen), DisplayHeight(display, screen) );
-    XCloseDisplay(display);
+void CalibrationWindow::calibration_right_button_down(WiimoteEventData const& data) {
+    m_cal_data.p_wii[m_cal_data.active_point++] = data.ir_pos;
+    if (m_cal_data.active_point == 4)
+	finish_calibration_thread();
+}
+void CalibrationWindow::calibration_mouse_moved(WiimoteEventData const& data) {
+    m_cal_data.ir_pos = data.ir_pos;
+    m_cal_data.waited = data.waited;
+}
+void CalibrationWindow::calibration_mouse_down(WiimoteEventData const& data) {
+    m_cal_data.ir_on_mouse_down = data.ir_on_mouse_down;
+    m_cal_data.border_crossed = false;
+}
+void CalibrationWindow::calibration_begin_click_and_drag(WiimoteEventData const& data) {
+    m_cal_data.border_crossed = true;
+}
+void* calibration_thread_func(void* ptr) {
+    ASSERT(ptr != 0, "No data has been passed along");
+    CalibrationWindow& data = *static_cast<CalibrationWindow*>(ptr);
+    ASSERT(data.m_calibration_thread != 0, "This thread has become immortal, omfg!!!1");
 
-    return scr_size;
-}
-void screen_corners(point_t p_screen[4]) {
-    point_t const scr_size = screen_size();
-    int const PADDING = 50;
+    WiiCursor wc;
+    wc.signal_right_button_down() = sigc::mem_fun(data, &CalibrationWindow::calibration_right_button_down);
+    wc.signal_mouse_moved() = sigc::mem_fun(data, &CalibrationWindow::calibration_mouse_moved);
+    wc.signal_mouse_down() = sigc::mem_fun(data, &CalibrationWindow::calibration_mouse_down);
+    wc.signal_begin_click_and_drag() = sigc::mem_fun(data, &CalibrationWindow::calibration_begin_click_and_drag);
+    wc.process( data.m_wiimote, matrix_t(3, 3), data.MOVE_TOLERANCE, data.WAIT_TOLERANCE, data.m_thread_running); // The main loop
 
-    // By a user's request
-    p_screen[0] = point_t(PADDING, PADDING);
-    p_screen[1] = point_t(scr_size.x - PADDING, PADDING);
-    p_screen[3] = point_t(PADDING, scr_size.y - PADDING);
-    p_screen[2] = point_t(scr_size.x - PADDING, scr_size.y - PADDING);
+    cwiid_disable(data.m_wiimote, CWIID_FLAG_MESG_IFC);
+    data.quit();
+
+    return 0;
 }
 
 
-void draw_point(SDL_Surface* surface, point_t const& p, unsigned int radius) {
-    sge_Line(surface, p.x, p.y-radius, p.x, p.y+radius, SDL_COLOR_WHITE);
-    sge_Line(surface, p.x-radius, p.y, p.x+radius, p.y, SDL_COLOR_WHITE);
-}
-void draw_rectangle(SDL_Surface* surface, point_t const& p, point_t dim, Uint32 color) {
-    sge_Rect(surface, p.x-dim.x, p.y-dim.y, p.x+dim.x, p.y+dim.y, color);
-}
-void draw_square(SDL_Surface* surface, point_t const& p, unsigned int radius, Uint32 color) {
-    draw_rectangle(surface, p, point_t(radius, radius), color);
-}
-void draw_calibration_points(SDL_Surface* surface, point_t const points[4], int active, int active_light_up) {
+void draw_calibration_points(Cairo::RefPtr<Cairo::Context> cr, point_t const points[4], unsigned int active, bool active_light_up) {
     unsigned int const RADIUS = 10;
-    for (int i = 0; i != sizeof(points); ++i) {
-	draw_point(surface, points[i], RADIUS);
+    for (unsigned int i = 0; i != sizeof(points); ++i) {
+	{ // Draws a cross inside the rectangle for easier viewing
+	    cr->move_to(points[i].x-RADIUS, points[i].y-RADIUS);
+	    cr->line_to(points[i].x+RADIUS, points[i].y+RADIUS);
+	    cr->move_to(points[i].x+RADIUS, points[i].y-RADIUS);
+	    cr->line_to(points[i].x-RADIUS, points[i].y+RADIUS);
+	}
+	// Draws the bounding boxes if needed
 	if ( (i < active) || ((i == active) && active_light_up) )
-	    draw_square(surface, points[i], RADIUS, SDL_COLOR_WHITE);
+	    cr->rectangle(points[i].x-RADIUS, points[i].y-RADIUS, RADIUS*2, RADIUS*2);
     }
 }
-// NOTE: Needs MUCH improvement, it's too long and monolithic
-int get_calibration_points(cwiid_wiimote_t* wiimote, point_t p_wii[4]) {
-    // Sets up the Wiimote
-    cwiid_enable(wiimote, CWIID_FLAG_MESG_IFC | CWIID_FLAG_NONBLOCK);
 
+bool CalibrationWindow::calibration_area_key_pressed(GdkEventKey* event) {
+    if (event->keyval == GDK_Escape)
+	quit();
+
+    return true;
+}
+bool CalibrationWindow::calibration_area_exposed(GdkEventExpose* event) {
+    Glib::RefPtr<Gdk::Window> window = m_gtk_calibration_area->get_window();
+    Cairo::RefPtr<Cairo::Context> cr = window->create_cairo_context();
     point_t const scr_size = screen_size();
 
-    SDL_Init(SDL_INIT_VIDEO);
-    SDL_Surface* surface = SDL_SetVideoMode(0, 0, 0, SDL_HWSURFACE | SDL_FULLSCREEN | SDL_DOUBLEBUF);
-    Uint32 const black_color = SDL_MapRGB(surface->format,0,0,0);
+    // WARNING: We should *really* use relative coordinates (0.0-1.0) here.
+    // Improvements are welcome, I'm too lazy to clean it up.
 
-    SDL_FillRect(surface,0,black_color);
+    // Wiimote's viewing area
+    cr->set_source_rgb(1.0, 1.0, 1.0);
+    cr->set_line_width(2.0);
+    unsigned int const WII_VIEWING_AREA_RADIUS = 100;
+    point_t const screen_center( scr_size.x/2, scr_size.y/2 );
+    cr->rectangle(  screen_center.x-WII_VIEWING_AREA_RADIUS, screen_center.y-WII_VIEWING_AREA_RADIUS,
+	    WII_VIEWING_AREA_RADIUS*2, WII_VIEWING_AREA_RADIUS*2);
+    cr->stroke();
 
-    // Sets up the timer
-    delta_t_t last_time = 0;
-    get_delta_t(last_time);
-
-    // These are taken from wiicursor.cpp, improvements are welcome
-    delta_t_t waited = 0;
-    unsigned int const MOVE_TOLERANCE = 25;
-    unsigned int const WAIT_TOLERANCE = 700;
-    bool mouse_down = false;
-    point_t ir_on_mouse_down;
-    // ...
-    int active_light_up  = 0;
-    point_t ir_pos(INVALID_IR_POS, 0);
-    int active_point = 0, error = 0;
-    while ( (active_point != 4) && !error ) {
-	// IR events
-	{   
-	    int msg_count = 0;
-	    union cwiid_mesg* msgs = 0;
-	    // NOTE: See wiicursor.cpp's NOTE about this
-	    timespec tspec;
-	    while (!cwiid_get_mesg(wiimote, &msg_count, &msgs))
-		for (int i = 0; i != msg_count; ++i) {
-		    point_t const ir_old = ir_pos;
-		    process_messages(msgs[i], &ir_pos, 0);
-		    if ( (ir_old.x == INVALID_IR_POS) && (ir_pos.x != INVALID_IR_POS) ) {
-			ir_on_mouse_down = ir_pos;
-			mouse_down = true;
-			get_delta_t(last_time); // 'Sort of' resets the timer
-			printf("MOUSE DOWN\n.");
-		    }
-		    if ( (ir_old.x != INVALID_IR_POS) && (ir_pos.x == INVALID_IR_POS) ) {
-			mouse_down = false; // NOTE: Repetitive :<
-			waited = 0; // Written in 3 different places, what if it was in C++?
-			printf("MOUSE UP\n.");
-		    }
-		}
-	}
-
-	// Timer stuff
-	if (mouse_down) {
-	    if (waited > WAIT_TOLERANCE) {
-		p_wii[active_point] = ir_pos;
-		++active_point;
-		mouse_down = false;
-		waited = 0;
-		printf("POINT %d calibrated.\n", active_point);
-	    }
-	    else {
-		waited += get_delta_t(last_time);
-		printf("Mouse has been down for: %lld milliseconds.\n", waited);
-	    }
-
-	    if ( squared_distance(ir_pos, ir_on_mouse_down) > sqr(MOVE_TOLERANCE) ) {
-		mouse_down = false;
-		waited = 0;
-		printf("MOUSE MOVED by sqrt(%d) pixels :) .\n", squared_distance(ir_pos, ir_on_mouse_down));
-	    }
-	}
-
-	// SDL stuff
-	SDL_FillRect(surface,0,black_color);
-	SDL_PollEvent(0);
-
-	Uint8 const*const k = SDL_GetKeyState(0);
-	if (k[SDLK_ESCAPE])
-	    error = 1;
-
-	// Interface stuff
-	active_light_up = !active_light_up;
-	unsigned int const WII_VIEWING_AREA_RADIUS = 100;
-	point_t const screen_center( scr_size.x/2, scr_size.y/2 );
-	draw_square(surface, screen_center, WII_VIEWING_AREA_RADIUS, SDL_COLOR_WHITE); // Wiimote's viewing area
-
-	if (ir_pos.x != INVALID_IR_POS) { // There's no point in drawing an invalid IR pointer
-	    point_t const MAX_WII(1020, 760);
-	    point_t const ir_pointer_center(
-		    (screen_center.x-WII_VIEWING_AREA_RADIUS) + static_cast<int>( ((float) ir_pos.x / (float) MAX_WII.x)*(WII_VIEWING_AREA_RADIUS*2)),
-		    (screen_center.y+WII_VIEWING_AREA_RADIUS) - static_cast<int>( ((float) ir_pos.y / (float) MAX_WII.y)*(WII_VIEWING_AREA_RADIUS*2)) );
-	    draw_square(surface, ir_pointer_center, 1, SDL_COLOR_WHITE); // Current IR pointer's location, from the Wiimote's eye
-	}
-
-	point_t p_screen[4];
-	screen_corners(p_screen);
-	draw_calibration_points(surface, p_screen, active_point, active_light_up); // 4 calibration points
-
-	/* Draws bounding boxes around the screen's edges, for easier viewing
-	 * NOTE: The values of screen_center = screen_dimensions */
-	unsigned int const BOX_THICK = 5;
-	unsigned int colors[3] = {SDL_COLOR_RED, SDL_COLOR_YELLOW, SDL_COLOR_GREEN};
-	for (unsigned int i = 0; i != 3; ++i)
-	    for (unsigned int j = 0; j != BOX_THICK; ++j)
-		draw_rectangle( surface, screen_center, point_t(screen_center.x-i*j, screen_center.y-i*j), colors[i] );
-
-	// SDL again
-	SDL_Flip(surface);
-	SDL_Delay(100);
+    // Current IR pointer's location, from the Wiimote's eye
+    // NOTE: Needs improvement, it looks fugly
+    point_t const& ir_pos = m_cal_data.ir_pos; // Readability
+    if (ir_pos.x != INVALID_IR_POS) { // There's no point in drawing an invalid IR pointer
+	cr->set_source_rgb(1.0, 1.0, 0.0);
+	cr->set_line_width(2.0);
+	point_t const MAX_WII(1020, 760);
+	point_t const ir_pointer_center(
+		(screen_center.x-WII_VIEWING_AREA_RADIUS) + static_cast<int>( ((float) ir_pos.x / (float) MAX_WII.x)*(WII_VIEWING_AREA_RADIUS*2)),
+		(screen_center.y+WII_VIEWING_AREA_RADIUS) - static_cast<int>( ((float) ir_pos.y / (float) MAX_WII.y)*(WII_VIEWING_AREA_RADIUS*2)) );
+	cr->rectangle(ir_pointer_center.x-1.0, ir_pointer_center.y-1.0, 1.0, 1.0);
+	cr->stroke();
     }
 
-    printf("Quitting SDL..");
-    SDL_Quit();
-    printf("Done\n");
-    print_points(p_wii);
-
-    return error;
-}
-
-
-void print_points(point_t const p_wii[4]) {
+    // 4 calibration points
+    cr->set_source_rgb(1.0, 1.0, 1.0);
+    cr->set_line_width(2.0);
+    m_cal_data.active_light_up = !m_cal_data.active_light_up;
     point_t p_screen[4];
     screen_corners(p_screen);
+    draw_calibration_points(cr, p_screen, m_cal_data.active_point, m_cal_data.active_light_up); // 4 calibration points
+    cr->stroke();
 
-    int i;
-    for (i=0; i<4; i++)
-	printf("Point %d --> (%d,%d) === (%d,%d)\n",
-		i, p_screen[i].x, p_screen[i].y, p_wii[i].x, p_wii[i].y);
+    // Draws bounding boxes around the screen's edges, for easier viewing
+    unsigned int const BOX_THICKNESS = 3;
+    unsigned int const NUMBER_OF_BOXES = 3;
+    cr->set_line_width(BOX_THICKNESS);
+    for (unsigned int i = 0; i != NUMBER_OF_BOXES; ++i) {
+	cr->set_source_rgb(i*0.25, 1.0, 1.0-i*0.25); // Varies the colors a bit
+	cr->rectangle(i*BOX_THICKNESS, i*BOX_THICKNESS, scr_size.x-i*BOX_THICKNESS*2, scr_size.y-i*BOX_THICKNESS*2); // Yeah, '2'
+	cr->stroke();
+    }
+
+    // A circle showing the elapsed time since the left button down event
+    double const FULL_CIRCLE = 2*M_PI;
+    unsigned int const CIRCLE_RADIUS = 50;
+    point_t const circle_time_pos(screen_center.x-CIRCLE_RADIUS*1.5, screen_center.y+WII_VIEWING_AREA_RADIUS*2);
+    // Boundary
+    cr->set_source_rgb(0.0, 1.0, 0.0);
+    cr->set_line_width(3.0);
+    cr->arc(circle_time_pos.x, circle_time_pos.y, CIRCLE_RADIUS, 0, FULL_CIRCLE);
+    cr->stroke();
+    // 'Hand'?
+    double const hand_angle = FULL_CIRCLE * static_cast<double>(m_cal_data.waited) / static_cast<double>(WAIT_TOLERANCE);
+    cr->set_source_rgb(0.75, 1.0, 1.0);
+    cr->set_line_width(2.0);
+    cr->move_to(circle_time_pos.x, circle_time_pos.y);
+    cr->arc(circle_time_pos.x, circle_time_pos.y, CIRCLE_RADIUS, -FULL_CIRCLE/4.0, hand_angle-FULL_CIRCLE/4.0);
+    cr->fill();
+
+    // Another circle showing how far off the current IR pointer from its original position
+    point_t const circle_move_pos(screen_center.x+CIRCLE_RADIUS*1.5, screen_center.y+WII_VIEWING_AREA_RADIUS*2);
+    // Boundary
+    if (!m_cal_data.border_crossed)
+	cr->set_source_rgb(0.0, 1.0, 1.0);
+    else cr->set_source_rgb(1.0, 0.0, 0.0);
+    cr->set_line_width(3.0);
+    cr->arc(circle_move_pos.x, circle_move_pos.y, CIRCLE_RADIUS, 0, FULL_CIRCLE);
+    cr->stroke();
+    // Relative IR position
+    unsigned int const DOT_RADIUS = 4;
+    point_t const dot_pos(
+	circle_move_pos.x+static_cast<int>((double)CIRCLE_RADIUS/(double)MOVE_TOLERANCE)*(m_cal_data.ir_pos.x-m_cal_data.ir_on_mouse_down.x),
+	circle_move_pos.y+static_cast<int>((double)CIRCLE_RADIUS/(double)MOVE_TOLERANCE)*(m_cal_data.ir_pos.y-m_cal_data.ir_on_mouse_down.y)
+    );
+    if (!m_cal_data.border_crossed) {
+	cr->set_source_rgb(1.0, 1.0, 0.0);
+	cr->set_line_width(3.0);
+	cr->arc(dot_pos.x, dot_pos.y, DOT_RADIUS, 0, FULL_CIRCLE);
+	cr->fill();
+    }
+
+    return true;
+}
+bool CalibrationWindow::redraw_calibration_area() {
+    m_gtk_calibration_area->queue_draw();
+
+    return true;
+}
+
+void CalibrationWindow::start_calibration_thread() {
+    // NOTE: Not checking for any return value here                                                                                                            
+    m_thread_running = true;
+    pthread_create(&m_calibration_thread, 0, &calibration_thread_func, this);
+}
+void CalibrationWindow::finish_calibration_thread() {
+    m_thread_running = false;
+    pthread_join(m_calibration_thread, 0);
+}
+
+void CalibrationWindow::quit() {
+    m_gtk_window->hide();
+}
+
+CalibrationWindow::CalibrationWindow(cwiid_wiimote_t* wiimote, CalibrationData& cal_data) :
+    m_wiimote(wiimote),
+    m_cal_data(cal_data),
+    m_calibration_thread(0),
+    m_thread_running(false),
+    m_gtk_window(0),
+    m_gtk_calibration_area(0)
+{
+    // Gets the widgets
+    std::string const DATA_DIR(DATADIR);
+    Glib::RefPtr<Gnome::Glade::Xml> refXml = Gnome::Glade::Xml::create(DATA_DIR + "/calibration-window.glade");
+
+    refXml->get_widget("calibration-window", m_gtk_window);
+    refXml->get_widget("calibration-area", m_gtk_calibration_area);
+
+    // Prepares the widgets
+    m_gtk_calibration_area->modify_bg( Gtk::STATE_NORMAL, Gdk::Color("black") );
+    m_gtk_calibration_area->signal_expose_event().connect( sigc::mem_fun(*this, &CalibrationWindow::calibration_area_exposed) );
+    m_gtk_window->signal_key_press_event().connect( sigc::mem_fun(*this, &CalibrationWindow::calibration_area_key_pressed) );
+    m_gtk_window->maximize();
+}
+
+
+int CalibrationWindow::get_calibration_points() {
+    Gtk::Main gtk_kit(0, 0); // NOTE: Bypassing potential arguments for GTK+ here
+
+    // Starts the main loop
+    start_calibration_thread();
+    sigc::connection redraw_connection =
+	Glib::signal_timeout().connect(
+	    sigc::mem_fun(*this, &CalibrationWindow::redraw_calibration_area), 100 );
+
+    gtk_kit.run(*m_gtk_window);
+
+    redraw_connection.disconnect();
+    if (m_thread_running)
+	finish_calibration_thread();
+
+    return m_cal_data.active_point != 4;
 }

@@ -21,41 +21,84 @@
 #define  __GUI_H__
 
 
-#include <SDL/SDL.h>
-#include <SDL/sge.h>
+#include <gtkmm.h>
+#include <gdkmm.h>
+#include <libglademm.h>
+#include <cairomm/context.h>
 
-#include "wii.h"
 #include "auxiliary.h"
+#include "wiicursor.h"
 #include "common.h"
 
 
-#define SDL_COLOR_WHITE static_cast<unsigned int>(0xffffff)
-#define SDL_COLOR_BLACK static_cast<unsigned int>(0x0)
-#define SDL_COLOR_RED static_cast<unsigned int>(0xff0000)
-#define SDL_COLOR_YELLOW static_cast<unsigned int>(0xffff00)
-#define SDL_COLOR_GREEN static_cast<unsigned int>(0x00ff00)
+// For future needs and to avoid point_t p_wii[4] BS
+struct CalibrationData {
+    point_t p_wii[4];
+    unsigned int active_point; // Index of the current point that is being calibrated
+    bool active_light_up; // Makes current point blink as needed
+    point_t ir_pos; // Current IR pointer's location
+    point_t ir_on_mouse_down; // IR pointer on left button down event
+    delta_t_t waited; // For drawing of a pretty circle
+    bool border_crossed; // Will be true if the IR pointer 'moved' (i.e., no longer valid as a point)
+
+    CalibrationData() :
+	active_point(0),
+	active_light_up(true),
+	ir_pos(INVALID_IR_POS, 0),
+	waited(0),
+	border_crossed(false)
+    { }
+};
 
 
-point_t screen_size();
-void screen_corners(point_t p_screen[4]);
-
-/* Draws the center of a calibration point */
-void draw_point(SDL_Surface* surface, point_t const& p, unsigned int radius);
-/* Basic figures
- * NOTE: I just reused point_t with dim, but that's not really desirable since
- * dimensions should be unsigned */
-void draw_rectangle(SDL_Surface* surface, point_t const& p, point_t dim, Uint32 color);
-void draw_square(SDL_Surface* surface, point_t const& p, unsigned int radius, Uint32 color);
 /* Draws the 4 calibration points, paints the
  * active point a blinking square, and paints the
  * calibrated ones static squares */
-void draw_calibration_points(SDL_Surface* surface, point_t const points[4], int active, int active_light_up);
-/* Get 4 calibration points from users
- * Points are written to p_wii
- * Returns 0 on success, -1 on error or user escapes */
-int get_calibration_points(cwiid_wiimote_t* wiimote, point_t p_wii[4]);
+void draw_calibration_points(Cairo::RefPtr<Cairo::Context> cr, point_t const points[4], unsigned int active, bool active_light_up);
 
-void print_points(point_t const p_wii[4]);
+// NOTE: The *only* reason this is not in CalibrationWindow is
+// because pthread is a C library
+void* calibration_thread_func(void* ptr);
+
+class CalibrationWindow {
+public:
+    CalibrationWindow(cwiid_wiimote_t* wiimote, CalibrationData& cal_data);
+
+    /* Get 4 calibration points from users
+     * Points are written to p_wii
+     * Returns 0 on success, -1 on error or user escapes */
+    int get_calibration_points();
+private:
+    friend void* calibration_thread_func(void* ptr); // NOTE: Friends can see your private :-<
+
+    /* Event handlers for the calibration window */
+    bool calibration_area_key_pressed(GdkEventKey* event);
+    bool calibration_area_exposed(GdkEventExpose* event);
+    bool redraw_calibration_area();
+
+    void start_calibration_thread();
+    void finish_calibration_thread();
+    void calibration_right_button_down(WiimoteEventData const& data);
+    void calibration_mouse_moved(WiimoteEventData const& data);
+    void calibration_mouse_down(WiimoteEventData const& data);
+    void calibration_begin_click_and_drag(WiimoteEventData const& data);
+
+    void quit(); // Tells GTK+ to quit, either successfully calibrated or not
+
+
+    cwiid_wiimote_t* m_wiimote;
+    CalibrationData& m_cal_data;
+
+    /* Thread to calibrate and update the window */
+    pthread_t m_calibration_thread;
+    bool m_thread_running;
+
+    /* GUI stuff */
+    Gtk::Window* m_gtk_window;
+    Gtk::DrawingArea* m_gtk_calibration_area;
+    static unsigned int const MOVE_TOLERANCE = 15;
+    static unsigned int const WAIT_TOLERANCE = 1000;
+};
 
 
 #endif /* __GUI_H__ */

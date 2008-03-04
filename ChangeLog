@@ -1,3 +1,9 @@
+2008/03/04:
+ - Now became entirely GUI-driven.
+ - Dropped SDL dependency, everything GUI-related is handled by GTK+ .
+ - Dependencies: gtkmm-2.4, libglademm-2.4, cairomm-1.0, xtst and sigc++-2.0 .
+ - Added real-time notification of IR inaccuracies when calibrating.
+
 2008/02/25:
  - Icons and data files should now go into appropriate places when properly installed.
 
