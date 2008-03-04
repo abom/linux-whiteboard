@@ -1,11 +1,11 @@
 To build whiteboard, you'll need the usual toolchain (gcc, g++ and make) and the following libraries. The names of the libraries are taken from Ubuntu's database. If you're using a different Linux distro, please change them according to yours:
 
   * libcwiid0-dev
-  * libsdl-sge-dev
   * libgtkmm-2.4-dev
   * libglademm-2.4-dev
   * libxtst-dev
-  * libsdl-dev
+  * libcairomm-1.0-dev
+  * libsigc++-2.0-dev
 
 If you have checked out whiteboard from our SVN repository, you probably need those too: 
   * autoconf
