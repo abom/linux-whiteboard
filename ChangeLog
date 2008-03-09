@@ -1,12 +1,3 @@
-2008-03-09  gettextize  <bug-gnu-gettext@gnu.org>
-
-	* Makefile.am (EXTRA_DIST): Add build-aux/config.rpath.
-
-2008-03-09  gettextize  <bug-gnu-gettext@gnu.org>
-
-	* Makefile.am (ACLOCAL_AMFLAGS): New variable.
-	(EXTRA_DIST): Add config.rpath, m4/ChangeLog.
-
 2008/03/04:
  - Now became entirely GUI-driven.
  - Dropped SDL dependency, everything GUI-related is handled by GTK+ .
