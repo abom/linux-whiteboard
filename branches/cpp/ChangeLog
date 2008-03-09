@@ -1,5 +1,9 @@
 2008-03-09  gettextize  <bug-gnu-gettext@gnu.org>
 
+	* configure.ac (AC_CONFIG_FILES): Add po/Makefile.in.
+
+2008-03-09  gettextize  <bug-gnu-gettext@gnu.org>
+
 	* m4/gettext.m4: New file, from gettext-0.17.
 	* m4/iconv.m4: New file, from gettext-0.17.
 	* m4/lib-ld.m4: New file, from gettext-0.17.
