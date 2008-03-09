@@ -27,7 +27,7 @@ int main(int argc,char *argv[])
     setlocale (LC_ALL, "");
     // URL: http://www.gnome.org/~malcolm/i18n/i18n-header.html
     bindtextdomain(PACKAGE, LOCALEDIR);
-    bind_textdomain_codeset(PACKAGE, "UTF-8");
+    //bind_textdomain_codeset(PACKAGE, "UTF-8");
     textdomain(PACKAGE);
 
     MainGtkWindow main_window(argc, argv);
