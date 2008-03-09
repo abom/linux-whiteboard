@@ -1,4 +1,4 @@
-whiteboarddir = ${prefix}/share/whiteboard
-windowsdir = ${whiteboarddir}/windows
+whiteboarddatadir = ${datadir}/whiteboard
+whiteboardwindowsdir = ${whiteboarddatadir}/windows
 
-windows_DATA = main-window.glade calibration-window.glade
+whiteboardwindows_DATA = main-window.glade calibration-window.glade

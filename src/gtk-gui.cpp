@@ -84,8 +84,8 @@ MainGtkWindow::MainGtkWindow(int argc,char *argv[]) :
     // WARNING: Constructing paths this way is not safe/portable, but I don't want to bother with g_free()
 
     /* GUI */
-    std::string const DATA_DIR(DATADIR);
     std::string const WINDOWS_DIR(WINDOWSDIR);
+    std::string const PIXMAPS_DIR(PIXMAPSDIR);
     Glib::RefPtr<Gnome::Glade::Xml> refXml = Gnome::Glade::Xml::create(WINDOWS_DIR + "/main-window.glade");
 
     refXml->get_widget("main-window", m_gtk_main_window);
@@ -113,7 +113,9 @@ MainGtkWindow::MainGtkWindow(int argc,char *argv[]) :
     m_gtk_output->set_buffer(m_output_buffer);
     m_time_text_tag->property_font() = "bold";
 
-    m_gtk_status_icon->set_from_file(DATA_DIR + "/icon.svg");
+    std::string const ICON_FILE(PIXMAPS_DIR + "/whiteboard.svg");
+    m_gtk_main_window->set_icon_from_file(ICON_FILE);
+    m_gtk_status_icon->set_from_file(ICON_FILE);
 
     /* Data */
     if ( load_config(m_transform) ) {
