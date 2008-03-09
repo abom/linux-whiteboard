@@ -10,7 +10,6 @@ cd $srcdir
 #intltoolize --copy --force --automake || exit 1
 #glib-gettextize --copy --force || exit 1
 
-gettextize --copy --force || exit 1
 autoreconf -v --install || exit 1
 
 cd $ORIGDIR || exit $?
