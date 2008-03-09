@@ -9,8 +9,6 @@ AM_INIT_AUTOMAKE([-Wall -Werror])
 AM_GNU_GETTEXT([external])
 #AM_GLIB_GNU_GETTEXT
 
-AC_DEFINE_UNQUOTED([LOCALEDIR], "$(localedir)", [The locale directory])
-
 AC_PROG_CXX
 AC_PROG_LIBTOOL
 
