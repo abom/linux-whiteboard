@@ -24,11 +24,12 @@
 int main(int argc,char *argv[])
 {
     // From the intltool docs
-    setlocale (LC_ALL, "");
+    //setlocale (LC_ALL, "");
     // URL: http://www.gnome.org/~malcolm/i18n/i18n-header.html
-    bindtextdomain(PACKAGE, LOCALEDIR);
-    //bind_textdomain_codeset(PACKAGE, "UTF-8");
-    textdomain(PACKAGE);
+    // URL: http://www.gtkmm.org/docs/gtkmm-2.4/docs/tutorial/html/ch24s02.html
+    bindtextdomain(GETTEXT_PACKAGE, WHITEBOARDLOCALEDIR);
+    bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
+    textdomain(GETTEXT_PACKAGE);
 
     MainGtkWindow main_window(argc, argv);
     return main_window.run();
