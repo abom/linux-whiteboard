@@ -24,6 +24,13 @@
 
 #include <assert.h> // assert
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif /* HAVE_CONFIG_H */
+
+#include "gettext.h"
+#define _(String) gettext (String)
+
 
 #define ASSERT(exp, msg) { \
     int const p = exp; \

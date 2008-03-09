@@ -31,6 +31,6 @@ void fake_button(int button, bool pressed)
 {
     Display* display = XOpenDisplay(0);
     XTestFakeButtonEvent(display, button, pressed, 0);
-    printf("MOUSE %d's state changed to %d\n", button, pressed);
+    //printf("MOUSE %d's state changed to %d\n", button, pressed);
     XCloseDisplay(display);
 }

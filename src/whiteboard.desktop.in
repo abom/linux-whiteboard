@@ -1,0 +1,10 @@
+[Desktop Entry]
+Encoding=UTF-8
+_Name=Wiimote Whiteboard
+_Comment=Control your mouse pointer with the Wiimote
+Exec=whiteboard
+Icon=whiteboard.svg
+StartupNotify=true
+Terminal=false
+Type=Application
+Categories=GNOME;Application;Accessories;

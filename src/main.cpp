@@ -23,6 +23,13 @@
 /* WARNING: Remember to run valgrind */
 int main(int argc,char *argv[])
 {
+    // From the intltool docs
+    setlocale (LC_ALL, "");
+    // URL: http://www.gnome.org/~malcolm/i18n/i18n-header.html
+    bindtextdomain(PACKAGE, LOCALEDIR);
+    bind_textdomain_codeset(PACKAGE, "UTF-8");
+    textdomain(PACKAGE);
+
     MainGtkWindow main_window(argc, argv);
     return main_window.run();
 }
