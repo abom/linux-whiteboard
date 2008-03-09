@@ -20,7 +20,7 @@ Having gotten those installed, navigate to the program's root directory and issu
 
 If it was a SVN snapshot, do these first:
 {{{
-autoconf --install
+./autogen.sh
 }}}
 
 For Ubuntu Gutsy users:
