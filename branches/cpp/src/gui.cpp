@@ -196,8 +196,8 @@ CalibrationWindow::CalibrationWindow(cwiid_wiimote_t* wiimote, CalibrationData& 
     m_gtk_calibration_area(0)
 {
     // Gets the widgets
-    std::string const DATA_DIR(DATADIR);
-    Glib::RefPtr<Gnome::Glade::Xml> refXml = Gnome::Glade::Xml::create(DATA_DIR + "/calibration-window.glade");
+    std::string const WINDOWS_DIR(WINDOWSDIR);
+    Glib::RefPtr<Gnome::Glade::Xml> refXml = Gnome::Glade::Xml::create(WINDOWS_DIR + "/calibration-window.glade");
 
     refXml->get_widget("calibration-window", m_gtk_window);
     refXml->get_widget("calibration-area", m_gtk_calibration_area);

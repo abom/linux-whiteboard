@@ -47,13 +47,27 @@ void* wiicursor_thread_func(void* ptr);
 // NOTE: These data will be not filled with correct info
 // all the time because it's not necessary. I'm well aware of that.
 struct WiimoteEventData {
-    point_t ir_pos, ir_on_mouse_down, cursor_pos; // Their locations
-    delta_t_t waited;
+    WiimoteEventData(
+	point_t const& ir_pos, point_t const& ir_on_mouse_down, point_t cursor_pos, delta_t_t const& waited
+    ) :
+	ir_pos(ir_pos),
+	ir_on_mouse_down(ir_on_mouse_down),
+	waited(waited)
+    { }
+
+    point_t const& ir_pos;
+    point_t const& ir_on_mouse_down;
+    point_t cursor_pos;
+    delta_t_t const& waited;
 };
 typedef sigc::slot<void, WiimoteEventData const&> WiiEventSlotType;
 
 class WiiCursor {
 public:
+    WiiCursor() :
+	m_wii_event_data(m_ir, m_ir_on_mouse_down, point_t(), m_waited)
+    { }
+
     void process(
 	cwiid_wiimote_t* wiimote, matrix_t transform,
 	unsigned int move_tolerance, unsigned int wait_tolerance,
@@ -106,6 +120,7 @@ private:
 			m_fn_right_button_down, m_fn_right_button_up,
 			m_fn_begin_click_and_drag, m_fn_end_click_and_drag,
 			m_fn_mouse_down, m_fn_mouse_up, m_fn_mouse_moved;
+    WiimoteEventData m_wii_event_data; // To pass to event handlers
 };
 
 

@@ -85,7 +85,8 @@ MainGtkWindow::MainGtkWindow(int argc,char *argv[]) :
 
     /* GUI */
     std::string const DATA_DIR(DATADIR);
-    Glib::RefPtr<Gnome::Glade::Xml> refXml = Gnome::Glade::Xml::create(DATA_DIR + "/main-window.glade");
+    std::string const WINDOWS_DIR(WINDOWSDIR);
+    Glib::RefPtr<Gnome::Glade::Xml> refXml = Gnome::Glade::Xml::create(WINDOWS_DIR + "/main-window.glade");
 
     refXml->get_widget("main-window", m_gtk_main_window);
     refXml->get_widget("output-scroll", m_gtk_output_scroll);
@@ -117,13 +118,12 @@ MainGtkWindow::MainGtkWindow(int argc,char *argv[]) :
     /* Data */
     if ( load_config(m_transform) ) {
 	sync_configuration_state(true);
-	print_to_output("Configuration file successfully loaded."
-			" To connect the Wiimote, press 1+2 on the Wiimote"
-			" then click the 'Connect' button.\n");
+	print_to_output(_(  "Configuration file successfully loaded."
+			    " To connect the Wiimote, press 1+2 on the Wiimote then click 'Connect'.\n"));
     }
     else {
 	sync_configuration_state(false);
-	print_to_output("Failed to load configuration file, you need to calibrate it before connecting the Wiimote.\n");
+	print_to_output(_("Failed to load configuration file, you need to calibrate it before activating the Wiimote.\n"));
     }
 }
 
@@ -140,17 +140,16 @@ void MainGtkWindow::toggle_wiimote_clicked() {
 	m_wiimote = wii_connect(0); // NOTE: We don't care about any command-line parameters for now
 	if (m_wiimote) {
 	    sync_wiimote_state(true);
-	    print_to_output("Successfully connected to the Wiimote."
-			    " Click 'Activate' to use your infrared pen.\n");
+	    print_to_output(_("Wiimote connected. Click 'Activate' to use your infrared pen.\n"));
 	}
-	else print_to_output("Failed to connect to the Wiimote.\n");
+	else print_to_output(_("Failed to connect to the Wiimote.\n"));
     }
     else {
 	if (m_thread_running)
 	    finish_wii_thread();
 	if (!wii_disconnect(m_wiimote))
-	    print_to_output("Successfully disconnected the Wiimote.\n");
-	else print_to_output("There was an error disconnecting the Wiimote. Hell's broken loose!!1.\n");
+	    print_to_output(_("Successfully disconnected the Wiimote.\n"));
+	else print_to_output(_("There was an error disconnecting the Wiimote. Hell's broken loose!!1.\n"));
 	// But we assume it was successfully disconnected anyway, can't do anything about that
 	m_wiimote = 0;
 	sync_wiimote_state(false);
@@ -173,9 +172,9 @@ void MainGtkWindow::calibrate_clicked() {
 	m_transform = calculate_transformation_matrix(cal_data.p_wii);
 	save_config(m_transform);
 	sync_configuration_state(true);
-	print_to_output("Successfully calibrated and configuration file has been saved.\n");
+	print_to_output(_("Calibration succeeded.\n"));
     }
-    else print_to_output("User escaped or there was an error while calibrating the Wii.\n");
+    else print_to_output(_("User escaped or there was an error while calibrating the Wii.\n"));
 
     cwiid_disable(m_wiimote, CWIID_FLAG_MESG_IFC);
 }
@@ -236,7 +235,7 @@ void MainGtkWindow::sync_configuration_state(bool configuration_is_valid) {
     m_transform_matrix_correct = configuration_is_valid;
 }
 void MainGtkWindow::sync_activation_state(bool activated) {
-    m_gtk_toggle_activation->set_label(activated ? "De_activate" : "_Activate");
+    m_gtk_toggle_activation->set_label(activated ? _("De_activate") : _("_Activate"));
     //m_gtk_sim_toggle_activation->set_label(activated ? "De_activate" : "_Activate");
     m_gtk_calibrate->set_sensitive(!activated);
     m_gtk_sim_calibrate->set_sensitive(!activated);

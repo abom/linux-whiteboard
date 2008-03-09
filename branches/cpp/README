@@ -1,6 +1,13 @@
 Linux Electronic Whiteboard with Wiimote
 ----------------------------------------
 
+***
+Online documentations are available at:
+http://code.google.com/p/linux-whiteboard/w/list
+
+Users are recommended to use those if possible.
+***
+
 <vanhtu1987: This needs updating>
  - Run 'autoreconf -i'
  - Run './configure && make' to compile and 'make install' to install

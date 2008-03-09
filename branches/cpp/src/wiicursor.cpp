@@ -30,17 +30,14 @@ void* wiicursor_thread_func(void* ptr) {
     get_delta_t(last_time);
 
     while ( data.all_running() ) {
-	WiimoteEventData const wii_event_data =
-	    {data.m_ir, data.m_ir_on_mouse_down, point_t(), data.m_waited};
-
 	if ( data.right_click() ) {
-		data.m_fn_right_button_down(wii_event_data);
+		data.m_fn_right_button_down(data.m_wii_event_data);
 	    break;
 	}
 	else data.m_waited += get_delta_t(last_time);
 
 	if ( data.click_and_drag() ) {
-		data.m_fn_begin_click_and_drag(wii_event_data);
+		data.m_fn_begin_click_and_drag(data.m_wii_event_data);
 	    break;
 	}
 	else {
@@ -102,7 +99,6 @@ void WiiCursor::process(
 	    point_t& ir_new = m_ir; // Read wii.cpp if you're not sure about this
 	    uint16_t button = INVALID_BUTTON_MSG_ID;
 	    process_messages(msgs[i], &ir_new, &button);
-	    WiimoteEventData wii_event_data = {ir_new, point_t(), point_t(), m_waited};
 
 	    if (button != INVALID_BUTTON_MSG_ID) {
 		//running = false; // NOTE: Not handling any key events for now
@@ -110,30 +106,28 @@ void WiiCursor::process(
 	    }
 
 	    if (ir_new.x != INVALID_IR_POS) { // Only updates if the IR data is valid
-		point_t const cursor = infrared_data(ir_new, transform);
-		wii_event_data.cursor_pos = cursor;
+		m_wii_event_data.cursor_pos = infrared_data(ir_new, transform);
 		// NOTE: The event fires even if the cursor doesn't move,
 		// this is my design decision since it makes other things easier.
-		m_fn_mouse_moved(wii_event_data);
+		m_fn_mouse_moved(m_wii_event_data);
 	    }
 	    if ( (ir_new.x != INVALID_IR_POS) && (ir_old.x == INVALID_IR_POS) ) { // MOUSE_DOWN
 		start_thread(ir_new);
-		wii_event_data.ir_on_mouse_down = ir_new;
-		m_fn_mouse_down(wii_event_data);
+		m_fn_mouse_down(m_wii_event_data);
 	    }
 	    if ( (ir_new.x == INVALID_IR_POS) && (ir_old.x != INVALID_IR_POS) ) { // MOUSE_UP
-		m_fn_mouse_up(wii_event_data);
+		m_fn_mouse_up(m_wii_event_data);
 		finish_thread();
 
 		// Finished at this point
 		if ( click_and_drag() ) {
-		    m_fn_end_click_and_drag(wii_event_data);
+		    m_fn_end_click_and_drag(m_wii_event_data);
 		}
 		else {
 		    if ( !right_click() ) { // Left click
-			m_fn_left_clicked(wii_event_data);
+			m_fn_left_clicked(m_wii_event_data);
 		    }
-		    else m_fn_right_button_up(wii_event_data); // Right click
+		    else m_fn_right_button_up(m_wii_event_data); // Right click
 		}
 	    }
 	}

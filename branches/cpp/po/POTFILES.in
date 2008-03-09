@@ -1,0 +1,6 @@
+src/auxiliary.cpp
+src/gtk-gui.cpp
+src/whiteboard.desktop.in
+src/wii.cpp
+src/windows/calibration-window.glade
+src/windows/main-window.glade
