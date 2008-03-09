@@ -1,11 +1,7 @@
 AC_INIT([Wiimote Whiteboard], [0.2], [http://code.google.com/p/linux-whiteboard/issues/list], [whiteboard])
-AC_CONFIG_AUX_DIR([build-aux])
+# No AUX_DIR because of intltoolize's bug
+#AC_CONFIG_AUX_DIR([build-aux])
 AM_INIT_AUTOMAKE([-Wall -Werror])
-
-# We changed to intltool
-##AM_GNU_GETTEXT_VERSION([0.17])
-#AM_GNU_GETTEXT([external])
-##AM_GLIB_GNU_GETTEXT
 
 AC_PROG_CXX
 AC_PROG_LIBTOOL
