@@ -18,7 +18,7 @@ PKG_CHECK_MODULES([whiteboard], [gtkmm-2.4] [libglademm-2.4] [cairomm-1.0] [xtst
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_FILES([
     Makefile
-    po/Makefile.in
+    #po/Makefile.in
     src/Makefile
     src/windows/Makefile
 ])
