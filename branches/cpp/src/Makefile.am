@@ -5,7 +5,10 @@ windowsdir = ${whiteboarddir}/windows
 
 bin_PROGRAMS = whiteboard
 whiteboard_DATA = whiteboard.svg
-whiteboard_CXXFLAGS = ${whiteboard_CFLAGS} -DDATADIR=\"$(whiteboarddir)\" -DWINDOWSDIR=\"$(windowsdir)\"
+whiteboard_CXXFLAGS = 	${whiteboard_CFLAGS} \
+			-DDATADIR=\"$(whiteboarddir)\" \
+			-DWINDOWSDIR=\"$(windowsdir)\" \
+			-DLOCALEDIR=\"$(localedir)\"
 whiteboard_LDFLAGS = ${whiteboard_LIBS} -lcwiid $(LIBINTL)
 whiteboard_SOURCES = 	main.cpp common.h matrix.h \
 			auxiliary.cpp auxiliary.h events.cpp events.h \
