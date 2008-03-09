@@ -21,10 +21,10 @@
 
 
 void show_help() {
-    printf(_(	"\nUsage: whiteboard [-h] [-c] [-mADDRESS]\n"
-		"	-h: This message.\n"
-		"	-c: Forces (re)calibrating the Wiimote.\n"
-		"	-m: Forces using the specified MAC address ADDRESS.\n") );
+    printf( "\nUsage: whiteboard [-h] [-c] [-mADDRESS]\n"
+	    "	-h: This message.\n"
+	    "	-c: Forces (re)calibrating the Wiimote.\n"
+	    "	-m: Forces using the specified MAC address ADDRESS.\n");
 }
 
 point_t screen_size() {
@@ -47,7 +47,7 @@ void screen_corners(point_t p_screen[4]) {
 }
 
 matrix_t calculate_transformation_matrix(point_t const p_wii[4]) {
-    printf(_("Calculating coefficients... "));
+    printf("Calculating coefficients... ");
 
     point_t p_screen[4];
     screen_corners(p_screen);
@@ -82,7 +82,7 @@ matrix_t calculate_transformation_matrix(point_t const p_wii[4]) {
     matrix_t const r = m.invert() * n;
     memcpy(out.elems(), r.elems(), 8*sizeof(matrix_elem_t));
 
-    printf(_("Done!\n"));
+    printf("Done!\n");
 
     return out;
 }
@@ -146,11 +146,11 @@ bool load_config(matrix_t& transform) {
     if ( in.is_open() ) {
 	in >> transform;
 
-	printf(_("Finished loading configurations.\n"));
+	printf("Finished loading configurations.\n");
 	return true;
     }
 
-    fprintf(stderr, _("Loading configuration file failed.\n"));
+    fprintf(stderr, "Loading configuration file failed.\n");
     return false;
 }
 bool save_config(matrix_t const& transform) {
@@ -158,11 +158,11 @@ bool save_config(matrix_t const& transform) {
     if ( out.is_open() ) {
 	out << transform;
 
-	printf(_("Finished saving configurations.\n"));
+	printf("Finished saving configurations.\n");
 	return true;
     }
 
-    fprintf(stderr, _("Saving configuration file failed.\n"));
+    fprintf(stderr, "Saving configuration file failed.\n");
     return false;
 }
 

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Wiimote Whiteboard 0.2\n"
 "Report-Msgid-Bugs-To: http://code.google.com/p/linux-whiteboard/issues/list\n"
-"POT-Creation-Date: 2008-03-09 17:28+0000\n"
+"POT-Creation-Date: 2008-03-09 19:38+0000\n"
 "PO-Revision-Date: 2008-03-09 17:16+0000\n"
 "Last-Translator: VAnhTu1987 <VAnhTu1987@gmail.com>\n"
 "Language-Team: Vietnamese\n"
@@ -15,46 +15,6 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-
-#: src/auxiliary.cpp:24
-#, c-format
-msgid ""
-"\n"
-"Usage: whiteboard [-h] [-c] [-mADDRESS]\n"
-"\t-h: This message.\n"
-"\t-c: Forces (re)calibrating the Wiimote.\n"
-"\t-m: Forces using the specified MAC address ADDRESS.\n"
-msgstr ""
-
-#: src/auxiliary.cpp:50
-#, c-format
-msgid "Calculating coefficients... "
-msgstr ""
-
-#: src/auxiliary.cpp:85
-#, c-format
-msgid "Done!\n"
-msgstr ""
-
-#: src/auxiliary.cpp:149
-#, c-format
-msgid "Finished loading configurations.\n"
-msgstr ""
-
-#: src/auxiliary.cpp:153
-#, c-format
-msgid "Loading configuration file failed.\n"
-msgstr ""
-
-#: src/auxiliary.cpp:161
-#, c-format
-msgid "Finished saving configurations.\n"
-msgstr ""
-
-#: src/auxiliary.cpp:165
-#, c-format
-msgid "Saving configuration file failed.\n"
-msgstr ""
 
 #: src/gtk-gui.cpp:121
 msgid ""
@@ -69,7 +29,7 @@ msgid ""
 "Failed to load configuration file, you need to calibrate it before "
 "activating the Wiimote.\n"
 msgstr ""
-"Không nạp được tập tin cấu hình. Bạn cần chỉnh Wiimote trước khi sử dụng.\n"
+"Không đọc được các thiết lập cũ. Bạn cần chỉnh Wiimote trước khi sử dụng.\n"
 
 #: src/gtk-gui.cpp:143
 msgid "Wiimote connected. Click 'Activate' to use your infrared pen.\n"
@@ -86,77 +46,48 @@ msgstr "Đã ngắt kết nối khởi Wiimote.\n"
 #: src/gtk-gui.cpp:152
 msgid "There was an error disconnecting the Wiimote. Hell's broken loose!!1.\n"
 msgstr ""
+"Không ngắt kết nối với Wiimote được!. Bạn nên khởi động lại chương trình.\n"
 
 #: src/gtk-gui.cpp:175
 msgid "Calibration succeeded.\n"
-msgstr ""
+msgstr "Đã chỉnh xong Wiimote.\n"
 
 #: src/gtk-gui.cpp:177
 msgid "User escaped or there was an error while calibrating the Wii.\n"
-msgstr ""
+msgstr "Người dùng đã bấm nút thoát hoặc có lỗi khi chỉnh.\n"
 
 #: src/gtk-gui.cpp:238
 msgid "De_activate"
-msgstr ""
+msgstr "Giải hoạt (_A)"
 
 #: src/gtk-gui.cpp:238 src/windows/main-window.glade:62
 msgid "_Activate"
-msgstr ""
-
-#: src/wii.cpp:28
-#, c-format
-msgid "Error setting LEDs.\n"
-msgstr ""
-
-#: src/wii.cpp:34
-#, c-format
-msgid "Error setting report mode.\n"
-msgstr ""
-
-#: src/wii.cpp:51
-#, c-format
-msgid "Put Wiimote in discoverable mode now (press 1+2)...\n"
-msgstr ""
-
-#: src/wii.cpp:53
-#, c-format
-msgid "Connected!!!\n"
-msgstr ""
-
-#: src/wii.cpp:60
-#, c-format
-msgid "Unable to connect to wiimote\n"
-msgstr ""
-
-#: src/wii.cpp:83
-#, c-format
-msgid "Button Report: %.4X\n"
-msgstr ""
+msgstr "Kích hoạt (_A)"
 
 #: src/windows/calibration-window.glade:8
 msgid "Wiimote Calibration"
-msgstr ""
+msgstr "Chỉnh Wiimote"
 
 #: src/windows/main-window.glade:8
 msgid "Whiteboard"
-msgstr ""
+msgstr "Màn hình cảm ứng dùng Wiimote"
 
 #: src/windows/main-window.glade:49
 msgid "gtk-connect"
-msgstr ""
+msgstr "gtk-connect"
 
 #: src/windows/main-window.glade:75 src/windows/main-window.glade:117
 msgid "Calib_rate"
-msgstr ""
+msgstr "Chỉnh Wiimote (_R)"
 
 #: src/windows/main-window.glade:99
 msgid "_Connect/Dis_connect"
-msgstr ""
+msgstr "Kết nối/Ngắt kết nối (_C)"
 
 #: src/windows/main-window.glade:108
 msgid "_Activate/De_activate"
-msgstr ""
+msgstr "Kích hoạt/Giaỉ hoạt (_A)"
 
 #: src/windows/main-window.glade:131
 msgid "_Quit"
-msgstr ""
+msgstr "Thoát (_Q)"

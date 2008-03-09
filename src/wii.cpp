@@ -25,13 +25,13 @@
 void set_led_state(cwiid_wiimote_t *wiimote, unsigned char led_state)                                                                                         
 {
     if (cwiid_command(wiimote, CWIID_CMD_LED, led_state)) {
-	fprintf(stderr, _("Error setting LEDs.\n"));
+	fprintf(stderr, "Error setting LEDs.\n");
     }
 }
 void set_rpt_mode(cwiid_wiimote_t *wiimote, unsigned char rpt_mode)
 {
     if (cwiid_command(wiimote, CWIID_CMD_RPT_MODE, rpt_mode)) {
-	fprintf(stderr, _("Error setting report mode.\n"));
+	fprintf(stderr, "Error setting report mode.\n");
     }
 }
 
@@ -48,16 +48,16 @@ cwiid_wiimote_t* wii_connect(char *mac)
 
     /* Connect to the wiimote */
     cwiid_wiimote_t* wiimote = 0;
-    printf(_("Put Wiimote in discoverable mode now (press 1+2)...\n"));
+    printf("Put Wiimote in discoverable mode now (press 1+2)...\n");
     if ( (wiimote = cwiid_connect(&bdaddr, 0)) ) {
-	printf(_("Connected!!!\n"));
+	printf("Connected!!!\n");
 
 	set_led_state(wiimote, 1); /* Notifies the user */
 	set_rpt_mode(wiimote, CWIID_RPT_IR | CWIID_RPT_BTN);
 
 	return wiimote;
     }
-    else fprintf(stderr, _("Unable to connect to wiimote\n"));
+    else fprintf(stderr, "Unable to connect to wiimote\n");
 
     return 0;
 }
@@ -80,7 +80,7 @@ int process_messages(cwiid_mesg const& mesg, point_t* ir_pos, uint16_t* buttons)
     switch (mesg.type) {
 	case CWIID_MESG_BTN:
 	    if (buttons) {
-		printf(_("Button Report: %.4X\n"), mesg.btn_mesg.buttons);
+		printf("Button Report: %.4X\n", mesg.btn_mesg.buttons);
 		*buttons = mesg.btn_mesg.buttons;
 	    }
 	    break;
