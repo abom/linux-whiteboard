@@ -78,9 +78,9 @@ matrix_t calculate_transformation_matrix(point_t const p_wii[4]) {
 	m[7][i*2+1] = -p_screen[i].y * p_wii[i].y;
     }
 
-    matrix_t out(3, 3);
+    matrix_t out(TRANSFORM_MATRIX_ROWS, TRANSFORM_MATRIX_COLS);
     matrix_t const r = m.invert() * n;
-    memcpy(out.elems(), r.elems(), 8*sizeof(matrix_elem_t));
+    memcpy(out.elems(), r.elems(), 8*sizeof(matrix_elem_t)); // NOTE: Do *something* about it!. memcpy, ugh...
 
     printf("Done!\n");
 
@@ -105,7 +105,7 @@ delta_t_t get_delta_t(delta_t_t& last_time) {
   static delta_t_t last_time = 0;
 
   return get_delta_t(last_time);
-  }*/
+}*/
 
 
 point_t infrared_data(point_t const& ir_pos_new, matrix_t const& transform) {

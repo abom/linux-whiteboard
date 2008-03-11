@@ -20,38 +20,23 @@
 #include "gui.h"
 
 
-void CalibrationWindow::calibration_right_button_down(WiimoteEventData const& data) {
+void CalibrationWindow::calibration_right_button_down(WiiEventData const& data) {
     m_cal_data.p_wii[m_cal_data.active_point++] = data.ir_pos;
-    if (m_cal_data.active_point == 4)
-	finish_calibration_thread();
+    if (m_cal_data.active_point == 4) {
+	finish_wii_thread(m_thread_data);
+	quit();
+    }
 }
-void CalibrationWindow::calibration_mouse_moved(WiimoteEventData const& data) {
+void CalibrationWindow::calibration_mouse_moved(WiiEventData const& data) {
     m_cal_data.ir_pos = data.ir_pos;
     m_cal_data.waited = data.waited;
 }
-void CalibrationWindow::calibration_mouse_down(WiimoteEventData const& data) {
+void CalibrationWindow::calibration_mouse_down(WiiEventData const& data) {
     m_cal_data.ir_on_mouse_down = data.ir_on_mouse_down;
     m_cal_data.border_crossed = false;
 }
-void CalibrationWindow::calibration_begin_click_and_drag(WiimoteEventData const& data) {
+void CalibrationWindow::calibration_begin_click_and_drag(WiiEventData const& data) {
     m_cal_data.border_crossed = true;
-}
-void* calibration_thread_func(void* ptr) {
-    ASSERT(ptr != 0, "No data has been passed along");
-    CalibrationWindow& data = *static_cast<CalibrationWindow*>(ptr);
-    ASSERT(data.m_calibration_thread != 0, "This thread has become immortal, omfg!!!1");
-
-    WiiCursor wc;
-    wc.signal_right_button_down() = sigc::mem_fun(data, &CalibrationWindow::calibration_right_button_down);
-    wc.signal_mouse_moved() = sigc::mem_fun(data, &CalibrationWindow::calibration_mouse_moved);
-    wc.signal_mouse_down() = sigc::mem_fun(data, &CalibrationWindow::calibration_mouse_down);
-    wc.signal_begin_click_and_drag() = sigc::mem_fun(data, &CalibrationWindow::calibration_begin_click_and_drag);
-    wc.process( data.m_wiimote, matrix_t(3, 3), data.MOVE_TOLERANCE, data.WAIT_TOLERANCE, data.m_thread_running); // The main loop
-
-    cwiid_disable(data.m_wiimote, CWIID_FLAG_MESG_IFC);
-    data.quit();
-
-    return 0;
 }
 
 
@@ -136,7 +121,7 @@ bool CalibrationWindow::calibration_area_exposed(GdkEventExpose* event) {
     cr->arc(circle_time_pos.x, circle_time_pos.y, CIRCLE_RADIUS, 0, FULL_CIRCLE);
     cr->stroke();
     // 'Hand'?
-    double const hand_angle = FULL_CIRCLE * static_cast<double>(m_cal_data.waited) / static_cast<double>(WAIT_TOLERANCE);
+    double const hand_angle = FULL_CIRCLE * static_cast<double>(m_cal_data.waited) / static_cast<double>(m_thread_data.wait_tolerance);
     cr->set_source_rgb(0.75, 1.0, 1.0);
     cr->set_line_width(2.0);
     cr->move_to(circle_time_pos.x, circle_time_pos.y);
@@ -155,8 +140,8 @@ bool CalibrationWindow::calibration_area_exposed(GdkEventExpose* event) {
     // Relative IR position
     unsigned int const DOT_RADIUS = 4;
     point_t const dot_pos(
-	circle_move_pos.x+static_cast<int>((double)CIRCLE_RADIUS/(double)MOVE_TOLERANCE)*(m_cal_data.ir_pos.x-m_cal_data.ir_on_mouse_down.x),
-	circle_move_pos.y+static_cast<int>((double)CIRCLE_RADIUS/(double)MOVE_TOLERANCE)*(m_cal_data.ir_pos.y-m_cal_data.ir_on_mouse_down.y)
+	circle_move_pos.x+static_cast<int>((double)CIRCLE_RADIUS/(double)m_thread_data.move_tolerance)*(m_cal_data.ir_pos.x-m_cal_data.ir_on_mouse_down.x),
+	circle_move_pos.y+static_cast<int>((double)CIRCLE_RADIUS/(double)m_thread_data.move_tolerance)*(m_cal_data.ir_pos.y-m_cal_data.ir_on_mouse_down.y)
     );
     if (!m_cal_data.border_crossed) {
 	cr->set_source_rgb(1.0, 1.0, 0.0);
@@ -173,30 +158,18 @@ bool CalibrationWindow::redraw_calibration_area() {
     return true;
 }
 
-void CalibrationWindow::start_calibration_thread() {
-    // NOTE: Not checking for any return value here                                                                                                            
-    m_thread_running = true;
-    pthread_create(&m_calibration_thread, 0, &calibration_thread_func, this);
-}
-void CalibrationWindow::finish_calibration_thread() {
-    m_thread_running = false;
-    pthread_join(m_calibration_thread, 0);
-}
-
 void CalibrationWindow::quit() {
     m_gtk_window->hide();
 }
 
 CalibrationWindow::CalibrationWindow(cwiid_wiimote_t* wiimote, CalibrationData& cal_data) :
-    m_wiimote(wiimote),
-    m_cal_data(cal_data),
-    m_calibration_thread(0),
-    m_thread_running(false),
     m_gtk_window(0),
-    m_gtk_calibration_area(0)
+    m_gtk_calibration_area(0),
+    m_cal_data(cal_data)
 {
     // Gets the widgets
     std::string const WINDOWS_DIR(WINDOWSDIR);
+    std::string const PIXMAPS_DIR(PIXMAPSDIR);
     Glib::RefPtr<Gnome::Glade::Xml> refXml = Gnome::Glade::Xml::create(WINDOWS_DIR + "/calibration-window.glade");
 
     refXml->get_widget("calibration-window", m_gtk_window);
@@ -205,8 +178,22 @@ CalibrationWindow::CalibrationWindow(cwiid_wiimote_t* wiimote, CalibrationData& 
     // Prepares the widgets
     m_gtk_calibration_area->modify_bg( Gtk::STATE_NORMAL, Gdk::Color("black") );
     m_gtk_calibration_area->signal_expose_event().connect( sigc::mem_fun(*this, &CalibrationWindow::calibration_area_exposed) );
+
+    std::string const ICON_FILE(PIXMAPS_DIR + "/whiteboard.svg");
+    m_gtk_window->set_icon_from_file(ICON_FILE);
     m_gtk_window->signal_key_press_event().connect( sigc::mem_fun(*this, &CalibrationWindow::calibration_area_key_pressed) );
     m_gtk_window->maximize();
+
+    // Data
+    m_thread_data.wiimote = wiimote;
+
+    m_thread_data.move_tolerance = 15;
+    m_thread_data.wait_tolerance = 1000;
+
+    m_thread_data.events.right_button_down = sigc::mem_fun(*this, &CalibrationWindow::calibration_right_button_down);
+    m_thread_data.events.mouse_moved = sigc::mem_fun(*this, &CalibrationWindow::calibration_mouse_moved);
+    m_thread_data.events.mouse_down = sigc::mem_fun(*this, &CalibrationWindow::calibration_mouse_down);
+    m_thread_data.events.begin_click_and_drag = sigc::mem_fun(*this, &CalibrationWindow::calibration_begin_click_and_drag);
 }
 
 
@@ -214,16 +201,16 @@ int CalibrationWindow::get_calibration_points() {
     Gtk::Main gtk_kit(0, 0); // NOTE: Bypassing potential arguments for GTK+ here
 
     // Starts the main loop
-    start_calibration_thread();
-    sigc::connection redraw_connection =
+    start_wii_thread(m_thread_data);
+    sigc::connection redraw_sigc_connection =
 	Glib::signal_timeout().connect(
 	    sigc::mem_fun(*this, &CalibrationWindow::redraw_calibration_area), 100 );
 
     gtk_kit.run(*m_gtk_window);
 
-    redraw_connection.disconnect();
-    if (m_thread_running)
-	finish_calibration_thread();
+    // Finished at this point, whether succeeded or escaped by user
+    redraw_sigc_connection.disconnect();
+    finish_wii_thread(m_thread_data);
 
     return m_cal_data.active_point != 4;
 }

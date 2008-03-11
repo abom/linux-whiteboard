@@ -69,35 +69,25 @@ public:
      * Returns 0 on success, -1 on error or user escapes */
     int get_calibration_points();
 private:
-    friend void* calibration_thread_func(void* ptr); // NOTE: Friends can see your private :-<
-
     /* Event handlers for the calibration window */
     bool calibration_area_key_pressed(GdkEventKey* event);
     bool calibration_area_exposed(GdkEventExpose* event);
     bool redraw_calibration_area();
 
-    void start_calibration_thread();
-    void finish_calibration_thread();
-    void calibration_right_button_down(WiimoteEventData const& data);
-    void calibration_mouse_moved(WiimoteEventData const& data);
-    void calibration_mouse_down(WiimoteEventData const& data);
-    void calibration_begin_click_and_drag(WiimoteEventData const& data);
+    void calibration_right_button_down(WiiEventData const& data);
+    void calibration_mouse_moved(WiiEventData const& data);
+    void calibration_mouse_down(WiiEventData const& data);
+    void calibration_begin_click_and_drag(WiiEventData const& data);
 
     void quit(); // Tells GTK+ to quit, either successfully calibrated or not
-
-
-    cwiid_wiimote_t* m_wiimote;
-    CalibrationData& m_cal_data;
-
-    /* Thread to calibrate and update the window */
-    pthread_t m_calibration_thread;
-    bool m_thread_running;
 
     /* GUI stuff */
     Gtk::Window* m_gtk_window;
     Gtk::DrawingArea* m_gtk_calibration_area;
-    static unsigned int const MOVE_TOLERANCE = 15;
-    static unsigned int const WAIT_TOLERANCE = 1000;
+
+    /* Data */
+    CalibrationData& m_cal_data;
+    WiiThreadFuncData m_thread_data;
 };
 
 

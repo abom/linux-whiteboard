@@ -38,11 +38,6 @@
 
 // NOTE: GUI stuff is allowed to be a bit messy since they are disposable
 
-// NOTE: The *only* reason this is not in MainGtkWindow is
-// because pthread is a C library
-void* wii_thread_func(void* ptr);
-
-
 /* NOTE: Read the GNOME HIG! */
 class MainGtkWindow {
 public:
@@ -51,8 +46,6 @@ public:
     /* Returns 0 on success */
     int run();
 private:
-    friend void* wii_thread_func(void* ptr); // NOTE: Friends can see your private :-<
-
     /* Event handlers */
     void toggle_wiimote_clicked();
     void toggle_activation_clicked();
@@ -60,12 +53,9 @@ private:
     void status_icon_clicked();
     void status_icon_popup(guint button, guint32 activate_time);
     void sim_quit_clicked();
-    void start_wii_thread();
-    void finish_wii_thread();
 
     /* Helpers */
     void print_to_output(char const* text);
-    void sync_configuration_state(bool configuration_is_valid);
     void sync_activation_state(bool activated);
     void sync_wiimote_state(bool wiimote_is_connected);
     bool wiimote_connected() const;
@@ -89,12 +79,8 @@ private:
     Glib::RefPtr<Gtk::TextTag> m_time_text_tag;
 
     /* Data */
-    bool m_transform_matrix_correct;
-    matrix_t m_transform;
-    cwiid_wiimote_t* m_wiimote;
-    pthread_t m_wii_thread;
-    bool m_thread_running;
+    WiiThreadFuncData m_thread_data;
 };
 
 
-#endif /* ----- #ifndef __GTK_GUI_H__  ----- */
+#endif /* __GTK_GUI_H__ */

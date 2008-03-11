@@ -68,4 +68,9 @@ typedef Point point_t;
 #define INVALID_BUTTON_MSG_ID static_cast<unsigned int>(1337)
 
 
+// Transformation matrix's dimensions
+#define TRANSFORM_MATRIX_ROWS static_cast<int>(3)
+#define TRANSFORM_MATRIX_COLS static_cast<int>(3)
+
+
 #endif   /* __COMMON_H__ */
