@@ -19,7 +19,7 @@
  */
 
 
-#include "wii.h"
+#include "wiicontrol.h"
 
 
 void set_led_state(cwiid_wiimote_t *wiimote, unsigned char led_state)                                                                                         

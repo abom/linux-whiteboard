@@ -1,4 +1,4 @@
-/* Copyright (C) 2008 Pere Negre                                                                                                                              
+/* Copyright (C) 2008 Tu Anh Vuong
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -20,6 +20,40 @@
 #include "wiicursor.h"
 
 
+void* wii_thread_func(void* ptr) {
+    ASSERT(ptr != 0, "No data has been passed along");
+    WiiThreadFuncData& data = *static_cast<WiiThreadFuncData*>(ptr);
+    ASSERT(data.this_thread != 0, "This thread has become immortal, omfg!!!1");
+                                                                                                                                                               
+    WiiCursor wc;
+    wc.events() = data.events;
+    wc.process(data.wiimote, data.transform, data.move_tolerance, data.wait_tolerance, data.thread_running); // The main loop
+
+    cwiid_disable(data.wiimote, CWIID_FLAG_MESG_IFC);
+    data.this_thread = 0;
+    data.thread_running = false;
+
+    return 0;
+}
+void start_wii_thread(WiiThreadFuncData& thread_data) {
+    // NOTE: Not checking for any return value here
+    // NOTE: Remember to find out how to clear the Wiimote cache                                                                                               
+    if (!thread_data.thread_running) {
+	thread_data.thread_running = true;
+	pthread_create(&thread_data.this_thread, 0, &wii_thread_func, &thread_data);
+    }
+}
+void finish_wii_thread(WiiThreadFuncData& thread_data) {
+    if (thread_data.thread_running) {
+	thread_data.thread_running = false;
+	// NOTE: We have to check because this_thread also gets cleared at
+	// the end of the thread
+	if (thread_data.this_thread)
+	    pthread_join(thread_data.this_thread, 0);
+    }
+}
+
+
 void* wiicursor_thread_func(void* ptr) {
     ASSERT(ptr != 0, "No data has been passed along");
     WiiCursor& data = *static_cast<WiiCursor*>(ptr);
@@ -31,13 +65,13 @@ void* wiicursor_thread_func(void* ptr) {
 
     while ( data.all_running() ) {
 	if ( data.right_click() ) {
-		data.m_fn_right_button_down(data.m_wii_event_data);
+		data.m_wii_events.right_button_down(data.m_wii_event_data);
 	    break;
 	}
 	else data.m_waited += get_delta_t(last_time);
 
 	if ( data.click_and_drag() ) {
-		data.m_fn_begin_click_and_drag(data.m_wii_event_data);
+		data.m_wii_events.begin_click_and_drag(data.m_wii_event_data);
 	    break;
 	}
 	else {
@@ -52,8 +86,8 @@ void* wiicursor_thread_func(void* ptr) {
     return 0;
 }
 
-void WiiCursor::start_thread(point_t const& ir_on_mouse_down) {
-    m_ir_on_mouse_down = ir_on_mouse_down;
+// NOTE: A further refactoring will be helpful (merging this one with start_wii_thread()
+void WiiCursor::start_thread() {
     set_data_at_thread_start();
     // NOTE: The order of the lines is important, don't mess with it
     // NOTE: Not checking for any return values here
@@ -109,25 +143,26 @@ void WiiCursor::process(
 		m_wii_event_data.cursor_pos = infrared_data(ir_new, transform);
 		// NOTE: The event fires even if the cursor doesn't move,
 		// this is my design decision since it makes other things easier.
-		m_fn_mouse_moved(m_wii_event_data);
+		m_wii_events.mouse_moved(m_wii_event_data);
 	    }
 	    if ( (ir_new.x != INVALID_IR_POS) && (ir_old.x == INVALID_IR_POS) ) { // MOUSE_DOWN
-		start_thread(ir_new);
-		m_fn_mouse_down(m_wii_event_data);
+		m_ir_on_mouse_down = ir_new;
+		m_wii_events.mouse_down(m_wii_event_data);
+		start_thread();
 	    }
 	    if ( (ir_new.x == INVALID_IR_POS) && (ir_old.x != INVALID_IR_POS) ) { // MOUSE_UP
-		m_fn_mouse_up(m_wii_event_data);
 		finish_thread();
+		m_wii_events.mouse_up(m_wii_event_data);
 
 		// Finished at this point
 		if ( click_and_drag() ) {
-		    m_fn_end_click_and_drag(m_wii_event_data);
+		    m_wii_events.end_click_and_drag(m_wii_event_data);
 		}
 		else {
 		    if ( !right_click() ) { // Left click
-			m_fn_left_clicked(m_wii_event_data);
+			m_wii_events.left_clicked(m_wii_event_data);
 		    }
-		    else m_fn_right_button_up(m_wii_event_data); // Right click
+		    else m_wii_events.right_button_up(m_wii_event_data); // Right click
 		}
 	    }
 	}

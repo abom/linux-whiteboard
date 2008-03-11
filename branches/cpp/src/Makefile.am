@@ -9,11 +9,12 @@ whiteboard_CXXFLAGS = 	${whiteboard_CFLAGS} \
 			-DWINDOWSDIR=\"$(whiteboardwindowsdir)\" \
 			-DPIXMAPSDIR=\"$(whiteboardpixmapsdir)\" \
 			-DWHITEBOARDLOCALEDIR=\"$(WHITEBOARDLOCALEDIR)\"
-whiteboard_LDFLAGS = ${whiteboard_LIBS} -lcwiid $(LIBINTL)
+whiteboard_LDFLAGS = ${whiteboard_LIBS} -lcwiid -lconfuse $(LIBINTL)
 whiteboard_SOURCES = 	main.cpp common.h matrix.h \
 			auxiliary.cpp auxiliary.h events.cpp events.h \
-			gui.cpp gui.h wii.cpp wii.h \
+			gui.cpp gui.h wiicontrol.cpp wiicontrol.h \
 			wiicursor.cpp wiicursor.h gtk-gui.cpp gtk-gui.h \
+			wiicursormanager.cpp wiicursormanager.h \
 			gettext.h
 
 whiteboarddesktopdir = ${datadir}/applications

@@ -41,7 +41,7 @@ msgstr "Không kết nối được với Wiimote.\n"
 
 #: ../src/gtk-gui.cpp:153
 msgid "Successfully disconnected the Wiimote.\n"
-msgstr "Đã ngắt kết nối khởi Wiimote.\n"
+msgstr "Đã ngắt kết nối khỏi Wiimote.\n"
 
 #: ../src/gtk-gui.cpp:154
 msgid "There was an error disconnecting the Wiimote. Hell's broken loose!!1.\n"
@@ -82,7 +82,7 @@ msgstr "Chỉnh Wiimote (_R)"
 
 #: ../src/windows/main-window.glade.h:3
 msgid "_Activate/De_activate"
-msgstr "Kích hoạt/Giaỉ hoạt (_A)"
+msgstr "Kích hoạt/Giải hoạt (_A)"
 
 #: ../src/windows/main-window.glade.h:4
 msgid "_Connect/Dis_connect"

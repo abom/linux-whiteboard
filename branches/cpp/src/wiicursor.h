@@ -1,4 +1,4 @@
-/* Copyright (C) 2008 Pere Negre                                                                                                                              
+/* Copyright (C) 2008 Tu Anh Vuong
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -30,7 +30,7 @@
 #include "matrix.h"
 #include "common.h"
 #include "events.h"
-#include "wii.h"
+#include "wiicontrol.h"
 
 
 // NOTE: These classes have quite a few ways to pass data
@@ -38,21 +38,16 @@
 // it is good, I'm not sure.
 
 
-// NOTE: The *only* reason this is not in wiimote_data is
-// because pthread is a C library
-void* wiicursor_thread_func(void* ptr);
-
-
 // Will be passed during events
 // NOTE: These data will be not filled with correct info
-// all the time because it's not necessary. I'm well aware of that.
-struct WiimoteEventData {
-    WiimoteEventData(
-	point_t const& ir_pos, point_t const& ir_on_mouse_down, point_t cursor_pos, delta_t_t const& waited
-    ) :
-	ir_pos(ir_pos),
-	ir_on_mouse_down(ir_on_mouse_down),
-	waited(waited)
+// all the time. I'm well aware of that.
+struct WiiEventData {
+    WiiEventData(
+        point_t const& ir_pos, point_t const& ir_on_mouse_down, point_t cursor_pos, delta_t_t const& waited
+    ) : 
+        ir_pos(ir_pos),
+        ir_on_mouse_down(ir_on_mouse_down),
+        waited(waited)
     { }
 
     point_t const& ir_pos;
@@ -60,7 +55,47 @@ struct WiimoteEventData {
     point_t cursor_pos;
     delta_t_t const& waited;
 };
-typedef sigc::slot<void, WiimoteEventData const&> WiiEventSlotType;
+typedef sigc::slot<void, WiiEventData const&> WiiEventSlotType;
+
+// Supported events
+struct WiiEvents {
+    WiiEventSlotType    left_clicked, right_button_down, right_button_up,
+                        begin_click_and_drag, end_click_and_drag,
+                        mouse_down, mouse_up, mouse_moved;
+};
+
+
+// Helpers, help reduce duplications
+// Will be passed to wii_thread_func_helper()
+struct WiiThreadFuncData {
+    WiiThreadFuncData() :
+	wiimote(0),
+	transform(TRANSFORM_MATRIX_ROWS, TRANSFORM_MATRIX_COLS),
+	move_tolerance(0),
+	wait_tolerance(0),
+	this_thread(0),
+	thread_running(false)
+    { }
+
+    cwiid_wiimote_t* wiimote;
+    WiiEvents events;
+    matrix_t transform;
+
+    unsigned int move_tolerance;
+    delta_t_t wait_tolerance;
+
+    pthread_t this_thread;
+    bool thread_running;
+};
+// NOTE: More descriptive names would be helpful
+void* wii_thread_func(void* ptr);
+void start_wii_thread(WiiThreadFuncData& thread_data);
+void finish_wii_thread(WiiThreadFuncData& thread_data);
+
+
+// Used internally by WiiCursor
+void* wiicursor_thread_func(void* ptr);
+
 
 class WiiCursor {
 public:
@@ -74,19 +109,14 @@ public:
 	bool& running);
 
     // Events
-    WiiEventSlotType& signal_left_clicked() { return m_fn_left_clicked; }
-    WiiEventSlotType& signal_right_button_down() { return m_fn_right_button_down; }
-    WiiEventSlotType& signal_right_button_up() { return m_fn_right_button_up; }
-    WiiEventSlotType& signal_begin_click_and_drag() { return m_fn_begin_click_and_drag; }
-    WiiEventSlotType& signal_end_click_and_drag() { return m_fn_end_click_and_drag; }
-    WiiEventSlotType& signal_mouse_down() { return m_fn_mouse_down; }
-    WiiEventSlotType& signal_mouse_up() { return m_fn_mouse_up; }
-    WiiEventSlotType& signal_mouse_moved() { return m_fn_mouse_moved; }
-
+    WiiEvents& events() {
+	return m_wii_events;
+    }
 private:
+    // NOTE: This needs refactoring like wii_thread_func()
     friend void* wiicursor_thread_func(void* ptr); // NOTE: Friends can see your private :-<
 
-    void start_thread(point_t const& ir_on_mouse_down);
+    void start_thread();
     void finish_thread();
 
     bool click_and_drag() const { return m_moved > sqr(m_move_tolerance); }
@@ -116,11 +146,8 @@ private:
     bool* m_running;
 
     // Callback functions for events
-    WiiEventSlotType	m_fn_left_clicked,
-			m_fn_right_button_down, m_fn_right_button_up,
-			m_fn_begin_click_and_drag, m_fn_end_click_and_drag,
-			m_fn_mouse_down, m_fn_mouse_up, m_fn_mouse_moved;
-    WiimoteEventData m_wii_event_data; // To pass to event handlers
+    WiiEvents m_wii_events;
+    WiiEventData m_wii_event_data; // To pass to event handlers
 };
 
 
