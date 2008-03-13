@@ -93,21 +93,21 @@ MainGtkWindow::MainGtkWindow(int argc,char *argv[]) :
     m_gtk_status_icon->set_from_file(ICON_FILE);
 
     /* Data */
-    if ( load_config(m_thread_data.transform) ) {
+    // NOTE: Load configs here
+    /*if ( load_config(m_thread_data.transform) ) {
 	print_to_output(_(  "Configuration file successfully loaded."
 			    " To connect the Wiimote, press 1+2 on the Wiimote then click 'Connect'.\n"));
     }
-    else print_to_output(_("Failed to load configuration file, you need to calibrate it before activating the Wiimote.\n"));
+    else print_to_output(_("Failed to load configuration file, you need to calibrate it before activating the Wiimote.\n"));*/
 
-    m_thread_data.move_tolerance = 5;
-    m_thread_data.wait_tolerance = 700;
+    m_wii_manager.tolerances(5, 700);
 
-    m_thread_data.events.left_clicked = sigc::ptr_fun(&wii_left_clicked);
-    m_thread_data.events.right_button_down = sigc::ptr_fun(&wii_right_button_down);
-    m_thread_data.events.right_button_up = sigc::ptr_fun(&wii_right_button_up);
-    m_thread_data.events.begin_click_and_drag = sigc::ptr_fun(&wii_begin_click_and_drag);
-    m_thread_data.events.end_click_and_drag = sigc::ptr_fun(&wii_end_click_and_drag);
-    m_thread_data.events.mouse_moved = sigc::ptr_fun(&wii_mouse_moved);
+    m_wii_manager.events().left_clicked = sigc::ptr_fun(&wii_left_clicked);
+    m_wii_manager.events().right_button_down = sigc::ptr_fun(&wii_right_button_down);
+    m_wii_manager.events().right_button_up = sigc::ptr_fun(&wii_right_button_up);
+    m_wii_manager.events().begin_click_and_drag = sigc::ptr_fun(&wii_begin_click_and_drag);
+    m_wii_manager.events().end_click_and_drag = sigc::ptr_fun(&wii_end_click_and_drag);
+    m_wii_manager.events().mouse_moved = sigc::ptr_fun(&wii_mouse_moved);
 }
 
 int MainGtkWindow::run() {
@@ -118,57 +118,47 @@ int MainGtkWindow::run() {
 }
 
 void MainGtkWindow::toggle_wiimote_clicked() {
-    if ( !wiimote_connected() ) {
-	m_thread_data.wiimote = wii_connect(0); // NOTE: We don't care about any command-line parameters for now
-	if (m_thread_data.wiimote) {
+    if ( !m_wii_manager.connected() ) {
+	if ( m_wii_manager.connect() ) {
 	    sync_wiimote_state(true);
-	    print_to_output(_("Wiimote connected. Click 'Activate' to use your infrared pen.\n"));
+	    print_to_output(_("All Wiimotes are connected. Click 'Activate' to use your infrared pen.\n"));
 	}
-	else print_to_output(_("Failed to connect to the Wiimote.\n"));
+	else print_to_output(_("Failed to connect to the Wiimotes.\n"));
     }
     else {
-	finish_wii_thread(m_thread_data);
-	if (!wii_disconnect(m_thread_data.wiimote))
-	    print_to_output(_("Successfully disconnected the Wiimote.\n"));
-	else print_to_output(_("There was an error disconnecting the Wiimote. Hell's broken loose!!1.\n"));
+	if ( m_wii_manager.disconnect() )
+	    print_to_output(_("Successfully disconnected the Wiimotes.\n"));
+	else print_to_output(_("There was an error disconnecting the Wiimotes. Hell's broken loose!!1.\n"));
 	// But we assume it was successfully disconnected anyway, can't do anything about that
 	sync_wiimote_state(false);
     }
 }
 void MainGtkWindow::toggle_activation_clicked() {
-    if (!m_thread_data.thread_running) {
-	start_wii_thread(m_thread_data);
+    if ( !m_wii_manager.activated() ) {
+	m_wii_manager.activate();
 	sync_activation_state(true);
     }
     else {
-	finish_wii_thread(m_thread_data);
+	m_wii_manager.deactivate();
 	sync_activation_state(false);
     }
 }
 void MainGtkWindow::calibrate_clicked() {
-    CalibrationData cal_data;
-    CalibrationWindow cal_window(m_thread_data.wiimote, cal_data);
-    if ( !cal_window.get_calibration_points() ) {
-	m_thread_data.transform = calculate_transformation_matrix(cal_data.p_wii);
-	save_config(m_thread_data.transform);
+    if ( m_wii_manager.calibrate() ) {
+	//save_config(m_thread_data.transform); // NOTE: *SAVE!!!*
 	print_to_output(_("Calibration succeeded.\n"));
     }
-    else print_to_output(_("User escaped or there was an error while calibrating the Wii.\n"));
-
-    cwiid_disable(m_thread_data.wiimote, CWIID_FLAG_MESG_IFC);
+    else print_to_output(_("User escaped or there was an error during calibration.\n"));
 }
 void MainGtkWindow::status_icon_clicked() {
-    if ( m_gtk_main_window->property_visible() )
-	m_gtk_main_window->hide();
-    else m_gtk_main_window->show();
+    m_gtk_main_window->property_visible() = !m_gtk_main_window->property_visible();
 }
 void MainGtkWindow::status_icon_popup(guint button, guint32 activate_time) {
     m_gtk_status_icon->popup_menu_at_position(*m_gtk_status_icon_menu, button, activate_time);
 }
 void MainGtkWindow::sim_quit_clicked() {
     // Cleans up as needed
-    if ( wiimote_connected() )
-	toggle_wiimote_clicked();
+    m_wii_manager.disconnect();
 
     m_gtk_kit.quit();
 }
@@ -210,8 +200,4 @@ void MainGtkWindow::sync_wiimote_state(bool wiimote_is_connected) {
     m_gtk_sim_toggle_activation->set_sensitive(wiimote_is_connected);
     m_gtk_calibrate->set_sensitive(wiimote_is_connected);
     m_gtk_sim_calibrate->set_sensitive(wiimote_is_connected);
-}
-
-bool MainGtkWindow::wiimote_connected() const {
-    return m_thread_data.wiimote ? true : false;
 }

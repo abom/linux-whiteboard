@@ -28,8 +28,14 @@
 #include "wiicursor.h"
 
 
+// Basically, this class transparently manages all available
+// Wiimotes and act as a virtual Wiimote to outsiders.
 class WiiCursorManager {
 public:
+    WiiCursorManager() :
+	m_wii_event_data(m_ir, m_ir_on_mouse_down, m_waited)
+    { }
+
     // Connects all available Wiimotes
     // Returns true if at least 1 Wiimote was connected
     bool connect();
@@ -61,14 +67,32 @@ public:
     bool load_config();
     // Saves configurations
     // Returns true on success
-    bool save_config();
+    bool save_config() const;
+
+    bool connected() const {
+	return m_wiis.size() ? true : false;
+    }
+    bool activated() const {
+	return connected() && m_wiis.front().thread_running;
+    }
 private:
-    // All Wiimotes
-    std::vector<WiiThreadFuncData> m_wiis;
+    // Event handlers for all connected Wiimotes
+    void wii_left_clicked(WiiEventData const& data);
+    void wii_right_button_down(WiiEventData const& data);
+    void wii_right_button_up(WiiEventData const& data);
+    void wii_begin_click_and_drag(WiiEventData const& data);
+    void wii_end_click_and_drag(WiiEventData const& data);
+    void wii_mouse_moved(WiiEventData const& data);
+
+    std::vector<WiiThreadFuncData> m_wiis; // All Wiimotes
     typedef std::vector<WiiThreadFuncData>::iterator WiiThreadFuncDataIterator;
 
-    // Events that will be emitted by this class
-    WiiEvents m_wii_events;
+    point_t m_ir;
+    point_t m_ir_on_mouse_down;
+    delta_t_t m_waited;
+
+    WiiEvents m_wii_events; // Events that will be emitted by this class
+    WiiEventData m_wii_event_data; // Data that will be sent during events
 };
 
 
