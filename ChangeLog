@@ -1,3 +1,8 @@
+2008/03/13:
+ - Added supports for multiple Wiimotes.
+ - No loading/saving configuration file yet, this
+   will be fixed in the next version.
+
 2008/03/09:
  - Now supports multiple languages.
  - Added Vietnamese translation.
