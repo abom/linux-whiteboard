@@ -57,20 +57,20 @@ struct Point {
 typedef Point point_t;
 
 
-// Mouse button IDs
-#define LEFT_BUTTON static_cast<int>(1)
-#define RIGHT_BUTTON static_cast<int>(3)
+enum MouseButtonIDs {
+    LEFT_BUTTON = 1,
+    RIGHT_BUTTON = 3,
+};
 
+enum InvalidWiiEventValues {
+    INVALID_IR_POS = 1, // To say there's no IR event, or an IR_OFF event
+    INVALID_BUTTON_MSG_ID = 1337, // To say there's no button event
+};
 
-// To say there's no IR event, or an IR_OFF event
-#define INVALID_IR_POS static_cast<int>(-1)
-// To say there's no button event
-#define INVALID_BUTTON_MSG_ID static_cast<unsigned int>(1337)
-
-
-// Transformation matrix's dimensions
-#define TRANSFORM_MATRIX_ROWS static_cast<int>(3)
-#define TRANSFORM_MATRIX_COLS static_cast<int>(3)
+enum TransformMatrixDimensions {
+    TRANSFORM_MATRIX_ROWS = 3,
+    TRANSFORM_MATRIX_COLS = 3,
+};
 
 
 #endif   /* __COMMON_H__ */

@@ -91,9 +91,11 @@ int process_messages(cwiid_mesg const& mesg, point_t* ir_pos, uint16_t* buttons)
 	    if (ir_pos) {
 		// Get valid IR events
 		std::vector<point_t> irs;
-		for (unsigned int i = 0; i != CWIID_IR_SRC_COUNT; ++i)
-		    if (mesg.ir_mesg.src[i].valid)
-			irs.push_back( point_t( mesg.ir_mesg.src[i].pos[CWIID_X], mesg.ir_mesg.src[i].pos[CWIID_Y] ) );
+		for (unsigned int i = 0; i != CWIID_IR_SRC_COUNT; ++i) {
+		    cwiid_ir_src const& current = mesg.ir_mesg.src[i];
+		    if (current.valid)
+			irs.push_back( point_t(current.pos[CWIID_X], current.pos[CWIID_Y] ) );
+		}
 		// Find the closest new IR
 		point_t const ir_old = *ir_pos;
 		ir_pos->x = INVALID_IR_POS; // No valid IR events if it

@@ -162,7 +162,7 @@ void CalibrationWindow::quit() {
     m_gtk_window->hide();
 }
 
-CalibrationWindow::CalibrationWindow(cwiid_wiimote_t* wiimote, CalibrationData& cal_data) :
+CalibrationWindow::CalibrationWindow(std::vector<WiimoteAndTransformMatrix>& wiimotes, CalibrationData& cal_data) :
     m_gtk_window(0),
     m_gtk_calibration_area(0),
     m_cal_data(cal_data)
@@ -185,7 +185,7 @@ CalibrationWindow::CalibrationWindow(cwiid_wiimote_t* wiimote, CalibrationData& 
     m_gtk_window->maximize();
 
     // Data
-    m_thread_data.wiimote = wiimote;
+    m_thread_data.wiimotes = wiimotes;
 
     m_thread_data.move_tolerance = 15;
     m_thread_data.wait_tolerance = 1000;

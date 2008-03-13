@@ -62,7 +62,7 @@ void* calibration_thread_func(void* ptr);
 
 class CalibrationWindow {
 public:
-    CalibrationWindow(cwiid_wiimote_t* wiimote, CalibrationData& cal_data);
+    CalibrationWindow(std::vector<WiimoteAndTransformMatrix>& wiimotes, CalibrationData& cal_data);
 
     /* Get 4 calibration points from users
      * Points are written to p_wii

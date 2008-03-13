@@ -33,7 +33,7 @@
 class WiiCursorManager {
 public:
     WiiCursorManager() :
-	m_wii_event_data(m_ir, m_ir_on_mouse_down, m_waited)
+	m_wiis(m_thread_data.wiimotes)
     { }
 
     // Connects all available Wiimotes
@@ -54,12 +54,14 @@ public:
     // Returns false if anyone of those failed to deactivate
     bool deactivate();
 
-    // Setup move and wait tolerances
-    void tolerances(unsigned int move_tolerance, delta_t_t wait_tolerance);
-
+    // Sets up move and wait tolerances
+    void tolerances(unsigned int move_tolerance, delta_t_t wait_tolerance) {
+	m_thread_data.move_tolerance = move_tolerance;
+	m_thread_data.wait_tolerance = wait_tolerance;
+    }
     // Events
     WiiEvents& events() {
-	return m_wii_events;
+	return m_thread_data.events;
     }
 
     // Loads configurations
@@ -73,26 +75,12 @@ public:
 	return m_wiis.size() ? true : false;
     }
     bool activated() const {
-	return connected() && m_wiis.front().thread_running;
+	return connected() && m_thread_data.thread_running;
     }
 private:
-    // Event handlers for all connected Wiimotes
-    void wii_left_clicked(WiiEventData const& data);
-    void wii_right_button_down(WiiEventData const& data);
-    void wii_right_button_up(WiiEventData const& data);
-    void wii_begin_click_and_drag(WiiEventData const& data);
-    void wii_end_click_and_drag(WiiEventData const& data);
-    void wii_mouse_moved(WiiEventData const& data);
-
-    std::vector<WiiThreadFuncData> m_wiis; // All Wiimotes
-    typedef std::vector<WiiThreadFuncData>::iterator WiiThreadFuncDataIterator;
-
-    point_t m_ir;
-    point_t m_ir_on_mouse_down;
-    delta_t_t m_waited;
-
-    WiiEvents m_wii_events; // Events that will be emitted by this class
-    WiiEventData m_wii_event_data; // Data that will be sent during events
+    WiiThreadFuncData m_thread_data; // For all Wiimotes
+    std::vector<WiimoteAndTransformMatrix>& m_wiis; // As a convenience factor, look at the constructor
+    typedef std::vector<WiimoteAndTransformMatrix>::iterator WiimoteAndTransformMatrixIterator;
 };
 
 
