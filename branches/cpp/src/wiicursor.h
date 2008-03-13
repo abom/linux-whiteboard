@@ -43,8 +43,8 @@
 // all the time. I'm well aware of that.
 struct WiiEventData {
     WiiEventData(
-        point_t const& ir_pos, point_t const& ir_on_mouse_down, point_t cursor_pos, delta_t_t const& waited
-    ) : 
+        point_t const& ir_pos, point_t const& ir_on_mouse_down, delta_t_t const& waited
+    ) :
         ir_pos(ir_pos),
         ir_on_mouse_down(ir_on_mouse_down),
         waited(waited)
@@ -56,7 +56,6 @@ struct WiiEventData {
     delta_t_t const& waited;
 };
 typedef sigc::slot<void, WiiEventData const&> WiiEventSlotType;
-
 // Supported events
 struct WiiEvents {
     WiiEventSlotType    left_clicked, right_button_down, right_button_up,
@@ -65,8 +64,33 @@ struct WiiEvents {
 };
 
 
+// More generalized functions for all start* and finish*
+// NOTE: Not meant to be used directly since they rely on some common
+// member variables of both WiiThreadFuncData and WiiCursorThreadData.
+// Bad names, so they stand out more.
+template<typename T>
+void start_wiimote_related_thread( T& thread_data, void* (*thread_func)(void* ptr) ) {
+    // NOTE: Not checking for any return value here
+    // NOTE: Remember to find out how to clear the Wiimote cache                                                                                               
+    if (!thread_data.thread_running) {
+	thread_data.thread_running = true;
+	pthread_create(&thread_data.this_thread, 0, thread_func, &thread_data);
+    }
+}
+template<typename T>
+void finish_wiimote_related_thread(T& thread_data) {
+    if (thread_data.thread_running) {
+	thread_data.thread_running = false;
+	// NOTE: We have to check because this_thread also gets cleared at
+	// the end of the thread (and it is cleared to notify others, good reason)                                                                             
+	if (thread_data.this_thread)
+	    pthread_join(thread_data.this_thread, 0);
+    }
+}
+
+
 // Helpers, help reduce duplications
-// Will be passed to wii_thread_func_helper()
+// Will be passed to wii_thread_func()
 struct WiiThreadFuncData {
     WiiThreadFuncData() :
 	wiimote(0),
@@ -88,66 +112,57 @@ struct WiiThreadFuncData {
     bool thread_running;
 };
 // NOTE: More descriptive names would be helpful
+// Creates a separate thread so the GUI will not be blocked
 void* wii_thread_func(void* ptr);
-void start_wii_thread(WiiThreadFuncData& thread_data);
-void finish_wii_thread(WiiThreadFuncData& thread_data);
+void start_wii_thread(WiiThreadFuncData& data);
+void finish_wii_thread(WiiThreadFuncData& data);
 
 
 // Used internally by WiiCursor
-void* wiicursor_thread_func(void* ptr);
+struct WiiCursorThreadData {
+    WiiCursorThreadData() :
+	event_data(ir, ir_on_mouse_down, waited)
+    { /* NOTE: Not initializing everything since I trust myself (or should I?) */ }
 
+    bool click_and_drag() const { return moved > sqr(move_tolerance); }
+    bool right_click() const { return waited > wait_tolerance; }
+    bool all_running() const { return *running && thread_running; }                                                                                        
+
+    // Data
+    point_t ir;
+    point_t ir_on_mouse_down;
+    delta_t_t waited;
+    unsigned int moved;
+    bool thread_running;
+    pthread_t this_thread;
+
+    unsigned int move_tolerance;
+    delta_t_t wait_tolerance;
+    bool const* running;
+
+    WiiEvents events; // Callback functions for events
+    WiiEventData event_data; // To be passed to event handlers
+};
+void* wiicursor_thread_func(void* ptr);
+void start_wiicursor_thread(WiiCursorThreadData& data);
+void finish_wiicursor_thread(WiiCursorThreadData& data);
 
 class WiiCursor {
 public:
-    WiiCursor() :
-	m_wii_event_data(m_ir, m_ir_on_mouse_down, point_t(), m_waited)
-    { }
-
     void process(
 	cwiid_wiimote_t* wiimote, matrix_t transform,
 	unsigned int move_tolerance, unsigned int wait_tolerance,
-	bool& running);
+	bool const& running);
 
     // Events
     WiiEvents& events() {
-	return m_wii_events;
+	return m_thread_data.events;
     }
 private:
     // NOTE: This needs refactoring like wii_thread_func()
     friend void* wiicursor_thread_func(void* ptr); // NOTE: Friends can see your private :-<
 
-    void start_thread();
-    void finish_thread();
-
-    bool click_and_drag() const { return m_moved > sqr(m_move_tolerance); }
-    bool right_click() const { return m_waited > m_wait_tolerance; }
-    bool all_running() const { return *m_running && m_thread_running; }
-
-    void set_data_at_thread_start() {
-        m_waited = 0;
-        m_moved = 0;
-        m_thread_running = true;
-    }
-    void set_data_at_thread_finish() {
-        m_thread_running = false;
-        // NOTE: Not bothering to clear the thread ID here
-    }
-
-    // Data
-    point_t m_ir;
-    point_t m_ir_on_mouse_down;
-    delta_t_t m_waited;
-    unsigned int m_moved;
-    bool m_thread_running;
-    pthread_t m_this_thread;
-
-    unsigned int m_move_tolerance;
-    delta_t_t m_wait_tolerance;
-    bool* m_running;
-
-    // Callback functions for events
-    WiiEvents m_wii_events;
-    WiiEventData m_wii_event_data; // To pass to event handlers
+    WiiCursorThreadData m_thread_data; // To be passed to wiicursor_thread_func()
 };
 
 

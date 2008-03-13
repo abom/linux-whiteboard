@@ -32,11 +32,21 @@
 #include "matrix.h"
 #include "auxiliary.h"
 #include "gui.h"
-#include "wiicursor.h"
+#include "wiicursormanager.h"
 #include "events.h"
 
 
 // NOTE: GUI stuff is allowed to be a bit messy since they are disposable
+
+
+// Events which are processed by MainGtkWindow
+void wii_left_clicked(WiiEventData const& data);
+void wii_right_button_down(WiiEventData const& data);
+void wii_right_button_up(WiiEventData const& data);
+void wii_begin_click_and_drag(WiiEventData const& data);
+void wii_end_click_and_drag(WiiEventData const& data);
+void wii_mouse_moved(WiiEventData const& data);
+
 
 /* NOTE: Read the GNOME HIG! */
 class MainGtkWindow {
@@ -58,7 +68,6 @@ private:
     void print_to_output(char const* text);
     void sync_activation_state(bool activated);
     void sync_wiimote_state(bool wiimote_is_connected);
-    bool wiimote_connected() const;
 
     /* GUI */
     Gtk::Main m_gtk_kit;
@@ -79,7 +88,7 @@ private:
     Glib::RefPtr<Gtk::TextTag> m_time_text_tag;
 
     /* Data */
-    WiiThreadFuncData m_thread_data;
+    WiiCursorManager m_wii_manager;
 };
 
 
