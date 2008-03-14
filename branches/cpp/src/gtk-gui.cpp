@@ -127,7 +127,7 @@ void MainGtkWindow::toggle_wiimote_clicked() {
     }
     else {
 	if ( m_wii_manager.disconnect() )
-	    print_to_output(_("Successfully disconnected the Wiimotes.\n"));
+	    print_to_output(_("Successfully disconnected all Wiimotes.\n"));
 	else print_to_output(_("There was an error disconnecting the Wiimotes. Hell's broken loose!!1.\n"));
 	// But we assume it was successfully disconnected anyway, can't do anything about that
 	sync_wiimote_state(false);

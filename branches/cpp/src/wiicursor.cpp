@@ -48,8 +48,6 @@ void* wiicursor_thread_func(void* ptr) {
     WiiCursorThreadData& data = *static_cast<WiiCursorThreadData*>(ptr);
     ASSERT(data.this_thread != 0, "This thread has become immortal, omfg!!!1");
 
-    printf("Thread has been started.\n");
-
     // Sets up the timer
     delta_t_t last_time = 0;
     get_delta_t(last_time);
@@ -82,7 +80,6 @@ void* wiicursor_thread_func(void* ptr) {
     }
 
     data.this_thread = 0;
-    printf("Thread finished.\n");
 
     return 0;
 }
@@ -112,15 +109,14 @@ void WiiCursor::process(
 
     while (running) {
 	std::vector<WiiEvent> events;
-	get_wiis_event_data(wiimotes, events);
+	get_wiis_event_data(wiimotes, m_thread_data.ir, events);
 	for (std::vector<WiiEvent>::const_iterator iter = events.begin(); iter != events.end(); ++iter) {
 	    switch (iter->type) {
 		case WII_EVENT_TYPE_BUTTON:
 		    //running = false; // NOTE: Not handling any key events for now
 		    break;
 		case WII_EVENT_TYPE_IR:
-		    process_ir_events(m_thread_data.ir, iter->ir, *iter->transform); // WARNING: Pay attention to the WARNING below
-		    m_thread_data.ir = iter->ir;
+		    process_ir_events(iter->ir, *iter->transform); // WARNING: Pay attention to the WARNING below
 		    break;
 		case WII_EVENT_TYPE_NON_EVENT:
 		default:
@@ -130,7 +126,7 @@ void WiiCursor::process(
     }
 }
 
-void WiiCursor::get_wiis_event_data(std::vector<WiimoteAndTransformMatrix>& wiimotes, std::vector<WiiEvent>& events) {
+void get_wiis_event_data(std::vector<WiimoteAndTransformMatrix>& wiimotes, point_t const& ir_old, std::vector<WiiEvent>& events) {
     // These set of events will then be filtered and desirable events
     // will be added to event_data.
     std::vector< std::vector<WiiEvent> > event_batches( wiimotes.size() );
@@ -151,7 +147,7 @@ void WiiCursor::get_wiis_event_data(std::vector<WiimoteAndTransformMatrix>& wiim
 
 	batch.resize(msg_count);
 	for (std::vector<WiiEvent>::iterator iter = batch.begin(); iter != batch.end(); ++iter) {
-	    iter->ir = m_thread_data.ir; // Read wiicontrol.cpp if you're not sure about this
+	    iter->ir = ir_old; // Read wiicontrol.cpp if you're not sure about this
 	    iter->button = INVALID_BUTTON_MSG_ID;
 	    process_messages(msgs[iter-batch.begin()], &iter->ir, &iter->button);
 
@@ -193,25 +189,32 @@ void WiiCursor::get_wiis_event_data(std::vector<WiimoteAndTransformMatrix>& wiim
 	    }
 	}
 
-	// If there are multiple valid IR events, take the first one
+	// If there are multiple valid IR events, take the closest to ir_old
 	// If none of them contains valid IR event, returns INVALID_IR_POS
-	int valid_ir_index = -1;
+	int closest_ir_index = -1;
+	unsigned int closest_distance = static_cast<unsigned int>(-1); // Max uint value, actually sqr(closest)
 	ASSERT(irs.size() == transforms.size(), "Someone finds me a lost transformation matrix, omfgwtfbbq!!!1");
 	for (std::vector<point_t>::const_iterator iter = irs.begin(); iter != irs.end(); ++iter) 
 	    if (iter->x != INVALID_IR_POS) {
-		valid_ir_index = iter - irs.begin();
-		break;
+		unsigned int const distance = squared_distance(*iter, ir_old);
+		if ( closest_distance > distance ) {
+		    closest_distance = distance;
+		    closest_ir_index = iter - irs.begin();
+		    break;
+		}
 	    }
-	if (valid_ir_index != -1)
-	    events.push_back( WiiEvent(irs[valid_ir_index], *transforms[valid_ir_index]) );
+	if (closest_ir_index != -1)
+	    events.push_back( WiiEvent(irs[closest_ir_index], *transforms[closest_ir_index]) );
 	else events.push_back(	WiiEvent( point_t(INVALID_IR_POS, 0),
-				// WARNING: The matrix WILL fail when referenced, but I left it
+				// WARNING: The matrix WILL fail when accessed, but I left it
 				// here because of performance reason (pointer > another copy)
 				matrix_t(TRANSFORM_MATRIX_ROWS, TRANSFORM_MATRIX_COLS) ));
     }
 }
 
-void WiiCursor::process_ir_events(point_t const& ir_old, point_t const& ir_new, matrix_t const& transform) {
+void WiiCursor::process_ir_events(point_t const& ir_new, matrix_t const& transform) {
+    point_t const ir_old = m_thread_data.ir;
+    m_thread_data.ir = ir_new;
     // Readability
     WiiEvents& wii_events = m_thread_data.events;                                                                                                      
     WiiEventData& wii_event_data = m_thread_data.event_data;

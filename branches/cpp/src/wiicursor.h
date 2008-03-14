@@ -155,6 +155,31 @@ struct WiiCursorThreadData {
 void* wiicursor_thread_func(void* ptr);
 void start_wiicursor_thread(WiiCursorThreadData& data);
 void finish_wiicursor_thread(WiiCursorThreadData& data);
+// Used internally by WiiCursor
+enum WiiEventType {
+    WII_EVENT_TYPE_BUTTON,
+    WII_EVENT_TYPE_IR,
+    WII_EVENT_TYPE_NON_EVENT, // NOTE: Not returned by wiicontrol.cpp, but used by get_wiis_event_data()
+};
+struct WiiEvent {
+    WiiEvent() :
+	type(WII_EVENT_TYPE_NON_EVENT)
+    { }
+    WiiEvent(uint16_t button) :
+	type(WII_EVENT_TYPE_BUTTON),
+	button(button)
+    { }
+    WiiEvent(point_t ir, matrix_t const& transform) :
+	type(WII_EVENT_TYPE_IR),
+	ir(ir),
+	transform(&transform) // NOTE: Never needs to check because transform is a reference
+    { }
+    WiiEventType type;
+    uint16_t button;
+    point_t ir;
+    matrix_t const* transform;
+};
+void get_wiis_event_data(std::vector<WiimoteAndTransformMatrix>& wiimotes, point_t const& ir_old, std::vector<WiiEvent>& events);
 
 class WiiCursor {
 public:
@@ -168,32 +193,7 @@ public:
 	return m_thread_data.events;
     }
 private:
-    enum WiiEventType {
-	WII_EVENT_TYPE_BUTTON,
-	WII_EVENT_TYPE_IR,
-	WII_EVENT_TYPE_NON_EVENT, // NOTE: Not returned by wiicontrol.cpp, but used by get_wiis_event_data()
-    };
-    struct WiiEvent {
-	WiiEvent() :
-	    type(WII_EVENT_TYPE_NON_EVENT)
-	{ }
-	WiiEvent(uint16_t button) :
-	    type(WII_EVENT_TYPE_BUTTON),
-	    button(button)
-	{ }
-	WiiEvent(point_t ir, matrix_t const& transform) :
-	    type(WII_EVENT_TYPE_IR),
-	    ir(ir),
-	    transform(&transform) // NOTE: Never needs to check because transform is a reference
-	{ }
-
-	WiiEventType type;
-	uint16_t button;
-	point_t ir;
-	matrix_t const* transform;
-    };
-    void get_wiis_event_data(std::vector<WiimoteAndTransformMatrix>& wiimotes, std::vector<WiiEvent>& events);
-    void process_ir_events(point_t const& ir_old, point_t const& ir_new, matrix_t const& transform);
+    void process_ir_events(point_t const& ir_new, matrix_t const& transform);
 
     WiiCursorThreadData m_thread_data; // To be passed to wiicursor_thread_func()
 };
