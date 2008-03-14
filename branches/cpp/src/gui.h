@@ -68,6 +68,8 @@ public:
      * Points are written to p_wii
      * Returns 0 on success, -1 on error or user escapes */
     int get_calibration_points();
+
+    void quit(); // Tells GTK+ to quit, either successfully calibrated or not
 private:
     /* Event handlers for the calibration window */
     bool calibration_area_key_pressed(GdkEventKey* event);
@@ -78,8 +80,6 @@ private:
     void calibration_mouse_moved(WiiEventData const& data);
     void calibration_mouse_down(WiiEventData const& data);
     void calibration_begin_click_and_drag(WiiEventData const& data);
-
-    void quit(); // Tells GTK+ to quit, either successfully calibrated or not
 
     /* GUI stuff */
     Gtk::Window* m_gtk_window;

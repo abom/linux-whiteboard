@@ -32,6 +32,7 @@
 #include "common.h"
 #include "events.h"
 #include "wiicontrol.h"
+#include "physics.h"
 
 
 // Will be passed during events
@@ -183,6 +184,10 @@ void get_wiis_event_data(std::vector<WiimoteAndTransformMatrix>& wiimotes, point
 
 class WiiCursor {
 public:
+    WiiCursor() :
+	m_physics_engine(m_thread_data.ir)
+    { }
+
     void process(
 	std::vector<WiimoteAndTransformMatrix>& wiimotes,
 	unsigned int move_tolerance, unsigned int wait_tolerance,
@@ -193,9 +198,10 @@ public:
 	return m_thread_data.events;
     }
 private:
-    void process_ir_events(point_t const& ir_new, matrix_t const& transform);
+    void process_ir_events(point_t ir_new, matrix_t const& transform);
 
     WiiCursorThreadData m_thread_data; // To be passed to wiicursor_thread_func()
+    PhysicsEngine m_physics_engine;
 };
 
 

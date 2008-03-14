@@ -42,19 +42,20 @@
 }
 
 
+template<typename T>
 struct Point {
     Point() :
-	x(0),
-	y(0)
+	x( T() ),
+	y( T() )
     { }
-    Point(int x, int y) :
+    Point(T x, T y) :
 	x(x),
 	y(y)
     { }
 
-    int x, y;                                                                                                                                                 
+    T x, y;                                                                                                                                                 
 };
-typedef Point point_t;
+typedef Point<int> point_t; // The default
 
 
 enum MouseButtonIDs {

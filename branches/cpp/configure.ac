@@ -16,6 +16,7 @@ AM_GLIB_GNU_GETTEXT
 WHITEBOARDLOCALEDIR=[${datadir}/locale]
 AC_SUBST(WHITEBOARDLOCALEDIR)
 
+#AC_CHECK_LIB([m], [sin], [], AC_MSG_ERROR([Dependency unmet: math library not found. Your system must be broken]))
 AC_CHECK_LIB([cwiid], [cwiid_command], [], AC_MSG_ERROR([Dependency unmet: Wiimote library (libcwiid) not found]))
 AC_CHECK_LIB([confuse], [cfg_parse], [], AC_MSG_ERROR([Dependency unmet: Configuration parsing library (libconfuse) not found]))
 PKG_CHECK_MODULES([whiteboard], [gtkmm-2.4] [libglademm-2.4] [cairomm-1.0] [xtst] [sigc++-2.0])

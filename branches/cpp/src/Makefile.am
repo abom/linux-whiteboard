@@ -12,6 +12,7 @@ whiteboard_CXXFLAGS = 	${whiteboard_CFLAGS} \
 whiteboard_LDFLAGS = ${whiteboard_LIBS} -lcwiid -lconfuse $(LIBINTL)
 whiteboard_SOURCES = 	main.cpp common.h matrix.h \
 			auxiliary.cpp auxiliary.h events.cpp events.h \
+			physics.cpp physics.h \
 			gui.cpp gui.h wiicontrol.cpp wiicontrol.h \
 			wiicursor.cpp wiicursor.h gtk-gui.cpp gtk-gui.h \
 			wiicursormanager.cpp wiicursormanager.h \
