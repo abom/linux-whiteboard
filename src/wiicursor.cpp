@@ -127,7 +127,7 @@ void WiiCursor::process(
 }
 
 void get_wiis_event_data(std::vector<WiimoteAndTransformMatrix>& wiimotes, point_t const& ir_old, std::vector<WiiEvent>& events) {
-    // These set of events will then be filtered and desirable events
+    // This set of events will then be filtered and desirable events
     // will be added to event_data.
     std::vector< std::vector<WiiEvent> > event_batches( wiimotes.size() );
 
@@ -212,8 +212,11 @@ void get_wiis_event_data(std::vector<WiimoteAndTransformMatrix>& wiimotes, point
     }
 }
 
-void WiiCursor::process_ir_events(point_t const& ir_new, matrix_t const& transform) {
+void WiiCursor::process_ir_events(point_t ir_new, matrix_t const& transform) {
     point_t const ir_old = m_thread_data.ir;
+    // We don't want the raw ir_new, let's put it
+    // through the physics engine first.
+    ir_new = m_physics_engine.process(ir_new);
     m_thread_data.ir = ir_new;
     // Readability
     WiiEvents& wii_events = m_thread_data.events;                                                                                                      

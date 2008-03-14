@@ -33,7 +33,8 @@
 class WiiCursorManager {
 public:
     WiiCursorManager() :
-	m_wiis(m_thread_data.wiimotes)
+	m_wiis(m_thread_data.wiimotes),
+	m_cal_window(0)
     { }
 
     // Connects all available Wiimotes
@@ -81,6 +82,8 @@ private:
     WiiThreadFuncData m_thread_data; // For all Wiimotes
     std::vector<WiimoteAndTransformMatrix>& m_wiis; // As a convenience factor, look at the constructor
     typedef std::vector<WiimoteAndTransformMatrix>::iterator WiimoteAndTransformMatrixIterator;
+    CalibrationWindow* m_cal_window;	// NOTE: Basically a hack, because I don't want to keep a real cal_window around
+					// This is needed because if user closes the app, we have to notify it somehow.
 };
 
 

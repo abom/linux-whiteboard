@@ -22,10 +22,8 @@
 
 void CalibrationWindow::calibration_right_button_down(WiiEventData const& data) {
     m_cal_data.p_wii[m_cal_data.active_point++] = data.ir_pos;
-    if (m_cal_data.active_point == 4) {
-	finish_wii_thread(m_thread_data);
+    if (m_cal_data.active_point == 4)
 	quit();
-    }
 }
 void CalibrationWindow::calibration_mouse_moved(WiiEventData const& data) {
     m_cal_data.ir_pos = data.ir_pos;
@@ -210,7 +208,8 @@ int CalibrationWindow::get_calibration_points() {
 
     // Finished at this point, whether succeeded or escaped by user
     redraw_sigc_connection.disconnect();
-    finish_wii_thread(m_thread_data);
+    finish_wii_thread(m_thread_data);	// WARNING: Some bugs about 'msg pipe overflow' if user selects 'Quit'
+					// while calibrating.
 
     return m_cal_data.active_point != 4;
 }
