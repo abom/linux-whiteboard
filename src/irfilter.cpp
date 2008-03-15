@@ -20,7 +20,7 @@
 #include "irfilter.h"
 
 
-point_t string_physics(point_t const& pos_current, point_t const& pos_new, unsigned int string_length) {
+/*point_t string_physics(point_t const& pos_current, point_t const& pos_new, unsigned int string_length) {
     point_t_phys const displacement(pos_new.x-pos_current.x, pos_new.y-pos_current.y);
     double const distance = sqrt( static_cast<double>(squared_distance(pos_current, pos_new)) );
     point_t ret = pos_new; // By default
@@ -32,13 +32,29 @@ point_t string_physics(point_t const& pos_current, point_t const& pos_new, unsig
     }
 
     return ret;
-}
+}*/
 
 
 point_t IrFilter::process(point_t const& pos_new) {
     bool const data_is_valid = (m_pos_current.x != INVALID_IR_POS) && (pos_new.x != INVALID_IR_POS);
     if (data_is_valid) {
-	return string_physics(m_pos_current, pos_new, m_move_tolerance);
+	// NOTE: Idea stolen from 'ujs': http://www.wiimoteproject.com/index.php?action=profile;u=1240
+	m_old_positions.push_back(pos_new);
+	if (m_old_positions.size() > MAX_NUMBER_OF_POSITIONS)
+	    m_old_positions.pop_front();
+
+	point_t pos_average;
+	for (std::list<point_t>::const_iterator iter = m_old_positions.begin(); iter != m_old_positions.end(); ++iter) {
+	    pos_average.x += iter->x;
+	    pos_average.y += iter->y;
+	}
+	pos_average.x /= m_old_positions.size();
+	pos_average.y /= m_old_positions.size();
+
+	return pos_average;
     }
-    else return pos_new; // There's no point in calculating an invalid IR
+    else {
+	reset();
+	return pos_new; // There's no point in calculating an invalid IR
+    }
 }

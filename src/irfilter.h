@@ -22,6 +22,7 @@
 
 
 #include <cmath>
+#include <list>
 
 #include "common.h"
 #include "auxiliary.h"
@@ -31,7 +32,7 @@ typedef Point<double> point_t_phys;
 
 
 // Imagine you're pulling the cursor with a string
-point_t string_physics(point_t const& pos_current, point_t const& pos_new, unsigned int string_length);
+//point_t string_physics(point_t const& pos_current, point_t const& pos_new, unsigned int string_length);
 
 
 // Filters out 'bad' IR signals
@@ -40,18 +41,21 @@ public:
     // Needs constant access to current IR location
     IrFilter(point_t const& pos_current) :
 	m_pos_current(pos_current),
-	m_move_tolerance(0)
+	m_old_positions(MAX_NUMBER_OF_POSITIONS)
     { }
 
-    unsigned int& move_tolerance() { return m_move_tolerance; }
+    void reset() {
+	m_old_positions.clear();
+    }
 
     // Gets a new IR location, brings it through the engine
     // and returns the desired new IR location.
     point_t process(point_t const& pos_new);
 private:
     point_t const& m_pos_current;
+    std::list<point_t> m_old_positions;
     // NOTE: All these below should be heuristically guessed instead
-    unsigned int m_move_tolerance;
+    static unsigned int const MAX_NUMBER_OF_POSITIONS = 7;
 };
 
 
