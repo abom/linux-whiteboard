@@ -106,6 +106,7 @@ void WiiCursor::process(
     m_thread_data.move_tolerance = move_tolerance;
     m_thread_data.wait_tolerance = wait_tolerance;
     m_thread_data.running = &running; // No need to check anything here since running is a reference
+    m_ir_filter.move_tolerance() = move_tolerance;
 
     while (running) {
 	std::vector<WiiEvent> events;
@@ -215,8 +216,8 @@ void get_wiis_event_data(std::vector<WiimoteAndTransformMatrix>& wiimotes, point
 void WiiCursor::process_ir_events(point_t ir_new, matrix_t const& transform) {
     point_t const ir_old = m_thread_data.ir;
     // We don't want the raw ir_new, let's put it
-    // through the physics engine first.
-    ir_new = m_physics_engine.process(ir_new);
+    // through the IR signal filter first.
+    ir_new = m_ir_filter.process(ir_new);
     m_thread_data.ir = ir_new;
     // Readability
     WiiEvents& wii_events = m_thread_data.events;                                                                                                      
