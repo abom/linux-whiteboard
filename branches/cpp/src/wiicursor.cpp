@@ -106,7 +106,6 @@ void WiiCursor::process(
     m_thread_data.move_tolerance = move_tolerance;
     m_thread_data.wait_tolerance = wait_tolerance;
     m_thread_data.running = &running; // No need to check anything here since running is a reference
-    m_ir_filter.move_tolerance() = move_tolerance;
 
     while (running) {
 	std::vector<WiiEvent> events;
