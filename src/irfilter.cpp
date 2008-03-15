@@ -17,35 +17,28 @@
  */
 
 
-#include "physics.h"
+#include "irfilter.h"
 
 
-PhysicsEngine::PhysicsEngine(point_t const& pos_current) :
-    m_pos_current(pos_current),
-    m_spring_constant(1.0),
-    m_mass(1.0)
-{
-    reset();
+point_t string_physics(point_t const& pos_current, point_t const& pos_new, unsigned int string_length) {
+    point_t_phys const displacement(pos_new.x-pos_current.x, pos_new.y-pos_current.y);
+    double const distance = sqrt( static_cast<double>(squared_distance(pos_current, pos_new)) );
+    point_t ret = pos_new; // By default
+    if (distance > string_length) {
+	point_t_phys const normalized(displacement.x/distance, displacement.y/distance);
+	point_t_phys const new_displacement(normalized.x*string_length, normalized.y*string_length);
+	ret.x = pos_current.x+new_displacement.x;
+	ret.y = pos_current.y+new_displacement.y;
+    }
+
+    return ret;
 }
 
-point_t PhysicsEngine::process(point_t const& pos_new) {
+
+point_t IrFilter::process(point_t const& pos_new) {
     bool const data_is_valid = (m_pos_current.x != INVALID_IR_POS) && (pos_new.x != INVALID_IR_POS);
     if (data_is_valid) {
-	double const delta_t = get_delta_t(m_last_time)/1000.0; // In seconds
-
-	// Force caused by the movement
-	point_t_phys const displacement(pos_new.x-m_pos_current.x, pos_new.y-m_pos_current.y);
-	point_t_phys const total_force(m_spring_constant*displacement.x, m_spring_constant*displacement.y);
-
-	point_t_phys const acceleration(total_force.x/m_mass, total_force.y/m_mass);
-	m_velocity_current.x += acceleration.x*delta_t;
-	m_velocity_current.y += acceleration.y*delta_t;
-
-	point_t const new_pos(m_pos_current.x+m_velocity_current.x, m_pos_current.y+m_velocity_current.y);
-	return new_pos;
+	return string_physics(m_pos_current, pos_new, m_move_tolerance);
     }
-    else {
-	reset();
-	return pos_new; // There's no point in calculating an invalid IR
-    }
+    else return pos_new; // There's no point in calculating an invalid IR
 }

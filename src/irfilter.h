@@ -21,40 +21,37 @@
 #define  __PHYSICS_H__
 
 
+#include <cmath>
+
 #include "common.h"
 #include "auxiliary.h"
 
 
 typedef Point<double> point_t_phys;
 
-// Intead of directly returns the IR pointer location,
-// this class considers the difference between old and new
-// IR locations a force acting on the actual pointer. Hence
-// making it move in a smooth manner.
-class PhysicsEngine {
+
+// Imagine you're pulling the cursor with a string
+point_t string_physics(point_t const& pos_current, point_t const& pos_new, unsigned int string_length);
+
+
+// Filters out 'bad' IR signals
+class IrFilter {
 public:
     // Needs constant access to current IR location
-    PhysicsEngine(point_t const& pos_current);
+    IrFilter(point_t const& pos_current) :
+	m_pos_current(pos_current),
+	m_move_tolerance(0)
+    { }
 
-    // Resets all of its physics data, used when MOUSE_DOWN
-    void reset() {
-	// Initializes the timer
-	m_last_time = 0;
-	get_delta_t(m_last_time);
-
-	m_velocity_current = point_t_phys();
-    }
+    unsigned int& move_tolerance() { return m_move_tolerance; }
 
     // Gets a new IR location, brings it through the engine
     // and returns the desired new IR location.
     point_t process(point_t const& pos_new);
 private:
     point_t const& m_pos_current;
-    delta_t_t m_last_time; // Hooke's law
-    point_t_phys m_velocity_current;
-    // NOTE: All of the below should be heurisically initialized rather than hard-coded
-    double const m_spring_constant;
-    double const m_mass;
+    // NOTE: All these below should be heuristically guessed instead
+    unsigned int m_move_tolerance;
 };
 
 
