@@ -50,15 +50,14 @@ bool WiiCursorManager::calibrate() {
 	one_wiimote.push_back( WiimoteAndTransformMatrix(iter->wiimote, iter->transform) );
 	CalibrationData cal_data;
 	CalibrationWindow cal_window( one_wiimote, cal_data);
-	m_cal_window = &cal_window; // NOTE: Not elegant
+	m_cal_window = &cal_window;
 	if ( cal_window.get_calibration_points() ) {
 	    ret = false;
-	    m_cal_window = 0; // NOTE: Not elegant :-<
 	    break;
 	}
 	else iter->transform = calculate_transformation_matrix(cal_data.p_wii);
-	m_cal_window = 0; // NOTE: Not elegant
     }
+    m_cal_window = 0; // If it gets to this point, the window's been closed
 
     return ret;
 }
