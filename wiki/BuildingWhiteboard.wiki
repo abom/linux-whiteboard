@@ -17,26 +17,25 @@ If you have checked out whiteboard from our SVN repository, you probably need th
   * autoconf
   * automake
 
-Having gotten those installed, navigate to the program's root directory and issue these commands:
-
-If it was a SVN snapshot, do these first:
+Having gotten those installed, navigate to the program's root directory and issue the following commands:
 {{{
 ./autogen.sh
+make
+sudo make install
 }}}
 
-For Ubuntu Gutsy users:
+----
+
+*For Ubuntu Gutsy Gibbon* users, you need to add *CXXFLAGS="-DCOMPATIBILITY_GUTSY"* to autogen.sh like this:
 {{{
-./configure CXXFLAGS="-DCOMPATIBILITY_GUTSY" && make
+./autogen.sh CXXFLAGS="-DCOMPATIBILITY_GUTSY"
 }}}
 
-For all users:
-{{{
-./configure && make
-}}}
+----
 
-To install whiteboard, run this command as root:
+To install to a different directory, so that you don't need root permission when installing, add *--prefix=<path-to-desired-install-dir>* like this:
 {{{
-make install
+./autogen --prefix=~/whiteboard
 }}}
 
 ---- 
