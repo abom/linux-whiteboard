@@ -5,7 +5,8 @@ svn checkout http://linux-whiteboard.googlecode.com/svn/branches/cpp/ linux-whit
 
 To build whiteboard, you'll need the usual toolchain (gcc, g++ and make) and the following libraries. The names of the libraries are taken from Ubuntu's database. If you're using a different Linux distro, please change them according to yours:
 
-  * libcwiid0-dev
+  * libcwiid1-dev
+  * libconfuse-dev
   * libgtkmm-2.4-dev
   * libglademm-2.4-dev
   * libxtst-dev
