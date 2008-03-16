@@ -46,7 +46,7 @@ point_t IrFilter::process(point_t pos_new) {
 
     bool const mouse_is_down = (m_pos_current.x != INVALID_IR_POS) && (pos_new.x != INVALID_IR_POS);
     if (mouse_is_down) {
-	// NOTE: Idea stolen from 'ujs': http://www.wiimoteproject.com/index.php?action=profile;u=1240
+	// Idea stolen from 'ujs': http://www.wiimoteproject.com/index.php?action=profile;u=1240
 	m_old_positions.push_back(pos_new);
 	if (m_old_positions.size() > MAX_NUMBER_OF_POSITIONS)
 	    m_old_positions.pop_front();

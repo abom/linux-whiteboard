@@ -221,7 +221,7 @@ void WiiCursor::process_ir_events(point_t ir_new, matrix_t const* transform) {
     WiiEventData& wii_event_data = m_thread_data.event_data;
 
     if (ir_new.x != INVALID_IR_POS) { // Only updates if the IR data is valid
-	if (transform)	// NOTE: Can happen ( (ir_new != 0) and transform == 0) )
+	if (transform)	// NOTE: Can happen ( (ir_new != 0) and (transform == 0) )
 			// if m_ir_filter is tolerating the disappearing IR
 	    wii_event_data.cursor_pos = infrared_data(ir_new, *transform);
 	// NOTE: The event fires even if the cursor doesn't move,
