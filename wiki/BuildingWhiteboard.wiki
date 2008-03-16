@@ -26,7 +26,7 @@ sudo make install
 
 ----
 
-*For Ubuntu Gutsy Gibbon* users, you need to add *CXXFLAGS="-DCOMPATIBILITY_GUTSY"* to autogen.sh like this:
+For *Ubuntu Gutsy Gibbon* users, you need to add *CXXFLAGS="-DCOMPATIBILITY_GUTSY"* to autogen.sh like this:
 {{{
 ./autogen.sh CXXFLAGS="-DCOMPATIBILITY_GUTSY"
 }}}
