@@ -28,7 +28,7 @@
 #include "auxiliary.h"
 
 
-typedef Point<double> point_t_phys;
+//typedef Point<double> point_t_phys;
 
 
 // Imagine you're pulling the cursor with a string
@@ -40,22 +40,32 @@ class IrFilter {
 public:
     // Needs constant access to current IR location
     IrFilter(point_t const& pos_current) :
-	m_pos_current(pos_current),
-	m_old_positions(MAX_NUMBER_OF_POSITIONS)
-    { }
+	m_pos_current(pos_current)
+    {
+	reset();
+    }
 
     void reset() {
 	m_old_positions.clear();
+
+	// Resets the timer
+	m_last_time = 0;
+	get_delta_t(m_last_time);
+
+	m_disappearing = 0;
     }
 
     // Gets a new IR location, brings it through the engine
     // and returns the desired new IR location.
-    point_t process(point_t const& pos_new);
+    point_t process(point_t pos_new); // NOTE: pos_new is not 'const&' for a reason
 private:
     point_t const& m_pos_current;
     std::list<point_t> m_old_positions;
+    delta_t_t m_last_time;
+    delta_t_t m_disappearing; // How long the signal has been off
     // NOTE: All these below should be heuristically guessed instead
     static unsigned int const MAX_NUMBER_OF_POSITIONS = 7;
+    static delta_t_t const DISAPPEARANCE_TOLERANCE = 50; // In milliseconds
 };
 
 

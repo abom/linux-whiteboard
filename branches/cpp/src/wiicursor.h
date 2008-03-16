@@ -68,7 +68,6 @@ struct WiiEvents {
 template<typename T>
 void start_wiimote_related_thread( T& thread_data, void* (*thread_func)(void* ptr) ) {
     // NOTE: Not checking for any return value here
-    // NOTE: Remember to figure out how to clear the Wiimote cache
     if (!thread_data.thread_running) {
 	thread_data.thread_running = true;
 	pthread_create(&thread_data.this_thread, 0, thread_func, &thread_data);
@@ -131,6 +130,15 @@ void finish_wii_thread(WiiThreadFuncData& data);
 // Used internally by WiiCursor
 struct WiiCursorThreadData {
     WiiCursorThreadData() :
+	ir(INVALID_IR_POS, 0),
+	ir_on_mouse_down(INVALID_IR_POS, 0),
+	waited(0),
+	moved(0),
+	thread_running(false),
+	this_thread(0),
+	move_tolerance(0),
+	wait_tolerance(0),
+	running(0),
 	event_data(ir, ir_on_mouse_down, waited)
     { /* NOTE: Not initializing everything since I trust myself (or should I?) */ }
 
@@ -170,10 +178,10 @@ struct WiiEvent {
 	type(WII_EVENT_TYPE_BUTTON),
 	button(button)
     { }
-    WiiEvent(point_t ir, matrix_t const& transform) :
+    WiiEvent(point_t ir, matrix_t const* transform) :
 	type(WII_EVENT_TYPE_IR),
 	ir(ir),
-	transform(&transform) // NOTE: Never needs to check because transform is a reference
+	transform(transform)
     { }
     WiiEventType type;
     uint16_t button;
@@ -198,7 +206,7 @@ public:
 	return m_thread_data.events;
     }
 private:
-    void process_ir_events(point_t ir_new, matrix_t const& transform);
+    void process_ir_events(point_t ir_new, matrix_t const* transform);
 
     WiiCursorThreadData m_thread_data; // To be passed to wiicursor_thread_func()
     IrFilter m_ir_filter;
