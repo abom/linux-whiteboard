@@ -35,9 +35,17 @@
 }*/
 
 
-point_t IrFilter::process(point_t const& pos_new) {
-    bool const data_is_valid = (m_pos_current.x != INVALID_IR_POS) && (pos_new.x != INVALID_IR_POS);
-    if (data_is_valid) {
+point_t IrFilter::process(point_t pos_new) {
+    delta_t_t const delta_t = get_delta_t(m_last_time);
+    if (pos_new.x == INVALID_IR_POS) {
+	m_disappearing += delta_t;
+	if (m_disappearing < DISAPPEARANCE_TOLERANCE)
+	    pos_new = m_pos_current; // Lets it pass this time
+	else m_disappearing = 0;
+    }
+
+    bool const mouse_is_down = (m_pos_current.x != INVALID_IR_POS) && (pos_new.x != INVALID_IR_POS);
+    if (mouse_is_down) {
 	// NOTE: Idea stolen from 'ujs': http://www.wiimoteproject.com/index.php?action=profile;u=1240
 	m_old_positions.push_back(pos_new);
 	if (m_old_positions.size() > MAX_NUMBER_OF_POSITIONS)

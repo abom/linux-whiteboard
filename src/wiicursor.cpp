@@ -116,7 +116,7 @@ void WiiCursor::process(
 		    //running = false; // NOTE: Not handling any key events for now
 		    break;
 		case WII_EVENT_TYPE_IR:
-		    process_ir_events(iter->ir, *iter->transform); // WARNING: Pay attention to the WARNING below
+		    process_ir_events(iter->ir, iter->transform);
 		    break;
 		case WII_EVENT_TYPE_NON_EVENT:
 		default:
@@ -146,12 +146,13 @@ void get_wiis_event_data(std::vector<WiimoteAndTransformMatrix>& wiimotes, point
 #endif // COMPATIBILITY_GUTSY
 
 	batch.resize(msg_count);
-	for (std::vector<WiiEvent>::iterator iter = batch.begin(); iter != batch.end(); ++iter) {
-	    iter->ir = ir_old; // Read wiicontrol.cpp if you're not sure about this
-	    iter->button = INVALID_BUTTON_MSG_ID;
-	    process_messages(msgs[iter-batch.begin()], &iter->ir, &iter->button);
+	for (int i = 0; i != msg_count; ++i) {
+	    WiiEvent& cur_event = batch[i]; // Readability
+	    cur_event.ir = ir_old; // Read wiicontrol.cpp if you're not sure about this
+	    cur_event.button = INVALID_BUTTON_MSG_ID;
+	    process_messages(msgs[i], &cur_event.ir, &cur_event.button);
 
-	    iter->type = (iter->button != INVALID_BUTTON_MSG_ID) ? WII_EVENT_TYPE_BUTTON : WII_EVENT_TYPE_IR;
+	    cur_event.type = (cur_event.button != INVALID_BUTTON_MSG_ID) ? WII_EVENT_TYPE_BUTTON : WII_EVENT_TYPE_IR;
 	}
 
 	if (max_event_counts < msg_count)
@@ -204,15 +205,12 @@ void get_wiis_event_data(std::vector<WiimoteAndTransformMatrix>& wiimotes, point
 		}
 	    }
 	if (closest_ir_index != -1)
-	    events.push_back( WiiEvent(irs[closest_ir_index], *transforms[closest_ir_index]) );
-	else events.push_back(	WiiEvent( point_t(INVALID_IR_POS, 0),
-				// WARNING: The matrix WILL fail when accessed, but I left it
-				// here because of performance reason (pointer > another copy)
-				matrix_t(TRANSFORM_MATRIX_ROWS, TRANSFORM_MATRIX_COLS) ));
+	    events.push_back( WiiEvent(irs[closest_ir_index], transforms[closest_ir_index]) );
+	else events.push_back( WiiEvent( point_t(INVALID_IR_POS, 0), 0) );
     }
 }
 
-void WiiCursor::process_ir_events(point_t ir_new, matrix_t const& transform) {
+void WiiCursor::process_ir_events(point_t ir_new, matrix_t const* transform) {
     point_t const ir_old = m_thread_data.ir;
     // We don't want the raw ir_new, let's put it
     // through the IR signal filter first.
@@ -223,7 +221,9 @@ void WiiCursor::process_ir_events(point_t ir_new, matrix_t const& transform) {
     WiiEventData& wii_event_data = m_thread_data.event_data;
 
     if (ir_new.x != INVALID_IR_POS) { // Only updates if the IR data is valid
-	wii_event_data.cursor_pos = infrared_data(ir_new, transform);
+	if (transform)	// NOTE: Can happen ( (ir_new != 0) and transform == 0) )
+			// if m_ir_filter is tolerating the disappearing IR
+	    wii_event_data.cursor_pos = infrared_data(ir_new, *transform);
 	// NOTE: The event fires even if the cursor doesn't move,
 	// this is my design decision since it makes other things easier.
 	wii_events.mouse_moved(wii_event_data);
