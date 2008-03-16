@@ -48,5 +48,6 @@ To build a Debian/Ubuntu package:
   * Install *fakeroot* if you haven't got it already.
   * Issue these commands:
 {{{
+./autogen.sh
 dpkg-buildpackage -us -uc -b -rfakeroot
 }}}
