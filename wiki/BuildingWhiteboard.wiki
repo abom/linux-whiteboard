@@ -38,6 +38,8 @@ To install to a different directory, so that you don't need root permission when
 ./autogen --prefix=~/whiteboard
 }}}
 
+After 'make install', whiteboard will be installed to the directory 'whiteboard' in your home directory.
+
 ----
 
 To build a Debian/Ubuntu package:
