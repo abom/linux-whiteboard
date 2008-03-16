@@ -38,7 +38,7 @@ To install to a different directory, so that you don't need root permission when
 ./autogen --prefix=~/whiteboard
 }}}
 
----- 
+----
 
 To build a Debian/Ubuntu package:
   * Download the appropriate 'debian' tarball (currently only Ubuntu Hardy and Ubuntu Gutsy are supported, users of other systems may have to modify it a bit).
