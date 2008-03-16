@@ -42,7 +42,7 @@ After 'make install', whiteboard will be installed to the directory 'whiteboard'
 
 ----
 
-To build a Debian/Ubuntu package:
+To build a Debian/Ubuntu package (same rules applied if you use *Ubuntu Gutsy Gibbon*):
   * Install *fakeroot* if you haven't got it already.
   * Issue these commands:
 {{{
