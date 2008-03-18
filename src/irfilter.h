@@ -50,11 +50,13 @@ public:
 
     // Gets a new IR location, brings it through the engine
     // and returns the desired new IR location.
-    point_t process(point_t const& pos_new);
+    point_t process(point_t const& pos_new, unsigned int& move_tolerance);
 private:
-    // Used by process()
+    /* Used by process() */
+    // Returns true if tolerating
     bool process_tolerance(point_t const& pos_new); // Returns true if tolerating
-    point_t process_ir(point_t const& pos_new);
+    // The reasoning behind modifying move_tolerance is not obvious ;)
+    point_t process_ir(point_t const& pos_new, unsigned int& move_tolerance);
 
     point_t const& m_pos_current;
     std::list<point_t> m_old_positions;

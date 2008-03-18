@@ -39,6 +39,7 @@ struct CalibrationData {
     point_t ir_pos; // Current IR pointer's location
     point_t ir_on_mouse_down; // IR pointer on left button down event
     delta_t_t waited; // For drawing of a pretty circle
+    unsigned int move_tolerance; // For drawing IR inaccuracies
     bool border_crossed; // Will be true if the IR pointer 'moved' (i.e., no longer valid as a point)
 
     CalibrationData() :
@@ -46,6 +47,7 @@ struct CalibrationData {
 	active_light_up(true),
 	ir_pos(INVALID_IR_POS, 0),
 	waited(0),
+	move_tolerance(1), // NOTE: Thread problems, to avoid division-by-zero
 	border_crossed(false)
     { }
 };
