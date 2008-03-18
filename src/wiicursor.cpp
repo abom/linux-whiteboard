@@ -126,13 +126,12 @@ void WiiCursor::process(
     }
 }
 
-void get_wiis_event_data(std::vector<WiimoteAndTransformMatrix>& wiimotes, point_t const& ir_old, std::vector<WiiEvent>& events) {
-    // This set of events will then be filtered and desirable events
-    // will be added to event_data.
-    std::vector< std::vector<WiiEvent> > event_batches( wiimotes.size() );
-
-    // Collects all event data, additionally calculates the maximum event counts
-    int max_event_counts = 0;
+void get_wiis_event_data_collect_all_events(
+    std::vector<WiimoteAndTransformMatrix>& wiimotes,
+    point_t const& ir_old,
+    std::vector< std::vector<WiiEvent> >& event_batches,
+    unsigned int& max_event_counts)
+{
     for (unsigned int i = 0; i != wiimotes.size(); ++i) {
 	std::vector<WiiEvent>& batch = event_batches[i]; // Readability
 	int msg_count = 0;
@@ -155,58 +154,81 @@ void get_wiis_event_data(std::vector<WiimoteAndTransformMatrix>& wiimotes, point
 	    cur_event.type = (cur_event.button != INVALID_BUTTON_MSG_ID) ? WII_EVENT_TYPE_BUTTON : WII_EVENT_TYPE_IR;
 	}
 
-	if (max_event_counts < msg_count)
-	    max_event_counts = msg_count;
+	if ( max_event_counts < static_cast<unsigned int>(msg_count) )
+	    max_event_counts = static_cast<unsigned int>(msg_count);
     }
-
+}
+void get_wiis_event_data_rebalance_events(unsigned int max_event_counts, std::vector< std::vector<WiiEvent> >& event_batches) {
     // Re-balances all the event counts to be equal
     // If some Wiimote has less events than the rest, a fresh WiiEvent will be
     // added (which default type is WII_EVENT_TYPE_NON_EVENT).
     // NOTE: That is *not* the real way to do it, these non-events must be
-    // equally distributed thorough the shorter events, but whatever.
-    for (unsigned int i = 0; i != wiimotes.size(); ++i) {
+    // equally distributed throughout the shorter event batches, but whatever.
+    for (unsigned int i = 0; i != event_batches.size(); ++i) {
 	std::vector<WiiEvent>& batch = event_batches[i];
 	batch.insert( batch.end(), max_event_counts-batch.size(), WiiEvent() );
     }
+}
+void get_wiis_event_data_process_events(
+    std::vector< std::vector<WiiEvent> > const& event_batches,
+    unsigned int current_event_index,
+    std::vector<WiimoteAndTransformMatrix> const& wiimotes,
+    point_t const& ir_old,
+    std::vector<point_t>& irs,
+    std::vector<matrix_t const*>& transforms,
+    std::vector<WiiEvent>& events)
+{
+    // We allow all button events (hence processing those
+    // right away) but only need *one* IR event
+    for (unsigned int i = 0; i != event_batches.size(); ++i) {
+	switch (event_batches[i][current_event_index].type) {
+	    case WII_EVENT_TYPE_BUTTON:
+		events.push_back( WiiEvent(event_batches[i][current_event_index].button) );
+		break;
+	    case WII_EVENT_TYPE_IR:
+		irs.push_back(event_batches[i][current_event_index].ir);
+		transforms.push_back(&wiimotes[i].transform);
+		break;
+	    case WII_EVENT_TYPE_NON_EVENT:
+	    default:
+		break;
+	}
+    }
 
-    // Processes the return value 'events'
-    for (int i = 0; i != max_event_counts; ++i) {
-	// We allow all button events (hence processing those
-	// right away) but only need *one* IR event
-	std::vector<point_t> irs;
-	std::vector<matrix_t*> transforms;
-	for (unsigned int j = 0; j != wiimotes.size(); ++j) {
-	    switch (event_batches[j][i].type) {
-		case WII_EVENT_TYPE_BUTTON:
-		    events.push_back( WiiEvent(event_batches[j][i].button) );
-		    break;
-		case WII_EVENT_TYPE_IR:
-		    irs.push_back(event_batches[j][i].ir);
-		    transforms.push_back(&wiimotes[j].transform);
-		    break;
-		case WII_EVENT_TYPE_NON_EVENT:
-		default:
-		    break;
+    // If there are multiple valid IR events, take the closest to ir_old
+    // If none of them contains valid IR event, returns INVALID_IR_POS
+    int closest_ir_index = -1;
+    unsigned int closest_distance = static_cast<unsigned int>(-1); // Max uint value, actually sqr(closest)
+    ASSERT(irs.size() == transforms.size(), "Someone finds me a lost transformation matrix, omfgwtfbbq!!!1");
+    for (std::vector<point_t>::const_iterator iter = irs.begin(); iter != irs.end(); ++iter) 
+	if (iter->x != INVALID_IR_POS) {
+	    unsigned int const distance = squared_distance(*iter, ir_old);
+	    if ( closest_distance > distance ) {
+		closest_distance = distance;
+		closest_ir_index = iter - irs.begin();
+		break;
 	    }
 	}
+    if (closest_ir_index != -1)
+	events.push_back( WiiEvent(irs[closest_ir_index], transforms[closest_ir_index]) );                                                                 
+    else events.push_back( WiiEvent( point_t(INVALID_IR_POS, 0), 0) );
+}
 
-	// If there are multiple valid IR events, take the closest to ir_old
-	// If none of them contains valid IR event, returns INVALID_IR_POS
-	int closest_ir_index = -1;
-	unsigned int closest_distance = static_cast<unsigned int>(-1); // Max uint value, actually sqr(closest)
-	ASSERT(irs.size() == transforms.size(), "Someone finds me a lost transformation matrix, omfgwtfbbq!!!1");
-	for (std::vector<point_t>::const_iterator iter = irs.begin(); iter != irs.end(); ++iter) 
-	    if (iter->x != INVALID_IR_POS) {
-		unsigned int const distance = squared_distance(*iter, ir_old);
-		if ( closest_distance > distance ) {
-		    closest_distance = distance;
-		    closest_ir_index = iter - irs.begin();
-		    break;
-		}
-	    }
-	if (closest_ir_index != -1)
-	    events.push_back( WiiEvent(irs[closest_ir_index], transforms[closest_ir_index]) );
-	else events.push_back( WiiEvent( point_t(INVALID_IR_POS, 0), 0) );
+void get_wiis_event_data(std::vector<WiimoteAndTransformMatrix>& wiimotes, point_t const& ir_old, std::vector<WiiEvent>& events) {
+    // This set of events will then be filtered and desirable events
+    // will be added to event_data.
+    std::vector< std::vector<WiiEvent> > event_batches( wiimotes.size() );
+
+    unsigned int max_event_counts = 0;
+    get_wiis_event_data_collect_all_events(wiimotes, ir_old, event_batches, max_event_counts);
+
+    get_wiis_event_data_rebalance_events(max_event_counts, event_batches);
+
+    // Processes the return value 'events'
+    for (unsigned int i = 0; i != max_event_counts; ++i) {
+	std::vector<point_t> irs;
+	std::vector<matrix_t const*> transforms;
+	get_wiis_event_data_process_events(event_batches, max_event_counts, wiimotes, ir_old, irs, transforms, events);
     }
 }
 
@@ -220,9 +242,10 @@ void WiiCursor::process_ir_events(point_t ir_new, matrix_t const* transform) {
     WiiEvents& wii_events = m_thread_data.events;                                                                                                      
     WiiEventData& wii_event_data = m_thread_data.event_data;
 
-    if (ir_new.x != INVALID_IR_POS) { // Only updates if the IR data is valid
-	if (transform)	// NOTE: Can happen ( (ir_new != 0) and (transform == 0) )
-			// if m_ir_filter is tolerating the disappearing IR
+    if (ir_new.x != INVALID_IR_POS) { // MOUSE_MOVE - Only updates if the IR data is valid
+	// NOTE: Can happen (ir_new is valid but transform is null)
+	// if m_ir_filter is tolerating the disappearing IR
+	if (transform)
 	    wii_event_data.cursor_pos = infrared_data(ir_new, *transform);
 	// NOTE: The event fires even if the cursor doesn't move,
 	// this is my design decision since it makes other things easier.

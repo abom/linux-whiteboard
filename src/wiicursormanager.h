@@ -22,6 +22,7 @@
 
 
 #include <vector>
+#include <cstdlib>
 
 #include "gui.h"
 #include "matrix.h"
@@ -80,10 +81,11 @@ public:
     }
 private:
     WiiThreadFuncData m_thread_data; // For all Wiimotes
-    std::vector<WiimoteAndTransformMatrix>& m_wiis; // As a convenience factor, look at the constructor
+    std::vector<WiimoteAndTransformMatrix>& m_wiis; // To not have to look at m_thread_data all the time
     typedef std::vector<WiimoteAndTransformMatrix>::iterator WiimoteAndTransformMatrixIterator;
-    CalibrationWindow* m_cal_window;	// NOTE: Basically a hack, because I don't want to keep a real cal_window around
-					// This is needed because if user closes the app, we have to notify it somehow.
+    // NOTE: Basically a hack, because I don't want to keep a real cal_window around
+    // This is needed because if user closes the app, we have to notify it somehow.
+    CalibrationWindow* m_cal_window;
 };
 
 

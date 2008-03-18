@@ -28,13 +28,6 @@
 #include "auxiliary.h"
 
 
-//typedef Point<double> point_t_phys;
-
-
-// Imagine you're pulling the cursor with a string
-//point_t string_physics(point_t const& pos_current, point_t const& pos_new, unsigned int string_length);
-
-
 // Filters out 'bad' IR signals
 class IrFilter {
 public:
@@ -57,8 +50,12 @@ public:
 
     // Gets a new IR location, brings it through the engine
     // and returns the desired new IR location.
-    point_t process(point_t pos_new); // NOTE: pos_new is not 'const&' for a reason
+    point_t process(point_t const& pos_new);
 private:
+    // Used by process()
+    bool process_tolerance(point_t const& pos_new); // Returns true if tolerating
+    point_t process_ir(point_t const& pos_new);
+
     point_t const& m_pos_current;
     std::list<point_t> m_old_positions;
     delta_t_t m_last_time;

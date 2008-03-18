@@ -63,15 +63,26 @@ bool CalibrationWindow::calibration_area_exposed(GdkEventExpose* event) {
     Glib::RefPtr<Gdk::Window> window = m_gtk_calibration_area->get_window();
     Cairo::RefPtr<Cairo::Context> cr = window->create_cairo_context();
     point_t const scr_size = screen_size();
+    point_t const screen_center( scr_size.x/2, scr_size.y/2 );
 
     // WARNING: We should *really* use relative coordinates (0.0-1.0) here.
     // Improvements are welcome, I'm too lazy to clean it up.
+
+    // Draws a custom user messages, controllable from outside
+    cr->set_font_size(32.0);
+    Cairo::TextExtents text_extents;
+    cr->get_text_extents(m_user_message, text_extents);
+    Point<double> const text_position(
+	screen_center.x-text_extents.x_bearing-text_extents.width/2.0,
+	screen_center.y-200-text_extents.y_bearing-text_extents.height/2.0);
+    cr->move_to(text_position.x, text_position.y);
+    cr->set_source_rgb(1.0, 1.0, 1.0);
+    cr->show_text(m_user_message);
 
     // Wiimote's viewing area
     cr->set_source_rgb(1.0, 1.0, 1.0);
     cr->set_line_width(2.0);
     unsigned int const WII_VIEWING_AREA_RADIUS = 100;
-    point_t const screen_center( scr_size.x/2, scr_size.y/2 );
     cr->rectangle(  screen_center.x-WII_VIEWING_AREA_RADIUS, screen_center.y-WII_VIEWING_AREA_RADIUS,
 	    WII_VIEWING_AREA_RADIUS*2, WII_VIEWING_AREA_RADIUS*2);
     cr->stroke();
@@ -157,13 +168,17 @@ bool CalibrationWindow::redraw_calibration_area() {
 }
 
 void CalibrationWindow::quit() {
+    // Cleans up as needed
+    finish_wii_thread(m_thread_data);
+
     m_gtk_window->hide();
 }
 
-CalibrationWindow::CalibrationWindow(std::vector<WiimoteAndTransformMatrix>& wiimotes, CalibrationData& cal_data) :
+CalibrationWindow::CalibrationWindow(std::vector<WiimoteAndTransformMatrix>& wiimotes, CalibrationData& cal_data, std::string const& user_message) :
     m_gtk_window(0),
     m_gtk_calibration_area(0),
-    m_cal_data(cal_data)
+    m_cal_data(cal_data),
+    m_user_message(user_message)
 {
     // Gets the widgets
     std::string const WINDOWS_DIR(WINDOWSDIR);
@@ -208,8 +223,8 @@ int CalibrationWindow::get_calibration_points() {
 
     // Finished at this point, whether succeeded or escaped by user
     redraw_sigc_connection.disconnect();
-    finish_wii_thread(m_thread_data);	// WARNING: Some bugs about 'msg pipe overflow' if user selects 'Quit'
-					// while calibrating.
+    // NOTE: No need to finish_wii_thread() here as it is handled by
+    // quit() if user selected 'Quit' from the menu
 
     return m_cal_data.active_point != 4;
 }
