@@ -189,6 +189,21 @@ struct WiiEvent {
     matrix_t const* transform;
 };
 void get_wiis_event_data(std::vector<WiimoteAndTransformMatrix>& wiimotes, point_t const& ir_old, std::vector<WiiEvent>& events);
+// Used by get_wiis_event_data()
+void get_wiis_event_data_collect_all_events(
+    std::vector<WiimoteAndTransformMatrix>& wiimotes,
+    point_t const& ir_old,
+    std::vector< std::vector<WiiEvent> >& event_batches,
+    unsigned int& max_event_counts);
+void get_wiis_event_data_rebalance_events(unsigned int max_event_counts, std::vector< std::vector<WiiEvent> >& event_batches);
+void get_wiis_event_data_process_events(
+    std::vector< std::vector<WiiEvent> > const& event_batches,
+    unsigned int current_event_index,
+    std::vector<WiimoteAndTransformMatrix> const& wiimotes,
+    point_t const& ir_old,
+    std::vector<point_t>& irs,
+    std::vector<matrix_t const*>& transforms,
+    std::vector<WiiEvent>& events);
 
 class WiiCursor {
 public:

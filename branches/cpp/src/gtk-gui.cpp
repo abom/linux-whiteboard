@@ -168,9 +168,9 @@ void MainGtkWindow::print_to_output(char const* text) {
     time_t const current_time = time(0);
     tm const* const _tm = localtime(&current_time);
 
-    // NOTE: C funtion, sigh...
+    // WARNING: C funtion, sigh...
     char current_time_text[12];
-    sprintf(current_time_text, "<%.2d:%.2d:%.2d> ", _tm->tm_hour, _tm->tm_min, _tm->tm_sec);
+    sprintf(current_time_text, "(%.2d:%.2d:%.2d) ", _tm->tm_hour, _tm->tm_min, _tm->tm_sec);
 
     // Moves to the end first
     m_output_buffer->place_cursor( m_output_buffer->end() );

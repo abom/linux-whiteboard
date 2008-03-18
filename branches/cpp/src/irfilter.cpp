@@ -20,30 +20,20 @@
 #include "irfilter.h"
 
 
-/*point_t string_physics(point_t const& pos_current, point_t const& pos_new, unsigned int string_length) {
-    point_t_phys const displacement(pos_new.x-pos_current.x, pos_new.y-pos_current.y);
-    double const distance = sqrt( static_cast<double>(squared_distance(pos_current, pos_new)) );
-    point_t ret = pos_new; // By default
-    if (distance > string_length) {
-	point_t_phys const normalized(displacement.x/distance, displacement.y/distance);
-	point_t_phys const new_displacement(normalized.x*string_length, normalized.y*string_length);
-	ret.x = pos_current.x+new_displacement.x;
-	ret.y = pos_current.y+new_displacement.y;
-    }
+bool IrFilter::process_tolerance(point_t const& pos_new) {
+    bool ret = false;
 
-    return ret;
-}*/
-
-
-point_t IrFilter::process(point_t pos_new) {
     delta_t_t const delta_t = get_delta_t(m_last_time);
     if (pos_new.x == INVALID_IR_POS) {
 	m_disappearing += delta_t;
 	if (m_disappearing < DISAPPEARANCE_TOLERANCE)
-	    pos_new = m_pos_current; // Lets it pass this time
-	else m_disappearing = 0;
+	    ret = true; // Lets it pass this time
+	// NOTE: No need to clear m_disappearing here
     }
 
+    return ret;
+}
+point_t IrFilter::process_ir(point_t const& pos_new) {
     bool const mouse_is_down = (m_pos_current.x != INVALID_IR_POS) && (pos_new.x != INVALID_IR_POS);
     if (mouse_is_down) {
 	// Idea stolen from 'ujs': http://www.wiimoteproject.com/index.php?action=profile;u=1240
@@ -65,4 +55,13 @@ point_t IrFilter::process(point_t pos_new) {
 	reset();
 	return pos_new; // There's no point in calculating an invalid IR
     }
+}
+point_t IrFilter::process(point_t const& pos_new) {
+    point_t ret;
+
+    if ( process_tolerance(pos_new) )
+	ret = process_ir(m_pos_current);
+    else ret = process_ir(pos_new);
+
+    return ret;
 }

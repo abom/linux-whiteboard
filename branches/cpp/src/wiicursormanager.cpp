@@ -49,7 +49,11 @@ bool WiiCursorManager::calibrate() {
 	std::vector<WiimoteAndTransformMatrix> one_wiimote;
 	one_wiimote.push_back( WiimoteAndTransformMatrix(iter->wiimote, iter->transform) );
 	CalibrationData cal_data;
-	CalibrationWindow cal_window( one_wiimote, cal_data);
+	// NOTE: A simple Wiimote index for now
+	char current_wii_index = ( iter-m_wiis.begin() ) + '1'; // NOTE: Won't work if user has more than 9 Wiimotes :-)
+	std::string message("Calibrating Wiimote #");
+	message += current_wii_index;
+	CalibrationWindow cal_window( one_wiimote, cal_data, message);
 	m_cal_window = &cal_window;
 	if ( cal_window.get_calibration_points() ) {
 	    ret = false;
