@@ -100,7 +100,7 @@ MainGtkWindow::MainGtkWindow(int argc,char *argv[]) :
     }
     else print_to_output(_("Failed to load configuration file, you need to calibrate it before activating the Wiimote.\n"));*/
 
-    m_wii_manager.tolerances(5, 700);
+    m_wii_manager.tolerances(700);
 
     m_wii_manager.events().left_clicked = sigc::ptr_fun(&wii_left_clicked);
     m_wii_manager.events().right_button_down = sigc::ptr_fun(&wii_right_button_down);

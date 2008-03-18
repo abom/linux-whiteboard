@@ -40,17 +40,20 @@
 // all the time. I'm well aware of that.
 struct WiiEventData {
     WiiEventData(
-        point_t const& ir_pos, point_t const& ir_on_mouse_down, delta_t_t const& waited
+        point_t const& ir_pos, point_t const& ir_on_mouse_down,
+	delta_t_t const& waited, unsigned int const& move_tolerance
     ) :
         ir_pos(ir_pos),
         ir_on_mouse_down(ir_on_mouse_down),
-        waited(waited)
+        waited(waited),
+	move_tolerance(move_tolerance)
     { }
 
     point_t const& ir_pos;
     point_t const& ir_on_mouse_down;
     point_t cursor_pos;
     delta_t_t const& waited;
+    unsigned int const& move_tolerance;
 };
 typedef sigc::slot<void, WiiEventData const&> WiiEventSlotType;
 // Supported events
@@ -105,7 +108,6 @@ struct WiimoteAndTransformMatrix {
 // Will be passed to wii_thread_func()
 struct WiiThreadFuncData {
     WiiThreadFuncData() :
-	move_tolerance(0),
 	wait_tolerance(0),
 	this_thread(0),
 	thread_running(false)
@@ -114,7 +116,6 @@ struct WiiThreadFuncData {
     std::vector<WiimoteAndTransformMatrix> wiimotes;
     WiiEvents events;
 
-    unsigned int move_tolerance;
     delta_t_t wait_tolerance;
 
     pthread_t this_thread;
@@ -139,7 +140,7 @@ struct WiiCursorThreadData {
 	move_tolerance(0),
 	wait_tolerance(0),
 	running(0),
-	event_data(ir, ir_on_mouse_down, waited)
+	event_data(ir, ir_on_mouse_down, waited, move_tolerance)
     { /* NOTE: Not initializing everything since I trust myself (or should I?) */ }
 
     bool click_and_drag() const { return moved > sqr(move_tolerance); }
@@ -213,7 +214,7 @@ public:
 
     void process(
 	std::vector<WiimoteAndTransformMatrix>& wiimotes,
-	unsigned int move_tolerance, unsigned int wait_tolerance,
+	unsigned int wait_tolerance,
 	bool const& running);
 
     // Events

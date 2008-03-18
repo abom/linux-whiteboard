@@ -33,13 +33,14 @@ bool IrFilter::process_tolerance(point_t const& pos_new) {
 
     return ret;
 }
-point_t IrFilter::process_ir(point_t const& pos_new) {
+point_t IrFilter::process_ir(point_t const& pos_new, unsigned int& move_tolerance) {
     bool const mouse_is_down = (m_pos_current.x != INVALID_IR_POS) && (pos_new.x != INVALID_IR_POS);
     if (mouse_is_down) {
 	// Idea stolen from 'ujs': http://www.wiimoteproject.com/index.php?action=profile;u=1240
 	m_old_positions.push_back(pos_new);
 	if (m_old_positions.size() > MAX_NUMBER_OF_POSITIONS)
 	    m_old_positions.pop_front();
+	move_tolerance = MAX_NUMBER_OF_POSITIONS / m_old_positions.size() + 1; // Ask me if it's not clear
 
 	point_t pos_average;
 	for (std::list<point_t>::const_iterator iter = m_old_positions.begin(); iter != m_old_positions.end(); ++iter) {
@@ -56,12 +57,12 @@ point_t IrFilter::process_ir(point_t const& pos_new) {
 	return pos_new; // There's no point in calculating an invalid IR
     }
 }
-point_t IrFilter::process(point_t const& pos_new) {
+point_t IrFilter::process(point_t const& pos_new, unsigned int& move_tolerance) {
     point_t ret;
 
     if ( process_tolerance(pos_new) )
-	ret = process_ir(m_pos_current);
-    else ret = process_ir(pos_new);
+	ret = process_ir(m_pos_current, move_tolerance);
+    else ret = process_ir(pos_new, move_tolerance);
 
     return ret;
 }

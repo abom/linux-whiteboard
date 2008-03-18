@@ -27,7 +27,7 @@ void* wii_thread_func(void* ptr) {
                                                                                                                                                                
     WiiCursor wc;
     wc.events() = data.events;
-    wc.process(data.wiimotes, data.move_tolerance, data.wait_tolerance, data.thread_running); // The main loop
+    wc.process(data.wiimotes, data.wait_tolerance, data.thread_running); // The main loop
 
     for (std::vector<WiimoteAndTransformMatrix>::iterator iter = data.wiimotes.begin(); iter != data.wiimotes.end(); ++iter)
 	cwiid_disable(iter->wiimote, CWIID_FLAG_MESG_IFC);
@@ -93,7 +93,7 @@ void finish_wiicursor_thread(WiiCursorThreadData& data) {
 
 void WiiCursor::process(
 	std::vector<WiimoteAndTransformMatrix>& wiimotes,
-        unsigned int move_tolerance, unsigned int wait_tolerance,
+        unsigned int wait_tolerance,
         bool const& running)
 {
     // Sets up the Wiimotes
@@ -103,7 +103,6 @@ void WiiCursor::process(
     }
 
     // Sets up itself
-    m_thread_data.move_tolerance = move_tolerance;
     m_thread_data.wait_tolerance = wait_tolerance;
     m_thread_data.running = &running; // No need to check anything here since running is a reference
 
@@ -162,12 +161,10 @@ void get_wiis_event_data_rebalance_events(unsigned int max_event_counts, std::ve
     // Re-balances all the event counts to be equal
     // If some Wiimote has less events than the rest, a fresh WiiEvent will be
     // added (which default type is WII_EVENT_TYPE_NON_EVENT).
-    // NOTE: That is *not* the real way to do it, these non-events must be
+    // NOTE: This is *not* the real way to do it, these non-events must be
     // equally distributed throughout the shorter event batches, but whatever.
-    for (unsigned int i = 0; i != event_batches.size(); ++i) {
-	std::vector<WiiEvent>& batch = event_batches[i];
-	batch.insert( batch.end(), max_event_counts-batch.size(), WiiEvent() );
-    }
+    for (std::vector< std::vector<WiiEvent> >::iterator iter = event_batches.begin(); iter != event_batches.end(); ++iter)
+	iter->insert( iter->end(), max_event_counts-iter->size(), WiiEvent() );
 }
 void get_wiis_event_data_process_events(
     std::vector< std::vector<WiiEvent> > const& event_batches,
@@ -228,7 +225,7 @@ void get_wiis_event_data(std::vector<WiimoteAndTransformMatrix>& wiimotes, point
     for (unsigned int i = 0; i != max_event_counts; ++i) {
 	std::vector<point_t> irs;
 	std::vector<matrix_t const*> transforms;
-	get_wiis_event_data_process_events(event_batches, max_event_counts, wiimotes, ir_old, irs, transforms, events);
+	get_wiis_event_data_process_events(event_batches, i, wiimotes, ir_old, irs, transforms, events);
     }
 }
 
@@ -236,7 +233,7 @@ void WiiCursor::process_ir_events(point_t ir_new, matrix_t const* transform) {
     point_t const ir_old = m_thread_data.ir;
     // We don't want the raw ir_new, let's put it
     // through the IR signal filter first.
-    ir_new = m_ir_filter.process(ir_new);
+    ir_new = m_ir_filter.process(ir_new, m_thread_data.move_tolerance);
     m_thread_data.ir = ir_new;
     // Readability
     WiiEvents& wii_events = m_thread_data.events;                                                                                                      

@@ -28,6 +28,7 @@ void CalibrationWindow::calibration_right_button_down(WiiEventData const& data) 
 void CalibrationWindow::calibration_mouse_moved(WiiEventData const& data) {
     m_cal_data.ir_pos = data.ir_pos;
     m_cal_data.waited = data.waited;
+    m_cal_data.move_tolerance = data.move_tolerance;
 }
 void CalibrationWindow::calibration_mouse_down(WiiEventData const& data) {
     m_cal_data.ir_on_mouse_down = data.ir_on_mouse_down;
@@ -139,18 +140,20 @@ bool CalibrationWindow::calibration_area_exposed(GdkEventExpose* event) {
 
     // Another circle showing how far off the current IR pointer from its original position
     point_t const circle_move_pos(screen_center.x+CIRCLE_RADIUS*1.5, screen_center.y+WII_VIEWING_AREA_RADIUS*2);
+    unsigned int const MAX_NUMBER_OF_POSITIONS = 7; // NOTE: This is only temporary!
+    double const circle_radius_2 = MAX_NUMBER_OF_POSITIONS * m_cal_data.move_tolerance;
     // Boundary
     if (!m_cal_data.border_crossed)
 	cr->set_source_rgb(0.0, 1.0, 1.0);
     else cr->set_source_rgb(1.0, 0.0, 0.0);
     cr->set_line_width(3.0);
-    cr->arc(circle_move_pos.x, circle_move_pos.y, CIRCLE_RADIUS, 0, FULL_CIRCLE);
+    cr->arc(circle_move_pos.x, circle_move_pos.y, circle_radius_2, 0, FULL_CIRCLE);
     cr->stroke();
     // Relative IR position
     unsigned int const DOT_RADIUS = 4;
     point_t const dot_pos(
-	circle_move_pos.x+static_cast<int>((double)CIRCLE_RADIUS/(double)m_thread_data.move_tolerance)*(m_cal_data.ir_pos.x-m_cal_data.ir_on_mouse_down.x),
-	circle_move_pos.y+static_cast<int>((double)CIRCLE_RADIUS/(double)m_thread_data.move_tolerance)*(m_cal_data.ir_pos.y-m_cal_data.ir_on_mouse_down.y)
+	circle_move_pos.x+static_cast<int>(circle_radius_2/m_cal_data.move_tolerance)*(m_cal_data.ir_pos.x-m_cal_data.ir_on_mouse_down.x),
+	circle_move_pos.y+static_cast<int>(circle_radius_2/m_cal_data.move_tolerance)*(m_cal_data.ir_pos.y-m_cal_data.ir_on_mouse_down.y)
     );
     if (!m_cal_data.border_crossed) {
 	cr->set_source_rgb(1.0, 1.0, 0.0);
@@ -200,7 +203,6 @@ CalibrationWindow::CalibrationWindow(std::vector<WiimoteAndTransformMatrix>& wii
     // Data
     m_thread_data.wiimotes = wiimotes;
 
-    m_thread_data.move_tolerance = 15;
     m_thread_data.wait_tolerance = 1000;
 
     m_thread_data.events.right_button_down = sigc::mem_fun(*this, &CalibrationWindow::calibration_right_button_down);

@@ -57,8 +57,7 @@ public:
     bool deactivate();
 
     // Sets up move and wait tolerances
-    void tolerances(unsigned int move_tolerance, delta_t_t wait_tolerance) {
-	m_thread_data.move_tolerance = move_tolerance;
+    void tolerances(delta_t_t wait_tolerance) {
 	m_thread_data.wait_tolerance = wait_tolerance;
     }
     // Events
