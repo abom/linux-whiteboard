@@ -32,8 +32,9 @@
 class IrFilter {
 public:
     // Needs constant access to current IR location
-    IrFilter(point_t const& pos_current) :
-	m_pos_current(pos_current)
+    IrFilter(point_t const& pos_current, unsigned int& move_tolerance) :
+	m_pos_current(pos_current),
+	m_move_tolerance(move_tolerance)
     {
 	reset();
     }
@@ -50,20 +51,22 @@ public:
 
     // Gets a new IR location, brings it through the engine
     // and returns the desired new IR location.
-    point_t process(point_t const& pos_new, unsigned int& move_tolerance);
+    point_t process(point_t const& pos_new);
 private:
     /* Used by process() */
     // Returns true if tolerating
     bool process_tolerance(point_t const& pos_new); // Returns true if tolerating
     // The reasoning behind modifying move_tolerance is not obvious ;)
-    point_t process_ir(point_t const& pos_new, unsigned int& move_tolerance);
+    point_t process_ir_get_averaged_position();
+    point_t process_ir(point_t const& pos_new);
 
     point_t const& m_pos_current;
+    unsigned int& m_move_tolerance;
     std::list<point_t> m_old_positions;
     delta_t_t m_last_time;
     delta_t_t m_disappearing; // How long the signal has been off
-    // NOTE: All these below should be heuristically guessed instead
     static unsigned int const MAX_NUMBER_OF_POSITIONS = 7;
+    // NOTE: All these below should be heuristically guessed instead
     static delta_t_t const DISAPPEARANCE_TOLERANCE = 50; // In milliseconds
 };
 

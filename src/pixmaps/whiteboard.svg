@@ -13,7 +13,7 @@
    height="128"
    id="svg2"
    sodipodi:version="0.32"
-   inkscape:version="0.45.1+0.46pre1"
+   inkscape:version="0.46"
    sodipodi:docname="whiteboard.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
    inkscape:export-filename="/home/vanhtu1987/Temp/Tarballs/whiteboard/src/icon.png"
@@ -94,7 +94,9 @@
        width="25.29837"
        sodipodi:absref="/media/CACHE/Downloaded/Images/WiiMote.png"
        xlink:href="/media/CACHE/Downloaded/Images/WiiMote.png"
-       transform="matrix(0.4085861,-0.9127198,0.9116773,0.4109068,0,0)" />
+       transform="matrix(0.4085861,-0.9127198,0.9116773,0.4109068,0,0)"
+       inkscape:export-xdpi="101.05"
+       inkscape:export-ydpi="101.05" />
     <rect
        style="opacity:1;fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:#2e2e2e;stroke-width:4.41566372;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="rect2388"
@@ -103,13 +105,19 @@
        x="2.3313677"
        y="20.569014"
        rx="4.6998892"
-       ry="6.7189069" />
+       ry="6.7189069"
+       inkscape:export-filename="/home/vanhtu1987/Temp/Tarballs/whiteboard/src/pixmaps/image3318.png"
+       inkscape:export-xdpi="101.05"
+       inkscape:export-ydpi="101.05" />
     <text
        xml:space="preserve"
        style="font-size:69.82048798px;font-style:normal;font-weight:normal;fill:#404040;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Euclid Math One"
        x="10.901558"
        y="88.912704"
-       id="text2399"><tspan
+       id="text2399"
+       inkscape:export-filename="/home/vanhtu1987/Temp/Tarballs/whiteboard/src/pixmaps/image3318.png"
+       inkscape:export-xdpi="101.05"
+       inkscape:export-ydpi="101.05"><tspan
          sodipodi:role="line"
          id="tspan2401"
          x="10.901558"
