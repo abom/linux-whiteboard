@@ -198,7 +198,7 @@ CalibrationWindow::CalibrationWindow(std::vector<WiimoteAndTransformMatrix>& wii
     m_gtk_calibration_area->modify_bg( Gtk::STATE_NORMAL, Gdk::Color("black") );
     m_gtk_calibration_area->signal_expose_event().connect( sigc::mem_fun(*this, &CalibrationWindow::calibration_area_exposed) );
 
-    std::string const ICON_FILE(PIXMAPS_DIR + "/whiteboard.svg");
+    std::string const ICON_FILE(PIXMAPS_DIR + "/whiteboard.png");
     m_gtk_window->set_icon_from_file(ICON_FILE);
     m_gtk_window->signal_key_press_event().connect( sigc::mem_fun(*this, &CalibrationWindow::calibration_area_key_pressed) );
     m_gtk_window->maximize();
