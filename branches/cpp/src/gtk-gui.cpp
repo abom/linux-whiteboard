@@ -88,7 +88,7 @@ MainGtkWindow::MainGtkWindow(int argc,char *argv[]) :
     m_gtk_output->set_buffer(m_output_buffer);
     m_time_text_tag->property_font() = "bold";
 
-    std::string const ICON_FILE(PIXMAPS_DIR + "/whiteboard.svg");
+    std::string const ICON_FILE(PIXMAPS_DIR + "/whiteboard.png");
     m_gtk_main_window->set_icon_from_file(ICON_FILE);
     m_gtk_status_icon->set_from_file(ICON_FILE);
 

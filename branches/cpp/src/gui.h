@@ -81,6 +81,7 @@ private:
     void calibration_right_button_down(WiiEventData const& data);
     void calibration_mouse_moved(WiiEventData const& data);
     void calibration_mouse_down(WiiEventData const& data);
+    void calibration_mouse_up(WiiEventData const& data);
     void calibration_begin_click_and_drag(WiiEventData const& data);
 
     /* GUI stuff */

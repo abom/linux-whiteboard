@@ -1,3 +1,3 @@
 whiteboardpixmapsdir = ${datadir}/pixmaps
 
-whiteboardpixmaps_DATA = whiteboard.svg
+whiteboardpixmaps_DATA = whiteboard.svg whiteboard.png

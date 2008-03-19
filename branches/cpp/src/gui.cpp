@@ -22,8 +22,6 @@
 
 void CalibrationWindow::calibration_right_button_down(WiiEventData const& data) {
     m_cal_data.p_wii[m_cal_data.active_point++] = data.ir_pos;
-    if (m_cal_data.active_point == 4)
-	quit();
 }
 void CalibrationWindow::calibration_mouse_moved(WiiEventData const& data) {
     m_cal_data.ir_pos = data.ir_pos;
@@ -33,6 +31,11 @@ void CalibrationWindow::calibration_mouse_moved(WiiEventData const& data) {
 void CalibrationWindow::calibration_mouse_down(WiiEventData const& data) {
     m_cal_data.ir_on_mouse_down = data.ir_on_mouse_down;
     m_cal_data.border_crossed = false;
+}
+void CalibrationWindow::calibration_mouse_up(WiiEventData const& data) {
+    m_cal_data.ir_pos.x = INVALID_IR_POS; // So it will not be drawn later
+    if (m_cal_data.active_point == 4)
+	quit();
 }
 void CalibrationWindow::calibration_begin_click_and_drag(WiiEventData const& data) {
     m_cal_data.border_crossed = true;
@@ -208,6 +211,7 @@ CalibrationWindow::CalibrationWindow(std::vector<WiimoteAndTransformMatrix>& wii
     m_thread_data.events.right_button_down = sigc::mem_fun(*this, &CalibrationWindow::calibration_right_button_down);
     m_thread_data.events.mouse_moved = sigc::mem_fun(*this, &CalibrationWindow::calibration_mouse_moved);
     m_thread_data.events.mouse_down = sigc::mem_fun(*this, &CalibrationWindow::calibration_mouse_down);
+    m_thread_data.events.mouse_up = sigc::mem_fun(*this, &CalibrationWindow::calibration_mouse_up);
     m_thread_data.events.begin_click_and_drag = sigc::mem_fun(*this, &CalibrationWindow::calibration_begin_click_and_drag);
 }
 

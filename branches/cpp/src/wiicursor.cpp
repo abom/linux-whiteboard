@@ -218,7 +218,6 @@ void get_wiis_event_data(std::vector<WiimoteAndTransformMatrix>& wiimotes, point
 
     unsigned int max_event_counts = 0;
     get_wiis_event_data_collect_all_events(wiimotes, ir_old, event_batches, max_event_counts);
-
     get_wiis_event_data_rebalance_events(max_event_counts, event_batches);
 
     // Processes the return value 'events'
@@ -233,7 +232,7 @@ void WiiCursor::process_ir_events(point_t ir_new, matrix_t const* transform) {
     point_t const ir_old = m_thread_data.ir;
     // We don't want the raw ir_new, let's put it
     // through the IR signal filter first.
-    ir_new = m_ir_filter.process(ir_new, m_thread_data.move_tolerance);
+    ir_new = m_ir_filter.process(ir_new);
     m_thread_data.ir = ir_new;
     // Readability
     WiiEvents& wii_events = m_thread_data.events;                                                                                                      

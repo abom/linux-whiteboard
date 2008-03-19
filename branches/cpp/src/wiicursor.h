@@ -141,7 +141,7 @@ struct WiiCursorThreadData {
 	wait_tolerance(0),
 	running(0),
 	event_data(ir, ir_on_mouse_down, waited, move_tolerance)
-    { /* NOTE: Not initializing everything since I trust myself (or should I?) */ }
+    { }
 
     bool click_and_drag() const { return moved > sqr(move_tolerance); }
     bool right_click() const { return waited > wait_tolerance; }
@@ -209,7 +209,7 @@ void get_wiis_event_data_process_events(
 class WiiCursor {
 public:
     WiiCursor() :
-	m_ir_filter(m_thread_data.ir)
+	m_ir_filter(m_thread_data.ir, m_thread_data.move_tolerance)
     { }
 
     void process(
