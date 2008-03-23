@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.2 on Sun Mar 23 17:11:21 2008 -->
+<!--Generated with glade3 3.4.2 on Sun Mar 23 17:25:45 2008 -->
 <glade-interface>
   <widget class="GtkWindow" id="main-window">
     <property name="visible">True</property>
@@ -79,7 +79,6 @@
                 <child>
                   <widget class="GtkTextView" id="output">
                     <property name="visible">True</property>
-                    <property name="sensitive">False</property>
                     <property name="can_focus">True</property>
                     <property name="editable">False</property>
                     <property name="wrap_mode">GTK_WRAP_WORD</property>
