@@ -73,9 +73,8 @@ bool WiiCursorManager::calibrate() {
 	unsigned int const current_wii_index = iter - m_wiis.begin() + 1;
 	char message[1024];
 	sprintf(message, _("Calibrating Wiimote #%d"), current_wii_index);
-	std::string const user_message(message);
 
-	CalibrationWindow cal_window( one_wiimote, cal_data, user_message);
+	CalibrationWindow cal_window( one_wiimote, cal_data, message);
 	m_cal_window = &cal_window;
 	if ( cal_window.get_calibration_points() ) {
 	    ret = false;
