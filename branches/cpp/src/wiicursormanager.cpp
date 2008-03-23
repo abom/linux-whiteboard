@@ -20,14 +20,33 @@
 #include "wiicursormanager.h"
 
 
-bool WiiCursorManager::connect() {
+void* wiicursormanager_connect_thread(void* ptr) {
+    ASSERT(ptr != 0, "No data has been passed along");
+    WiiCursorManagerThreadData& data = *static_cast<WiiCursorManagerThreadData*>(ptr);
+
     // Trying to connect to as many Wiimotes as possible
     // NOTE: Error checking
     cwiid_wiimote_t* new_wiimote = 0;
-    while ( (new_wiimote = wii_connect(0)) )
-	m_wiis.push_back( WiimoteAndTransformMatrix(new_wiimote) );
+    do {
+        data.events.start_each_connection(data.wiis.size() + 1);
+	if ( (new_wiimote = wii_connect(0)) )
+	    data.wiis.push_back( WiimoteAndTransformMatrix(new_wiimote) );
+	data.events.finish_each_connection(new_wiimote ? true : false);
+    }
+    while (new_wiimote);
 
-    return connected();
+    data.events.done_connecting( data.wiis.size() );
+
+    return 0;
+}
+
+
+void WiiCursorManager::connect()
+{
+    // NOTE: We are throwing away the thread ID because we trust
+    // the caller to NOT call this repeatedly at the same time.
+    pthread_t this_thread;
+    pthread_create(&this_thread, 0, &wiicursormanager_connect_thread, &m_connect_thread_data);
 }
 bool WiiCursorManager::disconnect() {
     if (m_cal_window)
@@ -50,9 +69,11 @@ bool WiiCursorManager::calibrate() {
 	one_wiimote.push_back( WiimoteAndTransformMatrix(iter->wiimote, iter->transform) );
 	CalibrationData cal_data;
 	// NOTE: A simple Wiimote index for now
-	char current_wii_index = ( iter-m_wiis.begin() ) + '1'; // NOTE: Won't work if user has more than 9 Wiimotes :-)
-	std::string message("Calibrating Wiimote #");
-	message += current_wii_index;
+	// WARNING: C function. I'd have used std::ostringstream if not for l10n.
+	unsigned int const current_wii_index = iter - m_wiis.begin() + 1;
+	char message[1024];
+	sprintf(message, _("Calibrating Wiimote #%d"), current_wii_index);
+
 	CalibrationWindow cal_window( one_wiimote, cal_data, message);
 	m_cal_window = &cal_window;
 	if ( cal_window.get_calibration_points() ) {

@@ -76,12 +76,22 @@ bool CalibrationWindow::calibration_area_exposed(GdkEventExpose* event) {
     cr->set_font_size(32.0);
     Cairo::TextExtents text_extents;
     cr->get_text_extents(m_user_message, text_extents);
-    Point<double> const text_position(
+    Point<double> const text_position_user_message(
 	screen_center.x-text_extents.x_bearing-text_extents.width/2.0,
-	screen_center.y-200-text_extents.y_bearing-text_extents.height/2.0);
-    cr->move_to(text_position.x, text_position.y);
+	screen_center.y-text_extents.y_bearing-text_extents.height/2.0-200.0);
+    cr->move_to(text_position_user_message.x, text_position_user_message.y);
     cr->set_source_rgb(1.0, 1.0, 1.0);
     cr->show_text(m_user_message);
+    // Draws a static informational message
+    std::string const escape_message(_("Press 'Escape' (Esc) to quit calibration"));
+    cr->set_font_size(16.0);
+    cr->get_text_extents(escape_message, text_extents);
+    Point<double> const text_position_escape_message(
+	screen_center.x-text_extents.x_bearing-text_extents.width/2.0,
+	scr_size.y-text_extents.y_bearing-text_extents.height/2.0-40.0);
+    cr->move_to(text_position_escape_message.x, text_position_escape_message.y);
+    cr->set_source_rgb(1.0, 1.0, 1.0);
+    cr->show_text(escape_message);
 
     // Wiimote's viewing area
     cr->set_source_rgb(1.0, 1.0, 1.0);
@@ -144,19 +154,19 @@ bool CalibrationWindow::calibration_area_exposed(GdkEventExpose* event) {
     // Another circle showing how far off the current IR pointer from its original position
     point_t const circle_move_pos(screen_center.x+CIRCLE_RADIUS*1.5, screen_center.y+WII_VIEWING_AREA_RADIUS*2);
     unsigned int const MAX_NUMBER_OF_POSITIONS = 7; // NOTE: This is only temporary!
-    double const circle_radius_2 = MAX_NUMBER_OF_POSITIONS * m_cal_data.move_tolerance;
+    double const circle_radius_move = MAX_NUMBER_OF_POSITIONS * m_cal_data.move_tolerance;
     // Boundary
     if (!m_cal_data.border_crossed)
 	cr->set_source_rgb(0.0, 1.0, 1.0);
     else cr->set_source_rgb(1.0, 0.0, 0.0);
     cr->set_line_width(3.0);
-    cr->arc(circle_move_pos.x, circle_move_pos.y, circle_radius_2, 0, FULL_CIRCLE);
+    cr->arc(circle_move_pos.x, circle_move_pos.y, circle_radius_move, 0, FULL_CIRCLE);
     cr->stroke();
     // Relative IR position
     unsigned int const DOT_RADIUS = 4;
     point_t const dot_pos(
-	circle_move_pos.x+static_cast<int>(circle_radius_2/m_cal_data.move_tolerance)*(m_cal_data.ir_pos.x-m_cal_data.ir_on_mouse_down.x),
-	circle_move_pos.y+static_cast<int>(circle_radius_2/m_cal_data.move_tolerance)*(m_cal_data.ir_pos.y-m_cal_data.ir_on_mouse_down.y)
+	circle_move_pos.x+static_cast<int>(circle_radius_move/m_cal_data.move_tolerance)*(m_cal_data.ir_pos.x-m_cal_data.ir_on_mouse_down.x),
+	circle_move_pos.y+static_cast<int>(circle_radius_move/m_cal_data.move_tolerance)*(m_cal_data.ir_pos.y-m_cal_data.ir_on_mouse_down.y)
     );
     if (!m_cal_data.border_crossed) {
 	cr->set_source_rgb(1.0, 1.0, 0.0);
@@ -202,6 +212,7 @@ CalibrationWindow::CalibrationWindow(std::vector<WiimoteAndTransformMatrix>& wii
     m_gtk_window->set_icon_from_file(ICON_FILE);
     m_gtk_window->signal_key_press_event().connect( sigc::mem_fun(*this, &CalibrationWindow::calibration_area_key_pressed) );
     m_gtk_window->maximize();
+    m_gtk_window->show();
 
     // Data
     m_thread_data.wiimotes = wiimotes;
@@ -230,7 +241,7 @@ int CalibrationWindow::get_calibration_points() {
     // Finished at this point, whether succeeded or escaped by user
     redraw_sigc_connection.disconnect();
     // NOTE: No need to finish_wii_thread() here as it is handled by
-    // quit() if user selected 'Quit' from the menu
+    // quit() if user selected 'Quit' from the menu. It self-terminated otherwise.
 
     return m_cal_data.active_point != 4;
 }

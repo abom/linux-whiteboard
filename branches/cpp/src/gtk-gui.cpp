@@ -52,15 +52,26 @@ MainGtkWindow::MainGtkWindow(int argc,char *argv[]) :
     m_gtk_calibrate(0),
     m_gtk_status_icon( Gtk::StatusIcon::create("whiteboard-status-icon") ),
     m_gtk_status_icon_menu(0),
+    m_gtk_sim_connect(0),
+    m_gtk_sim_disconnect(0),
+    m_gtk_sim_activate(0),
+    m_gtk_sim_deactivate(0),
+    m_gtk_sim_calibrate(0),
     m_gtk_sim_quit(0),
+    m_gtk_menu_quit(0),
+    m_gtk_menu_about(0),
+    m_gtk_about_dialog(0),
+    m_gtk_connecting_window(0),
+    m_gtk_label_wiimote_number(0),
+    m_gtk_connecting_progress(0),
     m_time_text_tag( m_output_buffer->create_tag("bold") )
 {
     // WARNING: Not checking for *any* return values here
     // WARNING: Constructing paths this way is not safe/portable, but I don't want to bother with g_free()
 
-    /* GUI */
+    // Gets GUI components
     std::string const WINDOWS_DIR(WINDOWSDIR);
-    std::string const PIXMAPS_DIR(PIXMAPSDIR);
+    std::string const PIXMAPS_DIR(PIXMAPSDIR); // NOTE: Glade's bug, 'icon' does nothing
     Glib::RefPtr<Gnome::Glade::Xml> refXml = Gnome::Glade::Xml::create(WINDOWS_DIR + "/main-window.glade");
 
     refXml->get_widget("main-window", m_gtk_main_window);
@@ -70,27 +81,50 @@ MainGtkWindow::MainGtkWindow(int argc,char *argv[]) :
     refXml->get_widget("toggle-activation", m_gtk_toggle_activation);
     refXml->get_widget("calibrate", m_gtk_calibrate);
     refXml->get_widget("status-icon-menu", m_gtk_status_icon_menu);
-    refXml->get_widget("sim-toggle-wiimote", m_gtk_sim_toggle_wiimote);
-    refXml->get_widget("sim-toggle-activation", m_gtk_sim_toggle_activation);
+    refXml->get_widget("sim-connect", m_gtk_sim_connect);
+    refXml->get_widget("sim-disconnect", m_gtk_sim_disconnect);
+    refXml->get_widget("sim-activate", m_gtk_sim_activate);
+    refXml->get_widget("sim-deactivate", m_gtk_sim_deactivate);
     refXml->get_widget("sim-calibrate", m_gtk_sim_calibrate);
     refXml->get_widget("sim-quit", m_gtk_sim_quit);
+    refXml->get_widget("menuitem-quit", m_gtk_menu_quit);
+    refXml->get_widget("menuitem-about", m_gtk_menu_about);
+    refXml->get_widget("about-dialog", m_gtk_about_dialog);
+    refXml->get_widget("connecting-window", m_gtk_connecting_window);
+    refXml->get_widget("connecting-window-label-wiimote-number", m_gtk_label_wiimote_number);
+    refXml->get_widget("connecting-window-progress", m_gtk_connecting_progress);
 
     m_gtk_toggle_wiimote->signal_clicked().connect(sigc::mem_fun(*this, &MainGtkWindow::toggle_wiimote_clicked));
     m_gtk_toggle_activation->signal_clicked().connect(sigc::mem_fun(*this, &MainGtkWindow::toggle_activation_clicked));
     m_gtk_calibrate->signal_clicked().connect(sigc::mem_fun(*this, &MainGtkWindow::calibrate_clicked));
     m_gtk_status_icon->signal_activate().connect(sigc::mem_fun(*this, &MainGtkWindow::status_icon_clicked));
     m_gtk_status_icon->signal_popup_menu().connect(sigc::mem_fun(*this, &MainGtkWindow::status_icon_popup));
-    m_gtk_sim_toggle_wiimote->signal_activate().connect(sigc::mem_fun(*this, &MainGtkWindow::toggle_wiimote_clicked));
-    m_gtk_sim_toggle_activation->signal_activate().connect(sigc::mem_fun(*this, &MainGtkWindow::toggle_activation_clicked));
+    // NOTE: '(Dis)connect' and '(De)activate' connections below are *wrong*,
+    // but they work if we keep the state of the menu consistent.
+    m_gtk_sim_connect->signal_activate().connect(sigc::mem_fun(*this, &MainGtkWindow::toggle_wiimote_clicked));
+    m_gtk_sim_disconnect->signal_activate().connect(sigc::mem_fun(*this, &MainGtkWindow::toggle_wiimote_clicked));
+    m_gtk_sim_activate->signal_activate().connect(sigc::mem_fun(*this, &MainGtkWindow::toggle_activation_clicked));
+    m_gtk_sim_deactivate->signal_activate().connect(sigc::mem_fun(*this, &MainGtkWindow::toggle_activation_clicked));
     m_gtk_sim_calibrate->signal_activate().connect(sigc::mem_fun(*this, &MainGtkWindow::calibrate_clicked));
     m_gtk_sim_quit->signal_activate().connect(sigc::mem_fun(*this, &MainGtkWindow::sim_quit_clicked));
+    m_gtk_menu_quit->signal_activate().connect(sigc::mem_fun(*this, &MainGtkWindow::sim_quit_clicked));
+    m_gtk_menu_about->signal_activate().connect(sigc::mem_fun(*this, &MainGtkWindow::menu_about_clicked));
+    m_gtk_about_dialog->signal_response().connect(sigc::mem_fun(*this, &MainGtkWindow::about_dialog_response));
 
+    // Sets up widgets
     m_gtk_output->set_buffer(m_output_buffer);
     m_time_text_tag->property_font() = "bold";
 
     std::string const ICON_FILE(PIXMAPS_DIR + "/whiteboard.png");
     m_gtk_main_window->set_icon_from_file(ICON_FILE);
     m_gtk_status_icon->set_from_file(ICON_FILE);
+    m_gtk_about_dialog->set_icon_from_file(ICON_FILE);
+    m_gtk_connecting_window->set_icon_from_file(ICON_FILE);
+
+    sync_wiimote_state(false); // Disconnected by default
+
+    // NOTE: I don't fscking understand :-< Gtk(mm) is fscking unstable
+    m_gtk_connecting_window->hide();
 
     /* Data */
     // NOTE: Load configs here
@@ -108,6 +142,10 @@ MainGtkWindow::MainGtkWindow(int argc,char *argv[]) :
     m_wii_manager.events().begin_click_and_drag = sigc::ptr_fun(&wii_begin_click_and_drag);
     m_wii_manager.events().end_click_and_drag = sigc::ptr_fun(&wii_end_click_and_drag);
     m_wii_manager.events().mouse_moved = sigc::ptr_fun(&wii_mouse_moved);
+
+    m_wii_manager.connect_events().start_each_connection = sigc::mem_fun(*this, &MainGtkWindow::wiicursormanager_connect_start_connection);
+    m_wii_manager.connect_events().finish_each_connection = sigc::mem_fun(*this, &MainGtkWindow::wiicursormanager_connect_finish_connection);
+    m_wii_manager.connect_events().done_connecting = sigc::mem_fun(*this, &MainGtkWindow::wiicursormanager_connect_done_connecting);
 }
 
 int MainGtkWindow::run() {
@@ -119,11 +157,10 @@ int MainGtkWindow::run() {
 
 void MainGtkWindow::toggle_wiimote_clicked() {
     if ( !m_wii_manager.connected() ) {
-	if ( m_wii_manager.connect() ) {
-	    sync_wiimote_state(true);
-	    print_to_output(_("All Wiimotes are connected. Click 'Activate' to use your infrared pen.\n"));
-	}
-	else print_to_output(_("Failed to connect to the Wiimotes.\n"));
+	sync_wiimote_state_connection_phase(true);
+
+	m_wii_manager.connect();
+	// The stopping process will be handled in wiicursor_connect_done_connecting()
     }
     else {
 	if ( m_wii_manager.disconnect() )
@@ -135,8 +172,8 @@ void MainGtkWindow::toggle_wiimote_clicked() {
 }
 void MainGtkWindow::toggle_activation_clicked() {
     if ( !m_wii_manager.activated() ) {
-	m_wii_manager.activate();
 	sync_activation_state(true);
+	m_wii_manager.activate();
     }
     else {
 	m_wii_manager.deactivate();
@@ -162,42 +199,105 @@ void MainGtkWindow::sim_quit_clicked() {
 
     m_gtk_kit.quit();
 }
+void MainGtkWindow::menu_about_clicked() {
+    // NOTE: I haven't figured out how to set
+    // the focus to this dialog.
+    m_gtk_about_dialog->show();
+}
+void MainGtkWindow::about_dialog_response(int response_id) {
+    switch (response_id) {
+	case Gtk::RESPONSE_CANCEL:
+	    m_gtk_about_dialog->hide();
+	    break;
+	default:
+	    break;
+    }
+}
+
+void MainGtkWindow::wiicursormanager_connect_start_connection(unsigned int index) {
+    // WARNING: C function. I'd have used std::ostringstream if not for l10n.
+    char out[1024];
+    sprintf(out, _("Connecting to Wiimote #%d... "), index);
+    m_gtk_label_wiimote_number->set_text(out);
+    m_gtk_connecting_window->show();
+
+    m_progressbar_pulse_connection =
+	Glib::signal_timeout().connect(
+	    sigc::mem_fun(*this, &MainGtkWindow::connecting_window_progressbar_pulse), 50 );
+}
+void MainGtkWindow::wiicursormanager_connect_finish_connection(bool connected) {
+    m_progressbar_pulse_connection.disconnect();
+
+    m_gtk_connecting_window->hide();
+}
+void MainGtkWindow::wiicursormanager_connect_done_connecting(unsigned int number_of_connected) {
+    sync_wiimote_state_connection_phase(false);
+
+    // WARNING: C function. I'd have used std::ostringstream if not for l10n.
+    if (number_of_connected) {
+	char out[1024];
+	sprintf(out, _("Successfully connected to %d Wiimote(s). Click 'Activate' to use your infrared pen.\n"), number_of_connected);
+	//print_to_output(out); // WARNING: Something has FUCKING gone wrong here
+	print_to_output(_("Successfully connected to all Wiimotes. Click 'Activate' to use your infrared pen.\n"));
+
+	sync_wiimote_state(true);
+    }
+    else print_to_output(_("Failed to connect to any Wiimote.\n"));
+}
+bool MainGtkWindow::connecting_window_progressbar_pulse() {
+    m_gtk_connecting_progress->pulse();
+
+    return true;
+}
 
 void MainGtkWindow::print_to_output(char const* text) {
-    // Gets current time of day
-    time_t const current_time = time(0);
-    tm const* const _tm = localtime(&current_time);
-
-    // WARNING: C funtion, sigh...
-    char current_time_text[12];
-    sprintf(current_time_text, "(%.2d:%.2d:%.2d) ", _tm->tm_hour, _tm->tm_min, _tm->tm_sec);
-
+    print_to_output(text, true);
+}
+void MainGtkWindow::print_to_output(char const* text, bool add_time_stamp) {
     // Moves to the end first
     m_output_buffer->place_cursor( m_output_buffer->end() );
 
-    // Makes the time more visible
-    m_output_buffer->insert_at_cursor(current_time_text);
-    Gtk::TextBuffer::iterator time_text_begin = m_output_buffer->end();
-    time_text_begin.backward_chars( sizeof(current_time_text) );
-    m_output_buffer->apply_tag( m_time_text_tag, time_text_begin, m_output_buffer->end() );
+    if (add_time_stamp) {
+	// Gets current time of day
+	time_t const current_time = time(0);
+	tm const* const _tm = localtime(&current_time);
+	// Text representation of the current time
+	// WARNING: C function. I don't know of a C++ equivalent of '%.2d'
+	char current_time_text[12];
+	sprintf(current_time_text, "(%.2d:%.2d:%.2d) ", _tm->tm_hour, _tm->tm_min, _tm->tm_sec);
+	// Makes the time more visible
+	m_output_buffer->insert_at_cursor(current_time_text);
+	Gtk::TextBuffer::iterator time_text_begin = m_output_buffer->end();
+	time_text_begin.backward_chars( sizeof(current_time_text) );
+	m_output_buffer->apply_tag( m_time_text_tag, time_text_begin, m_output_buffer->end() );
+    }
 
     m_output_buffer->insert_at_cursor(text);
 
-    // Moves to the end again to show the newest text
+    // Scrolls to the newest text
     Gtk::Adjustment *const vadj = m_gtk_output_scroll->get_vadjustment();
     vadj->set_value( vadj->get_upper() );
 }
 void MainGtkWindow::sync_activation_state(bool activated) {
     m_gtk_toggle_activation->set_label(activated ? _("De_activate") : _("_Activate"));
-    //m_gtk_sim_toggle_activation->set_label(activated ? "De_activate" : "_Activate");
     m_gtk_calibrate->set_sensitive(!activated);
+
+    m_gtk_sim_activate->set_sensitive(!activated);
+    m_gtk_sim_deactivate->set_sensitive(activated);
     m_gtk_sim_calibrate->set_sensitive(!activated);
 }
-void MainGtkWindow::sync_wiimote_state(bool wiimote_is_connected) {
-    m_gtk_toggle_wiimote->set_label(wiimote_is_connected ? "gtk-disconnect" : "gtk-connect");
-    //m_gtk_sim_toggle_wiimote->set_label(wiimote_is_connected ? "Dis_connect" : "_Connect");
-    m_gtk_toggle_activation->set_sensitive(wiimote_is_connected);
-    m_gtk_sim_toggle_activation->set_sensitive(wiimote_is_connected);
-    m_gtk_calibrate->set_sensitive(wiimote_is_connected);
-    m_gtk_sim_calibrate->set_sensitive(wiimote_is_connected);
+void MainGtkWindow::sync_wiimote_state(bool connected) {
+    m_gtk_toggle_wiimote->set_label(connected ? "gtk-disconnect" : "gtk-connect");
+    m_gtk_toggle_activation->set_sensitive(connected);
+    m_gtk_calibrate->set_sensitive(connected);
+
+    m_gtk_sim_connect->set_sensitive(!connected);
+    m_gtk_sim_disconnect->set_sensitive(connected);
+    m_gtk_sim_activate->set_sensitive(connected);
+    m_gtk_sim_deactivate->set_sensitive(false);
+    m_gtk_sim_calibrate->set_sensitive(connected);
+}
+void MainGtkWindow::sync_wiimote_state_connection_phase(bool starting) {
+    m_gtk_toggle_wiimote->set_sensitive(!starting);
+    m_gtk_sim_connect->set_sensitive(!starting);
 }
