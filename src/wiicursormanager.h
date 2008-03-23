@@ -29,18 +29,39 @@
 #include "wiicursor.h"
 
 
+class MainGtkWindow;
+
+
+void* wiicursormanager_connect_thread(void* ptr);
+
+
+// Used by wiicursormanager_connect_thread()
+struct WiiCursorManagerConnectEvents {
+    sigc::slot<void, unsigned int> start_each_connection;
+    sigc::slot<void, bool> finish_each_connection;
+    sigc::slot<void, unsigned int> done_connecting;
+};
+struct WiiCursorManagerThreadData {
+    WiiCursorManagerConnectEvents events;
+    std::vector<WiimoteAndTransformMatrix>& wiis;
+
+    WiiCursorManagerThreadData(std::vector<WiimoteAndTransformMatrix>& wiis) :
+	wiis(wiis)
+    { }
+};
+
 // Basically, this class transparently manages all available
 // Wiimotes and act as a virtual Wiimote to outsiders.
 class WiiCursorManager {
 public:
     WiiCursorManager() :
 	m_wiis(m_thread_data.wiimotes),
-	m_cal_window(0)
+	m_cal_window(0),
+	m_connect_thread_data(m_wiis)
     { }
 
-    // Connects all available Wiimotes
-    // Returns true if at least 1 Wiimote was connected
-    bool connect();
+    // Connects all available Wiimotes, asynchronously
+    void connect();
     // Disconnects all Wiimotes
     // Returns true if all successfully disconnected
     bool disconnect();
@@ -64,6 +85,9 @@ public:
     WiiEvents& events() {
 	return m_thread_data.events;
     }
+    WiiCursorManagerConnectEvents& connect_events() {
+	return m_connect_thread_data.events;
+    }
 
     // Loads configurations
     // Returns true on success
@@ -85,6 +109,8 @@ private:
     // NOTE: Basically a hack, because I don't want to keep a real cal_window around
     // This is needed because if user closes the app, we have to notify it somehow.
     CalibrationWindow* m_cal_window;
+    // Used by wiicursormanager_connect_thread()
+    WiiCursorManagerThreadData m_connect_thread_data;
 };
 
 

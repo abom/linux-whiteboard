@@ -48,7 +48,6 @@ void wii_end_click_and_drag(WiiEventData const& data);
 void wii_mouse_moved(WiiEventData const& data);
 
 
-/* NOTE: Read the GNOME HIG! */
 class MainGtkWindow {
 public:
     MainGtkWindow(int argc,char *argv[]);
@@ -63,13 +62,22 @@ private:
     void status_icon_clicked();
     void status_icon_popup(guint button, guint32 activate_time);
     void sim_quit_clicked();
+    void menu_about_clicked();
+    void about_dialog_response(int response_id);
+    void wiicursormanager_connect_start_connection(unsigned int index);
+    void wiicursormanager_connect_finish_connection(bool connected);
+    void wiicursormanager_connect_done_connecting(unsigned int number_of_connected);
+    bool connecting_window_progressbar_pulse();
 
     /* Helpers */
     void print_to_output(char const* text);
+    void print_to_output(char const* text, bool add_time_stamp);
     void sync_activation_state(bool activated);
     void sync_wiimote_state(bool wiimote_is_connected);
+    void sync_wiimote_state_connection_phase(bool starting); // If false then it has finished
 
     /* GUI */
+    // Main window
     Gtk::Main m_gtk_kit;
     Gtk::Window* m_gtk_main_window;
     Gtk::ScrolledWindow* m_gtk_output_scroll;
@@ -78,12 +86,25 @@ private:
     Gtk::Button* m_gtk_toggle_wiimote;
     Gtk::Button* m_gtk_toggle_activation;
     Gtk::Button* m_gtk_calibrate;
+    // Status icon menu
     Glib::RefPtr<Gtk::StatusIcon> m_gtk_status_icon;
     Gtk::Menu* m_gtk_status_icon_menu;
-    Gtk::MenuItem* m_gtk_sim_toggle_wiimote;
-    Gtk::MenuItem* m_gtk_sim_toggle_activation;
+    Gtk::MenuItem* m_gtk_sim_connect;
+    Gtk::MenuItem* m_gtk_sim_disconnect;
+    Gtk::MenuItem* m_gtk_sim_activate;
+    Gtk::MenuItem* m_gtk_sim_deactivate;
     Gtk::MenuItem* m_gtk_sim_calibrate;
     Gtk::MenuItem* m_gtk_sim_quit;
+    // Main menu
+    Gtk::MenuItem* m_gtk_menu_quit;
+    Gtk::MenuItem* m_gtk_menu_about;
+    // About dialog box
+    Gtk::AboutDialog* m_gtk_about_dialog;
+    // Connecting window
+    Gtk::Window* m_gtk_connecting_window;
+    Gtk::Label* m_gtk_label_wiimote_number;
+    Gtk::ProgressBar* m_gtk_connecting_progress;
+    sigc::connection m_progressbar_pulse_connection;
 
     Glib::RefPtr<Gtk::TextTag> m_time_text_tag;
 

@@ -24,7 +24,6 @@
 #include <cwiid.h>
 #include <pthread.h>
 #include <sigc++/sigc++.h>
-#include <memory>
 #include <vector>
 
 #include "auxiliary.h"
