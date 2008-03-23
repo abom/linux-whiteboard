@@ -183,12 +183,11 @@ bool CalibrationWindow::redraw_calibration_area() {
     return true;
 }
 bool CalibrationWindow::wiimote_blinking() {
-    unsigned int const leds[4] = {CWIID_LED1_ON, CWIID_LED2_ON, CWIID_LED3_ON, CWIID_LED4_ON};
-
     if ( (m_wiimote_blinking_lighted_up_led == 3) || (m_wiimote_blinking_lighted_up_led == 0) )
 	m_wiimote_blinking_led_direction = -m_wiimote_blinking_led_direction;
 
     // NOTE: We know there is only one wiimote here so no need for a loop
+    unsigned int const leds[4] = {CWIID_LED1_ON, CWIID_LED2_ON, CWIID_LED3_ON, CWIID_LED4_ON};
     set_led_state(m_thread_data.wiimotes.front().wiimote, leds[m_wiimote_blinking_lighted_up_led]);
     m_wiimote_blinking_lighted_up_led += m_wiimote_blinking_led_direction;
 
@@ -202,7 +201,7 @@ void CalibrationWindow::quit() {
     m_gtk_window->hide();
 }
 
-CalibrationWindow::CalibrationWindow(std::vector<WiimoteAndTransformMatrix>& wiimotes, CalibrationData& cal_data, std::string const& user_message) :
+CalibrationWindow::CalibrationWindow(std::vector<WiimoteAndTransformMatrix>& wiimotes, CalibrationData& cal_data, char const* user_message) :
     m_gtk_window(0),
     m_gtk_calibration_area(0),
     m_wiimote_blinking_lighted_up_led(0),

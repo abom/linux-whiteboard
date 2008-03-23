@@ -149,6 +149,8 @@ MainGtkWindow::MainGtkWindow(int argc,char *argv[]) :
 }
 
 int MainGtkWindow::run() {
+    // WARNING: Odd crash if user presses 'Connect' *too fast* after the window is shown
+
     m_gtk_kit.run();
 
     // NOTE: Always return 0 for now
@@ -240,12 +242,11 @@ void MainGtkWindow::wiicursormanager_connect_done_connecting(unsigned int number
     if (number_of_connected) {
 	char out[1024];
 	sprintf(out, _("Successfully connected to %d Wiimote(s). Click 'Activate' to use your infrared pen.\n"), number_of_connected);
-	print_to_output(out); // WARNING: Something has FUCKING gone wrong here
-	//print_to_output(_("Successfully connected to all Wiimotes. Click 'Activate' to use your infrared pen.\n"));
+	print_to_output(out);
 
 	sync_wiimote_state(true);
     }
-    else print_to_output(_("Failed to connect to any Wiimote.\n"));
+    else print_to_output(_("Unable to connect to any Wiimote.\n"));
 }
 bool MainGtkWindow::connecting_window_progressbar_pulse() {
     m_gtk_connecting_progress->pulse();
@@ -258,7 +259,7 @@ void MainGtkWindow::print_to_output(char const* text) {
 }
 void MainGtkWindow::print_to_output(char const* text, bool add_time_stamp) {
     // Moves to the end first
-    m_output_buffer->place_cursor( m_output_buffer->end() );
+    //m_output_buffer->place_cursor( m_output_buffer->end() );
 
     if (add_time_stamp) {
 	// Gets current time of day
@@ -269,13 +270,13 @@ void MainGtkWindow::print_to_output(char const* text, bool add_time_stamp) {
 	char current_time_text[12];
 	sprintf(current_time_text, "(%.2d:%.2d:%.2d) ", _tm->tm_hour, _tm->tm_min, _tm->tm_sec);
 	// Makes the time more visible
-	//m_output_buffer->insert_at_cursor(current_time_text);
+	m_output_buffer->insert_at_cursor(current_time_text);
 	Gtk::TextBuffer::iterator time_text_begin = m_output_buffer->end();
 	time_text_begin.backward_chars( sizeof(current_time_text) );
 	m_output_buffer->apply_tag( m_time_text_tag, time_text_begin, m_output_buffer->end() );
     }
 
-    //m_output_buffer->insert_at_cursor(text);
+    m_output_buffer->insert_at_cursor(text);
 
     // Scrolls to the newest text
     Gtk::Adjustment *const vadj = m_gtk_output_scroll->get_vadjustment();

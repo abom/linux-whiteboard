@@ -65,7 +65,7 @@ void* calibration_thread_func(void* ptr);
 
 class CalibrationWindow {
 public:
-    CalibrationWindow(std::vector<WiimoteAndTransformMatrix>& wiimotes, CalibrationData& cal_data, std::string const& user_message);
+    CalibrationWindow(std::vector<WiimoteAndTransformMatrix>& wiimotes, CalibrationData& cal_data, char const* user_message);
 
     /* Get 4 calibration points from users
      * Points are written to p_wii
@@ -96,7 +96,7 @@ private:
 
     /* Data */
     CalibrationData& m_cal_data;
-    std::string const& m_user_message;
+    char const* m_user_message;
     WiiThreadFuncData m_thread_data;
 };
 
