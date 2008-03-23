@@ -237,8 +237,8 @@ void MainGtkWindow::wiicursormanager_connect_done_connecting(unsigned int number
     if (number_of_connected) {
 	char out[1024];
 	sprintf(out, _("Successfully connected to %d Wiimote(s). Click 'Activate' to use your infrared pen.\n"), number_of_connected);
-	//print_to_output(out); // WARNING: Something has FUCKING gone wrong here
-	print_to_output(_("Successfully connected to all Wiimotes. Click 'Activate' to use your infrared pen.\n"));
+	print_to_output(out); // WARNING: Something has FUCKING gone wrong here
+	//print_to_output(_("Successfully connected to all Wiimotes. Click 'Activate' to use your infrared pen.\n"));
 
 	sync_wiimote_state(true);
     }
