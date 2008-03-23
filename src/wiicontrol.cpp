@@ -52,7 +52,7 @@ cwiid_wiimote_t* wii_connect(char *mac)
     if ( (wiimote = cwiid_connect(&bdaddr, 0)) ) {
 	printf("Connected!!!\n");
 
-	set_led_state(wiimote, 1); /* Notifies the user */
+	set_led_state(wiimote, WIIMOTE_LED_CONNECTED); /* Notifies user */
 	set_rpt_mode(wiimote, CWIID_RPT_IR | CWIID_RPT_BTN);
 
 	return wiimote;

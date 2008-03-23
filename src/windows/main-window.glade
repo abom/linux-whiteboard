@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.2 on Sun Mar 23 13:24:14 2008 -->
+<!--Generated with glade3 3.4.2 on Sun Mar 23 15:49:35 2008 -->
 <glade-interface>
   <widget class="GtkWindow" id="main-window">
     <property name="visible">True</property>
@@ -308,7 +308,7 @@ Tu Anh Vuong &lt;VAnhTu1987@gmail.com&gt;</property>
   <widget class="GtkWindow" id="connecting-window">
     <property name="visible">True</property>
     <property name="title" translatable="yes">Connecting...</property>
-    <property name="window_position">GTK_WIN_POS_CENTER_ALWAYS</property>
+    <property name="window_position">GTK_WIN_POS_CENTER</property>
     <property name="destroy_with_parent">True</property>
     <property name="icon_name">whiteboard</property>
     <property name="skip_taskbar_hint">True</property>
