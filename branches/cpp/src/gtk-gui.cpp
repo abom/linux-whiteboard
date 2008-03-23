@@ -259,7 +259,7 @@ void MainGtkWindow::print_to_output(char const* text) {
 }
 void MainGtkWindow::print_to_output(char const* text, bool add_time_stamp) {
     // Moves to the end first
-    //m_output_buffer->place_cursor( m_output_buffer->end() );
+    m_output_buffer->place_cursor( m_output_buffer->end() );
 
     if (add_time_stamp) {
 	// Gets current time of day
