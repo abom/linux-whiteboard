@@ -218,6 +218,7 @@ void MainGtkWindow::wiicursormanager_connect_start_connection(unsigned int index
     // WARNING: C function. I'd have used std::ostringstream if not for l10n.
     char out[1024];
     sprintf(out, _("Connecting to Wiimote #%d... "), index);
+    print_to_output(out);
     m_gtk_label_wiimote_number->set_text(out);
     m_gtk_connecting_window->show();
 
@@ -226,6 +227,8 @@ void MainGtkWindow::wiicursormanager_connect_start_connection(unsigned int index
 	    sigc::mem_fun(*this, &MainGtkWindow::connecting_window_progressbar_pulse), 50 );
 }
 void MainGtkWindow::wiicursormanager_connect_finish_connection(bool connected) {
+    print_to_output(connected ? _("Succeeded!.\n") : _("Failed.\n"), false);
+
     m_progressbar_pulse_connection.disconnect();
 
     m_gtk_connecting_window->hide();
@@ -266,13 +269,13 @@ void MainGtkWindow::print_to_output(char const* text, bool add_time_stamp) {
 	char current_time_text[12];
 	sprintf(current_time_text, "(%.2d:%.2d:%.2d) ", _tm->tm_hour, _tm->tm_min, _tm->tm_sec);
 	// Makes the time more visible
-	m_output_buffer->insert_at_cursor(current_time_text);
+	//m_output_buffer->insert_at_cursor(current_time_text);
 	Gtk::TextBuffer::iterator time_text_begin = m_output_buffer->end();
 	time_text_begin.backward_chars( sizeof(current_time_text) );
 	m_output_buffer->apply_tag( m_time_text_tag, time_text_begin, m_output_buffer->end() );
     }
 
-    m_output_buffer->insert_at_cursor(text);
+    //m_output_buffer->insert_at_cursor(text);
 
     // Scrolls to the newest text
     Gtk::Adjustment *const vadj = m_gtk_output_scroll->get_vadjustment();

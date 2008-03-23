@@ -182,6 +182,18 @@ bool CalibrationWindow::redraw_calibration_area() {
 
     return true;
 }
+bool CalibrationWindow::wiimote_blinking() {
+    unsigned int const leds[4] = {CWIID_LED1_ON, CWIID_LED2_ON, CWIID_LED3_ON, CWIID_LED4_ON};
+
+    if ( (m_wiimote_blinking_lighted_up_led == 3) || (m_wiimote_blinking_lighted_up_led == 0) )
+	m_wiimote_blinking_led_direction = -m_wiimote_blinking_led_direction;
+
+    // NOTE: We know there is only one wiimote here so no need for a loop
+    set_led_state(m_thread_data.wiimotes.front().wiimote, leds[m_wiimote_blinking_lighted_up_led]);
+    m_wiimote_blinking_lighted_up_led += m_wiimote_blinking_led_direction;
+
+    return true;
+}
 
 void CalibrationWindow::quit() {
     // Cleans up as needed
@@ -193,6 +205,8 @@ void CalibrationWindow::quit() {
 CalibrationWindow::CalibrationWindow(std::vector<WiimoteAndTransformMatrix>& wiimotes, CalibrationData& cal_data, std::string const& user_message) :
     m_gtk_window(0),
     m_gtk_calibration_area(0),
+    m_wiimote_blinking_lighted_up_led(0),
+    m_wiimote_blinking_led_direction(-1),
     m_cal_data(cal_data),
     m_user_message(user_message)
 {
@@ -235,10 +249,15 @@ int CalibrationWindow::get_calibration_points() {
     sigc::connection redraw_sigc_connection =
 	Glib::signal_timeout().connect(
 	    sigc::mem_fun(*this, &CalibrationWindow::redraw_calibration_area), 100 );
+    m_wiimote_blinking_connection =
+	Glib::signal_timeout().connect(
+	    sigc::mem_fun(*this, &CalibrationWindow::wiimote_blinking), 100);
 
     gtk_kit.run(*m_gtk_window);
 
     // Finished at this point, whether succeeded or escaped by user
+    set_led_state(m_thread_data.wiimotes.front().wiimote, WIIMOTE_LED_CONNECTED); // Resets the LEDs's state
+    m_wiimote_blinking_connection.disconnect();
     redraw_sigc_connection.disconnect();
     // NOTE: No need to finish_wii_thread() here as it is handled by
     // quit() if user selected 'Quit' from the menu. It self-terminated otherwise.

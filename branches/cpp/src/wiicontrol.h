@@ -30,6 +30,8 @@
 #include "common.h"
 
 
+void set_led_state(cwiid_wiimote_t *wiimote, unsigned char led_state);
+
 cwiid_wiimote_t* wii_connect(char *mac);
 int wii_disconnect(cwiid_wiimote_t* wiimote);
 // User may or may not care about IR and/or button events, hence the pointers

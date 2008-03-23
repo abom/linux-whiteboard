@@ -23,6 +23,7 @@
 
 
 #include <assert.h> // assert
+#include <cwiid.h>
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -71,6 +72,11 @@ enum InvalidWiiEventValues {
 enum TransformMatrixDimensions {
     TRANSFORM_MATRIX_ROWS = 3,
     TRANSFORM_MATRIX_COLS = 3,
+};
+
+enum WiimoteLedStates {
+    WIIMOTE_LED_CONNECTED = CWIID_LED1_ON,
+    //WIIMOTE_LED_CALIBRATING = CWIID_LED1_ON | CWIID_LED2_ON | CWIID_LED3_ON | CWIID_LED4_ON,
 };
 
 

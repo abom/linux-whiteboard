@@ -28,6 +28,7 @@
 
 #include "auxiliary.h"
 #include "wiicursor.h"
+#include "wiicontrol.h"
 #include "common.h"
 
 
@@ -77,6 +78,7 @@ private:
     bool calibration_area_key_pressed(GdkEventKey* event);
     bool calibration_area_exposed(GdkEventExpose* event);
     bool redraw_calibration_area();
+    bool wiimote_blinking(); // Blinks the LEDs to notice user
 
     void calibration_right_button_down(WiiEventData const& data);
     void calibration_mouse_moved(WiiEventData const& data);
@@ -87,6 +89,10 @@ private:
     /* GUI stuff */
     Gtk::Window* m_gtk_window;
     Gtk::DrawingArea* m_gtk_calibration_area;
+    // Don't worry about those below, it's just for fun
+    sigc::connection m_wiimote_blinking_connection;
+    unsigned int m_wiimote_blinking_lighted_up_led;
+    int m_wiimote_blinking_led_direction;
 
     /* Data */
     CalibrationData& m_cal_data;
