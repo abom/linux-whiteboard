@@ -227,7 +227,7 @@ CalibrationWindow::CalibrationWindow(
     std::string const ICON_FILE(PIXMAPS_DIR + "/whiteboard.png");
     m_gtk_window->set_icon_from_file(ICON_FILE);
     m_gtk_window->signal_key_press_event().connect( sigc::mem_fun(*this, &CalibrationWindow::calibration_area_key_pressed) );
-    m_gtk_window->maximize();
+    m_gtk_window->fullscreen();
     m_gtk_window->show();
 
     // Data

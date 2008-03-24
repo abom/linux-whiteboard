@@ -17,7 +17,7 @@
  */
 
 
-#include "configurator.h"
+#include "gtk-configurator.h"
 
 
 void Configurator::init() {

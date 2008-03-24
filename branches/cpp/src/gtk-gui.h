@@ -34,7 +34,7 @@
 #include "gui.h"
 #include "wiicursormanager.h"
 #include "events.h"
-#include "configurator.h"
+#include "gtk-configurator.h"
 
 
 // NOTE: GUI stuff is allowed to be a bit messy since they are disposable
