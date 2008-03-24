@@ -144,7 +144,7 @@ bool CalibrationWindow::calibration_area_exposed(GdkEventExpose* event) {
     cr->arc(circle_time_pos.x, circle_time_pos.y, CIRCLE_RADIUS, 0, FULL_CIRCLE);
     cr->stroke();
     // 'Hand'?
-    double const hand_angle = FULL_CIRCLE * static_cast<double>(m_cal_data.waited) / static_cast<double>(m_thread_data.wait_tolerance);
+    double const hand_angle = FULL_CIRCLE * static_cast<double>(m_cal_data.waited) / static_cast<double>(*m_thread_data.wait_tolerance);
     cr->set_source_rgb(0.75, 1.0, 1.0);
     cr->set_line_width(2.0);
     cr->move_to(circle_time_pos.x, circle_time_pos.y);
@@ -201,7 +201,10 @@ void CalibrationWindow::quit() {
     m_gtk_window->hide();
 }
 
-CalibrationWindow::CalibrationWindow(std::vector<WiimoteAndTransformMatrix>& wiimotes, CalibrationData& cal_data, char const* user_message) :
+CalibrationWindow::CalibrationWindow(
+    std::vector<WiimoteAndTransformMatrix>& wiimotes,
+    CalibrationData& cal_data, char const* user_message,
+    delta_t_t const* wait_tolerance) :
     m_gtk_window(0),
     m_gtk_calibration_area(0),
     m_wiimote_blinking_lighted_up_led(0),
@@ -230,7 +233,7 @@ CalibrationWindow::CalibrationWindow(std::vector<WiimoteAndTransformMatrix>& wii
     // Data
     m_thread_data.wiimotes = wiimotes;
 
-    m_thread_data.wait_tolerance = 1000;
+    m_thread_data.wait_tolerance = wait_tolerance; // WARNING: Not checking anything here
 
     m_thread_data.events.right_button_down = sigc::mem_fun(*this, &CalibrationWindow::calibration_right_button_down);
     m_thread_data.events.mouse_moved = sigc::mem_fun(*this, &CalibrationWindow::calibration_mouse_moved);

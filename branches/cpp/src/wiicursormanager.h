@@ -78,8 +78,8 @@ public:
     bool deactivate();
 
     // Sets up move and wait tolerances
-    void tolerances(delta_t_t wait_tolerance) {
-	m_thread_data.wait_tolerance = wait_tolerance;
+    void tolerances(delta_t_t const& wait_tolerance) {
+	m_thread_data.wait_tolerance = &wait_tolerance;
     }
     // Events
     WiiEvents& events() {

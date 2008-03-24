@@ -65,7 +65,10 @@ void* calibration_thread_func(void* ptr);
 
 class CalibrationWindow {
 public:
-    CalibrationWindow(std::vector<WiimoteAndTransformMatrix>& wiimotes, CalibrationData& cal_data, char const* user_message);
+    CalibrationWindow(
+	std::vector<WiimoteAndTransformMatrix>& wiimotes,
+	CalibrationData& cal_data, char const* user_message,
+	delta_t_t const* wait_tolerance);
 
     /* Get 4 calibration points from users
      * Points are written to p_wii
@@ -89,7 +92,7 @@ private:
     /* GUI stuff */
     Gtk::Window* m_gtk_window;
     Gtk::DrawingArea* m_gtk_calibration_area;
-    // Don't worry about those below, it's just for fun
+    // Don't worry about those below, these are just for fun
     sigc::connection m_wiimote_blinking_connection;
     unsigned int m_wiimote_blinking_lighted_up_led;
     int m_wiimote_blinking_led_direction;

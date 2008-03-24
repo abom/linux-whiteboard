@@ -18,3 +18,19 @@
 
 
 #include "configurator.h"
+
+
+void Configurator::init() {
+    m_refXml->get_widget("spin-right-click", m_gtk_right_click_time);
+
+    // Right click time
+    right_click_time_changed();
+    m_gtk_right_click_time->signal_value_changed().connect( sigc::mem_fun(*this, &Configurator::right_click_time_changed) );
+}
+
+bool Configurator::load_config() {
+    return false;
+}
+bool Configurator::save_config() {
+    return false;
+}

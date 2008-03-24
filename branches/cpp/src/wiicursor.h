@@ -115,7 +115,7 @@ struct WiiThreadFuncData {
     std::vector<WiimoteAndTransformMatrix> wiimotes;
     WiiEvents events;
 
-    delta_t_t wait_tolerance;
+    delta_t_t const* wait_tolerance;
 
     pthread_t this_thread;
     bool thread_running;
@@ -143,7 +143,7 @@ struct WiiCursorThreadData {
     { }
 
     bool click_and_drag() const { return moved > sqr(move_tolerance); }
-    bool right_click() const { return waited > wait_tolerance; }
+    bool right_click() const { return waited > *wait_tolerance; }
     bool all_running() const { return *running && thread_running; }                                                                                        
 
     // Data
@@ -155,7 +155,7 @@ struct WiiCursorThreadData {
     pthread_t this_thread;
 
     unsigned int move_tolerance;
-    delta_t_t wait_tolerance;
+    delta_t_t const* wait_tolerance;
     bool const* running;
 
     WiiEvents events; // Callback functions for events
@@ -213,7 +213,7 @@ public:
 
     void process(
 	std::vector<WiimoteAndTransformMatrix>& wiimotes,
-	unsigned int wait_tolerance,
+	delta_t_t const* wait_tolerance,
 	bool const& running);
 
     // Events

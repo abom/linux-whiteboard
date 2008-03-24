@@ -34,6 +34,7 @@
 #include "gui.h"
 #include "wiicursormanager.h"
 #include "events.h"
+#include "configurator.h"
 
 
 // NOTE: GUI stuff is allowed to be a bit messy since they are disposable
@@ -77,6 +78,7 @@ private:
     void sync_wiimote_state_connection_phase(bool starting); // If false then it has finished
 
     /* GUI */
+    Glib::RefPtr<Gnome::Glade::Xml> m_refXml;
     // Main window
     Gtk::Main m_gtk_kit;
     Gtk::Window* m_gtk_main_window;
@@ -110,6 +112,7 @@ private:
 
     /* Data */
     WiiCursorManager m_wii_manager;
+    Configurator m_configurator;
 };
 
 
