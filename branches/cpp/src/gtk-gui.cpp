@@ -89,6 +89,7 @@ MainGtkWindow::MainGtkWindow(int argc,char *argv[]) :
     m_refXml->get_widget("sim-deactivate", m_gtk_sim_deactivate);
     m_refXml->get_widget("sim-calibrate", m_gtk_sim_calibrate);
     m_refXml->get_widget("sim-quit", m_gtk_sim_quit);
+    m_refXml->get_widget("menuitem-close", m_gtk_menu_close);
     m_refXml->get_widget("menuitem-quit", m_gtk_menu_quit);
     m_refXml->get_widget("menuitem-about", m_gtk_menu_about);
     m_refXml->get_widget("about-dialog", m_gtk_about_dialog);
@@ -109,6 +110,7 @@ MainGtkWindow::MainGtkWindow(int argc,char *argv[]) :
     m_gtk_sim_deactivate->signal_activate().connect(sigc::mem_fun(*this, &MainGtkWindow::toggle_activation_clicked));
     m_gtk_sim_calibrate->signal_activate().connect(sigc::mem_fun(*this, &MainGtkWindow::calibrate_clicked));
     m_gtk_sim_quit->signal_activate().connect(sigc::mem_fun(*this, &MainGtkWindow::sim_quit_clicked));
+    m_gtk_menu_close->signal_activate().connect(sigc::mem_fun(*this, &MainGtkWindow::menu_close_clicked));
     m_gtk_menu_quit->signal_activate().connect(sigc::mem_fun(*this, &MainGtkWindow::sim_quit_clicked));
     m_gtk_menu_about->signal_activate().connect(sigc::mem_fun(*this, &MainGtkWindow::menu_about_clicked));
     m_gtk_about_dialog->signal_response().connect(sigc::mem_fun(*this, &MainGtkWindow::about_dialog_response));
@@ -122,6 +124,7 @@ MainGtkWindow::MainGtkWindow(int argc,char *argv[]) :
     m_gtk_status_icon->set_from_file(ICON_FILE);
     m_gtk_about_dialog->set_icon_from_file(ICON_FILE);
     m_gtk_connecting_window->set_icon_from_file(ICON_FILE);
+    m_gtk_main_window->signal_key_press_event().connect( sigc::mem_fun(*this, &MainGtkWindow::key_pressed) );
 
     sync_wiimote_state(false); // Disconnected by default
 
@@ -208,6 +211,9 @@ void MainGtkWindow::sim_quit_clicked() {
 
     m_gtk_kit.quit();
 }
+void MainGtkWindow::menu_close_clicked() {
+    m_gtk_main_window->hide();
+}
 void MainGtkWindow::menu_about_clicked() {
     // NOTE: I haven't figured out how to set
     // the focus to this dialog.
@@ -257,6 +263,13 @@ void MainGtkWindow::wiicursormanager_connect_done_connecting(unsigned int number
 }
 bool MainGtkWindow::connecting_window_progressbar_pulse() {
     m_gtk_connecting_progress->pulse();
+
+    return true;
+}
+bool MainGtkWindow::key_pressed(GdkEventKey* event) {
+    bool const will_close = (event->keyval == GDK_Escape);
+    if (will_close)
+	menu_close_clicked();
 
     return true;
 }

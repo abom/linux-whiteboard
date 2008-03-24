@@ -62,6 +62,7 @@ private:
     void calibrate_clicked();
     void status_icon_clicked();
     void status_icon_popup(guint button, guint32 activate_time);
+    void menu_close_clicked();
     void sim_quit_clicked();
     void menu_about_clicked();
     void about_dialog_response(int response_id);
@@ -69,6 +70,7 @@ private:
     void wiicursormanager_connect_finish_connection(bool connected);
     void wiicursormanager_connect_done_connecting(unsigned int number_of_connected);
     bool connecting_window_progressbar_pulse();
+    bool key_pressed(GdkEventKey* event);
 
     /* Helpers */
     void print_to_output(char const* text);
@@ -98,6 +100,7 @@ private:
     Gtk::MenuItem* m_gtk_sim_calibrate;
     Gtk::MenuItem* m_gtk_sim_quit;
     // Main menu
+    Gtk::MenuItem* m_gtk_menu_close;
     Gtk::MenuItem* m_gtk_menu_quit;
     Gtk::MenuItem* m_gtk_menu_about;
     // About dialog box
