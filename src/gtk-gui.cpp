@@ -152,8 +152,6 @@ MainGtkWindow::MainGtkWindow(int argc,char *argv[]) :
 }
 
 int MainGtkWindow::run() {
-    // WARNING: Odd crash if user presses 'Connect' *too fast* after the window is shown
-
     m_gtk_kit.run();
 
     // NOTE: Always return 0 for now
