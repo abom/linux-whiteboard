@@ -27,6 +27,7 @@
 #include <string>
 #include <ctime>
 #include <cstdio>
+#include <glib.h>
 
 #include "common.h"
 #include "matrix.h"
