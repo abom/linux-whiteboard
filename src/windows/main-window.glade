@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.2 on Sun Mar 23 18:49:23 2008 -->
+<!--Generated with glade3 3.4.2 on Mon Mar 24 08:38:00 2008 -->
 <glade-interface>
   <widget class="GtkWindow" id="main-window">
     <property name="visible">True</property>
@@ -25,6 +25,14 @@
                 <child>
                   <widget class="GtkMenu" id="menu-main-whiteboard">
                     <property name="visible">True</property>
+                    <child>
+                      <widget class="GtkImageMenuItem" id="menuitem-close">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">gtk-close</property>
+                        <property name="use_underline">True</property>
+                        <property name="use_stock">True</property>
+                      </widget>
+                    </child>
                     <child>
                       <widget class="GtkImageMenuItem" id="menuitem-quit">
                         <property name="visible">True</property>
