@@ -204,7 +204,7 @@ void CalibrationWindow::quit() {
 CalibrationWindow::CalibrationWindow(
     std::vector<WiimoteAndTransformMatrix>& wiimotes,
     CalibrationData& cal_data, char const* user_message,
-    delta_t_t const* wait_tolerance) :
+    delta_t_t const& wait_tolerance) :
     m_gtk_window(0),
     m_gtk_calibration_area(0),
     m_wiimote_blinking_lighted_up_led(0),
@@ -233,7 +233,7 @@ CalibrationWindow::CalibrationWindow(
     // Data
     m_thread_data.wiimotes = wiimotes;
 
-    m_thread_data.wait_tolerance = wait_tolerance; // WARNING: Not checking anything here
+    m_thread_data.wait_tolerance = &wait_tolerance;
 
     m_thread_data.events.right_button_down = sigc::mem_fun(*this, &CalibrationWindow::calibration_right_button_down);
     m_thread_data.events.mouse_moved = sigc::mem_fun(*this, &CalibrationWindow::calibration_mouse_moved);
