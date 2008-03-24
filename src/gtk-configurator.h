@@ -44,6 +44,8 @@ public:
 	return m_right_click_time;
     }
 
+    // NOTE: I will refrain from creating a separate class
+    // for saving/loading configuration until there are more UIs.
     bool load_config();
     bool save_config();
 private:

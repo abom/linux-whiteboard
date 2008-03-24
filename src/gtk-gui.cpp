@@ -227,7 +227,7 @@ void MainGtkWindow::wiicursormanager_connect_start_connection(unsigned int index
     // WARNING: C function. I'd have used std::ostringstream if not for l10n.
     char out[1024];
     sprintf(out, _("Connecting to Wiimote #%d... "), index);
-    print_to_output(out);
+    //print_to_output(out);
     m_gtk_label_wiimote_number->set_text(out);
     m_gtk_connecting_window->show();
 
@@ -236,7 +236,7 @@ void MainGtkWindow::wiicursormanager_connect_start_connection(unsigned int index
 	    sigc::mem_fun(*this, &MainGtkWindow::connecting_window_progressbar_pulse), 50 );
 }
 void MainGtkWindow::wiicursormanager_connect_finish_connection(bool connected) {
-    print_to_output(connected ? _("Succeeded!.\n") : _("Failed.\n"), false);
+    //print_to_output(connected ? _("Succeeded!.\n") : _("Failed.\n"), false);
 
     m_progressbar_pulse_connection.disconnect();
 
@@ -249,11 +249,11 @@ void MainGtkWindow::wiicursormanager_connect_done_connecting(unsigned int number
     if (number_of_connected) {
 	char out[1024];
 	sprintf(out, _("Successfully connected to %d Wiimote(s). Click 'Activate' to use your infrared pen.\n"), number_of_connected);
-	print_to_output(out);
+	//print_to_output(out);
 
 	sync_wiimote_state(true);
     }
-    else print_to_output(_("Unable to connect to any Wiimote.\n"));
+    //else print_to_output(_("Unable to connect to any Wiimote.\n"));
 }
 bool MainGtkWindow::connecting_window_progressbar_pulse() {
     m_gtk_connecting_progress->pulse();
