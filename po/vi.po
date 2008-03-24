@@ -91,7 +91,7 @@ msgstr "Điều khiển con trỏ chuột bằng Wiimote"
 
 #: ../src/whiteboard.desktop.in.h:2
 msgid "Wiimote Whiteboard"
-msgstr "Màn hình cảm ứng dùng Wiimote"
+msgstr "Màn Hình Cảm Ứng Dùng Wiimote"
 
 #: ../src/windows/calibration-window.glade.h:1
 msgid "Wiimote Calibration"
@@ -123,11 +123,11 @@ msgstr "Bản quyên năm 2007-2008 thuộc về các lập trình viên của W
 
 #: ../src/windows/main-window.glade.h:8
 msgid "Please press both <b>1</b> and <b>2</b> buttons on your Wiimote."
-msgstr "Bấm hai nút <b>1</b> và <b>2</b> trên Wiimote của bạn."
+msgstr "Hãy bấm hai nút <b>1</b> và <b>2</b> trên Wiimote của bạn."
 
 #: ../src/windows/main-window.glade.h:9
 msgid "Right-click waiting _time (in ms):"
-msgstr "Bấm nút phải chuột cần đợi trong (theo mili giây): "
+msgstr "Bấm nút phải chuột cần đợi trong (theo mili giây) (_T): "
 
 #: ../src/windows/main-window.glade.h:10
 msgid "Tu Anh Vuong <VAnhTu1987@gmail.com>"
