@@ -73,8 +73,10 @@ private:
     bool key_pressed(GdkEventKey* event);
 
     /* Helpers */
+public:
     void print_to_output(char const* text);
     void print_to_output(char const* text, bool add_time_stamp);
+private:
     void sync_activation_state(bool activated);
     void sync_wiimote_state(bool wiimote_is_connected);
     void sync_wiimote_state_connection_phase(bool starting); // If false then it has finished

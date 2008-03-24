@@ -1,4 +1,4 @@
-AC_INIT([Wiimote Whiteboard], [0.2], [http://code.google.com/p/linux-whiteboard/issues/list], [whiteboard])
+AC_INIT([Wiimote Whiteboard], [0.3], [http://code.google.com/p/linux-whiteboard/issues/list], [whiteboard])
 # No AUX_DIR because of intltoolize's bug
 #AC_CONFIG_AUX_DIR([build-aux])
 AM_INIT_AUTOMAKE([-Wall -Werror])
