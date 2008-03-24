@@ -68,7 +68,7 @@ public:
     CalibrationWindow(
 	std::vector<WiimoteAndTransformMatrix>& wiimotes,
 	CalibrationData& cal_data, char const* user_message,
-	delta_t_t const* wait_tolerance);
+	delta_t_t const& wait_tolerance);
 
     /* Get 4 calibration points from users
      * Points are written to p_wii

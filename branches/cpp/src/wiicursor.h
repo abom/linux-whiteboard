@@ -213,7 +213,7 @@ public:
 
     void process(
 	std::vector<WiimoteAndTransformMatrix>& wiimotes,
-	delta_t_t const* wait_tolerance,
+	delta_t_t const& wait_tolerance,
 	bool const& running);
 
     // Events
