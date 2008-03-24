@@ -280,9 +280,6 @@ void MainGtkWindow::print_to_output(char const* text) {
     print_to_output(text, true);
 }
 void MainGtkWindow::print_to_output(char const* text, bool add_time_stamp) {
-    // Moves to the end first
-    m_output_buffer->place_cursor( m_output_buffer->end() );
-
     if (add_time_stamp) {
 	// Gets current time of day
 	time_t const current_time = time(0);
@@ -291,18 +288,20 @@ void MainGtkWindow::print_to_output(char const* text, bool add_time_stamp) {
 	// WARNING: C function. I don't know of a C++ equivalent of '%.2d'
 	char current_time_text[12];
 	sprintf(current_time_text, "(%.2d:%.2d:%.2d) ", _tm->tm_hour, _tm->tm_min, _tm->tm_sec);
-	// Makes the time more visible
-	m_output_buffer->insert_at_cursor(current_time_text);
+	// Inserts and makes the time more visible
+	m_output_buffer->insert(m_output_buffer->end(), current_time_text);
 	Gtk::TextBuffer::iterator time_text_begin = m_output_buffer->end();
 	time_text_begin.backward_chars( sizeof(current_time_text) );
 	m_output_buffer->apply_tag( m_time_text_tag, time_text_begin, m_output_buffer->end() );
     }
 
-    m_output_buffer->insert_at_cursor(text);
+    m_output_buffer->insert(m_output_buffer->end(), text);
 
     // Scrolls to the newest text
-    Gtk::Adjustment *const vadj = m_gtk_output_scroll->get_vadjustment();
-    vadj->set_value( vadj->get_upper() );
+    // NOTE: Disabled it for now since I couldn't figure out
+    // how to make it thread-safety.
+    //Gtk::Adjustment *const vadj = m_gtk_output_scroll->get_vadjustment();
+    //vadj->set_value( vadj->get_upper() );
 }
 void MainGtkWindow::sync_activation_state(bool activated) {
     m_gtk_toggle_activation->set_label(activated ? _("De_activate") : _("_Activate"));

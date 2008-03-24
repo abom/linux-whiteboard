@@ -54,9 +54,9 @@ struct WiiEventData {
     delta_t_t const& waited;
     unsigned int const& move_tolerance;
 };
-typedef sigc::slot<void, WiiEventData const&> WiiEventSlotType;
 // Supported events
 struct WiiEvents {
+    typedef sigc::slot<void, WiiEventData const&> WiiEventSlotType;
     WiiEventSlotType    left_clicked, right_button_down, right_button_up,
                         begin_click_and_drag, end_click_and_drag,
                         mouse_down, mouse_up, mouse_moved;
