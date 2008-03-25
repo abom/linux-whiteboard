@@ -22,38 +22,16 @@
 
 
 #include <vector>
-#include <cstdlib>
 
 #include "gui.h"
 #include "matrix.h"
 #include "wiicursor.h"
 
 
-class MainGtkWindow;
-
-
-void* wiicursormanager_connect_thread(void* ptr);
-
-
-// Used by wiicursormanager_connect_thread()
 struct WiiCursorManagerConnectEvents {
     Glib::Dispatcher start_each_connection;
     Glib::Dispatcher finish_each_connection;
     Glib::Dispatcher done_connecting;
-};
-struct WiiCursorManagerThreadData {
-    WiiCursorManagerConnectEvents& events;
-    std::vector<WiimoteAndTransformMatrix>& wiis;
-    bool& last_connection_succeeded;
-
-    WiiCursorManagerThreadData(
-	WiiCursorManagerConnectEvents& events,
-	std::vector<WiimoteAndTransformMatrix>& wiis,
-	bool& last_connection_succeeded) :
-	events(events),
-	wiis(wiis),
-	last_connection_succeeded(last_connection_succeeded)
-    { }
 };
 
 // Basically, this class transparently manages all available
@@ -64,7 +42,7 @@ public:
 	m_wiis(m_thread_data.wiimotes),
 	m_cal_window(0),
 	m_last_connection_succeeded(false),
-	m_connect_thread_data(events, m_wiis, m_last_connection_succeeded)
+	m_connect_events(events)
     { }
 
     // Connects all available Wiimotes, asynchronously
@@ -84,11 +62,12 @@ public:
     // Returns false if anyone of those failed to deactivate
     bool deactivate();
 
-    // Sets up move and wait tolerances
+    // Sets up tolerances
+    // NOTE: Should be removed
     void tolerances(delta_t_t const& wait_tolerance) {
 	m_thread_data.wait_tolerance = &wait_tolerance;
     }
-    // Events
+    // Mouse events
     WiiEvents& events() {
 	return m_thread_data.events;
     }
@@ -117,9 +96,11 @@ private:
     // NOTE: Basically a hack, because I don't want to keep a real cal_window around
     // This is needed because if user closes the app, we have to notify it somehow.
     CalibrationWindow* m_cal_window;
+
     // Used by wiicursormanager_connect_thread()
-    bool m_last_connection_succeeded; // To be used by others as a workaround for the lack of cross-thread data-passing technique
-    WiiCursorManagerThreadData m_connect_thread_data;
+    bool m_last_connection_succeeded; // Used as a workaround for the lack of cross-thread data-passing technique
+    WiiCursorManagerConnectEvents& m_connect_events;
+    void wiicursormanager_connect_thread();
 };
 
 

@@ -46,7 +46,7 @@ void screen_corners(point_t p_screen[4]) {
     p_screen[2] = point_t(scr_size.x - PADDING, scr_size.y - PADDING);
 }
 
-matrix_t calculate_transformation_matrix(point_t const p_wii[4]) {
+matrix_t calculate_transformation_matrix(WiimoteCalibratedPoints const& p_wii) {
     printf("Calculating coefficients... ");
 
     point_t p_screen[4];
@@ -61,21 +61,21 @@ matrix_t calculate_transformation_matrix(point_t const p_wii[4]) {
 
     for (int i = 0; i != 4; ++i)
     {
-	m[0][i*2] = p_wii[i].x;
-	m[1][i*2] = p_wii[i].y;
+	m[0][i*2] = p_wii.p[i].x;
+	m[1][i*2] = p_wii.p[i].y;
 	m[2][i*2] = 1;
 	for (int j = 3; j != 6; ++j)
 	    m[j][i*2] = 0;
-	m[6][i*2] = -p_screen[i].x * p_wii[i].x;
-	m[7][i*2] = -p_screen[i].x * p_wii[i].y;
+	m[6][i*2] = -p_screen[i].x * p_wii.p[i].x;
+	m[7][i*2] = -p_screen[i].x * p_wii.p[i].y;
 
 	for (int j = 0; j != 3; ++j)
 	    m[j][i*2+1] = 0;
-	m[3][i*2+1] = p_wii[i].x;
-	m[4][i*2+1] = p_wii[i].y;
+	m[3][i*2+1] = p_wii.p[i].x;
+	m[4][i*2+1] = p_wii.p[i].y;
 	m[5][i*2+1] = 1;
-	m[6][i*2+1] = -p_screen[i].y * p_wii[i].x;
-	m[7][i*2+1] = -p_screen[i].y * p_wii[i].y;
+	m[6][i*2+1] = -p_screen[i].y * p_wii.p[i].x;
+	m[7][i*2+1] = -p_screen[i].y * p_wii.p[i].y;
     }
 
     matrix_t out(TRANSFORM_MATRIX_ROWS, TRANSFORM_MATRIX_COLS);

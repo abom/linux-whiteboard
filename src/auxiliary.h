@@ -52,7 +52,7 @@ void show_help();
 point_t screen_size();
 void screen_corners(point_t p_screen[4]);
 
-matrix_t calculate_transformation_matrix(point_t const p_wii[4]);
+matrix_t calculate_transformation_matrix(WiimoteCalibratedPoints const& p_wii);
 
 /* Returns how long the time has passed since last event in milliseconds
  * I removed the one with static variable, it's a bad practice

@@ -23,6 +23,10 @@
 /* WARNING: Remember to run valgrind */
 int main(int argc,char *argv[])
 {
+    // Thread safety, see: http://bugzilla.gnome.org/show_bug.cgi?id=524128
+    g_thread_init(0);
+    gdk_threads_init();
+
     // From the intltool docs
     //setlocale (LC_ALL, "");
     // URL: http://www.gnome.org/~malcolm/i18n/i18n-header.html

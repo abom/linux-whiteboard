@@ -69,10 +69,6 @@ MainGtkWindow::MainGtkWindow(int argc,char *argv[]) :
     m_wii_manager(m_connect_events),
     m_configurator(m_refXml)
 {
-    // Thread safety, see: http://bugzilla.gnome.org/show_bug.cgi?id=524128
-    //g_thread_init(0);
-    //gdk_threads_init();
-
     // WARNING: Not checking for *any* return values here
     // WARNING: Constructing paths this way is not safe/portable, but I don't want to bother with g_free()
 
@@ -240,7 +236,7 @@ void MainGtkWindow::wiicursormanager_connect_start_connection() {
 
     // WARNING: C function. I'd have used std::ostringstream if not for l10n.
     char out[1024];
-    sprintf(out, _("Connecting to Wiimote #%d...\n"), index);
+    sprintf(out, _("Connecting to Wiimote #%d... "), index);
     print_to_output(out);
     m_gtk_label_wiimote_number->set_text(out);
     m_gtk_connecting_window->show();
@@ -252,7 +248,7 @@ void MainGtkWindow::wiicursormanager_connect_start_connection() {
 void MainGtkWindow::wiicursormanager_connect_finish_connection() {
     bool const connected = m_wii_manager.last_connection_succeeded();
 
-    print_to_output(connected ? _("Connection succeeded!.\n") : _("Connection failed.\n"));
+    print_to_output(connected ? _("Succeeded!.\n") : _("Failed.\n"), false);
 
     m_progressbar_pulse_connection.disconnect();
 
@@ -307,9 +303,6 @@ void MainGtkWindow::print_to_output(char const* text, bool add_time_stamp) {
     m_output_buffer->insert(m_output_buffer->end(), text);
 
     // Scrolls to the newest text
-    // NOTE: Disabled it for now since I couldn't figure out
-    // how to make it thread-safety.
-    // NOTE: Enabled it again and disabled the connecting messages
     Gtk::Adjustment *const vadj = m_gtk_output_scroll->get_vadjustment();
     vadj->set_value( vadj->get_upper() );
 }
