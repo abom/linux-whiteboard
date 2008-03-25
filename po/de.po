@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Wiimote Whiteboard 0.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-03-24 15:29+0000\n"
+"POT-Creation-Date: 2008-03-25 20:55+0000\n"
 "PO-Revision-Date: 2008-03-24 14:51+0000\n"
 "Last-Translator: VAnhTu1987 <matthiasgies@gmx.de>\n"
 "Language-Team: German\n"
@@ -16,70 +16,77 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: ../src/gtk-gui.cpp:137
+#: ../src/gtk-gui.cpp:138
 msgid "Configurations successfully loaded.\n"
 msgstr ""
 
-#: ../src/gtk-gui.cpp:138
+#: ../src/gtk-gui.cpp:139
 msgid ""
-"Failed to load configuration file, you need to calibrate it before "
-"activating the Wiimotes.\n"
+"Failed to load configuration file, you need to calibrate before activating "
+"the Wiimotes.\n"
 msgstr ""
 
-#: ../src/gtk-gui.cpp:172
+#. NOTE: This is mainly to force the GUI to update itself
+#. WARNING: Somehow I still feel the problem has not
+#. been completely solved.
+#: ../src/gtk-gui.cpp:170
+msgid "Preparing to connect...\n"
+msgstr ""
+
+#: ../src/gtk-gui.cpp:181
 msgid "Successfully disconnected all Wiimotes.\n"
 msgstr ""
 
-#: ../src/gtk-gui.cpp:173
+#: ../src/gtk-gui.cpp:182
 msgid ""
 "There was an error disconnecting the Wiimotes. Hell's broken loose!!1.\n"
 msgstr ""
 
-#: ../src/gtk-gui.cpp:191
+#: ../src/gtk-gui.cpp:200
 msgid "Configurations saved.\n"
 msgstr ""
 
-#: ../src/gtk-gui.cpp:192
+#: ../src/gtk-gui.cpp:201
 msgid "Failed to save configuration file.\n"
 msgstr ""
 
-#: ../src/gtk-gui.cpp:193
+#: ../src/gtk-gui.cpp:202
 msgid "Calibration succeeded.\n"
 msgstr ""
 
-#: ../src/gtk-gui.cpp:195
+#: ../src/gtk-gui.cpp:204
 msgid "User escaped or there was an error during calibration.\n"
 msgstr ""
 
-#: ../src/gtk-gui.cpp:233
+#: ../src/gtk-gui.cpp:244
 #, c-format
 msgid "Connecting to Wiimote #%d... "
 msgstr ""
 
-#: ../src/gtk-gui.cpp:243
+#: ../src/gtk-gui.cpp:256
 msgid "Succeeded!.\n"
 msgstr ""
 
-#: ../src/gtk-gui.cpp:243
+#: ../src/gtk-gui.cpp:256
 msgid "Failed.\n"
 msgstr ""
 
-#: ../src/gtk-gui.cpp:255
+#: ../src/gtk-gui.cpp:269
 #, c-format
 msgid ""
 "Successfully connected to %d Wiimote(s). Click 'Activate' to use your "
 "infrared pen.\n"
 msgstr ""
 
-#: ../src/gtk-gui.cpp:260
+#: ../src/gtk-gui.cpp:274
 msgid "Unable to connect to any Wiimote.\n"
 msgstr ""
 
-#: ../src/gtk-gui.cpp:304 ../src/windows/main-window.glade.h:7
+#: ../src/gtk-gui.cpp:315 ../src/windows/main-window.glade.h:7
 msgid "De_activate"
 msgstr ""
 
-#: ../src/gtk-gui.cpp:304 ../src/windows/main-window.glade.h:17
+#: ../src/gtk-gui.cpp:315 ../src/windows/main-window.glade.h:17
 msgid "_Activate"
 msgstr ""
 
@@ -157,11 +164,11 @@ msgid "_Help"
 msgstr ""
 
 #. Draws a static informational message
-#: ../src/gui.cpp:86
+#: ../src/gui.cpp:94
 msgid "Press 'Escape' (Esc) to quit calibration"
 msgstr ""
 
-#: ../src/wiicursormanager.cpp:75
+#: ../src/wiicursormanager.cpp:71
 #, c-format
 msgid "Calibrating Wiimote #%d"
 msgstr ""

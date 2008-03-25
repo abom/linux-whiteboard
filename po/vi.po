@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Wiimote Whiteboard 0.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-03-24 15:29+0000\n"
+"POT-Creation-Date: 2008-03-25 20:55+0000\n"
 "PO-Revision-Date: 2008-03-09 17:16+0000\n"
 "Last-Translator: VAnhTu1987 <VAnhTu1987@gmail.com>\n"
 "Language-Team: Vietnamese\n"
@@ -16,72 +16,79 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: ../src/gtk-gui.cpp:137
+#: ../src/gtk-gui.cpp:138
 msgid "Configurations successfully loaded.\n"
 msgstr "Đã nạp xong các thiết lập.\n"
 
-#: ../src/gtk-gui.cpp:138
+#: ../src/gtk-gui.cpp:139
 msgid ""
-"Failed to load configuration file, you need to calibrate it before "
-"activating the Wiimotes.\n"
+"Failed to load configuration file, you need to calibrate before activating "
+"the Wiimotes.\n"
 msgstr ""
 "Không đọc được các thiết lập cũ. Bạn cần chỉnh Wiimote trước khi sử dụng.\n"
 
-#: ../src/gtk-gui.cpp:172
+#. NOTE: This is mainly to force the GUI to update itself
+#. WARNING: Somehow I still feel the problem has not
+#. been completely solved.
+#: ../src/gtk-gui.cpp:170
+msgid "Preparing to connect...\n"
+msgstr "Chuẩn bị kết nối...\n"
+
+#: ../src/gtk-gui.cpp:181
 msgid "Successfully disconnected all Wiimotes.\n"
 msgstr "Ngắt kết nối thành công.\n"
 
-#: ../src/gtk-gui.cpp:173
+#: ../src/gtk-gui.cpp:182
 msgid ""
 "There was an error disconnecting the Wiimotes. Hell's broken loose!!1.\n"
 msgstr ""
 "Không ngắt kết nối với Wiimote được!. Bạn nên khởi động lại chương trình.\n"
 
-#: ../src/gtk-gui.cpp:191
+#: ../src/gtk-gui.cpp:200
 msgid "Configurations saved.\n"
 msgstr "Đã lưu các thiết lập mới.\n"
 
-#: ../src/gtk-gui.cpp:192
+#: ../src/gtk-gui.cpp:201
 msgid "Failed to save configuration file.\n"
 msgstr "Không lưu được các thiết lập mới.\n"
 
-#: ../src/gtk-gui.cpp:193
+#: ../src/gtk-gui.cpp:202
 msgid "Calibration succeeded.\n"
 msgstr "Đã chỉnh xong Wiimote.\n"
 
-#: ../src/gtk-gui.cpp:195
+#: ../src/gtk-gui.cpp:204
 msgid "User escaped or there was an error during calibration.\n"
 msgstr "Người dùng đã bấm nút thoát hoặc có lỗi khi chỉnh Wiimote.\n"
 
-#: ../src/gtk-gui.cpp:233
+#: ../src/gtk-gui.cpp:244
 #, c-format
 msgid "Connecting to Wiimote #%d... "
 msgstr "Đang kết nối tới Wiimote số %d... "
 
-#: ../src/gtk-gui.cpp:243
+#: ../src/gtk-gui.cpp:256
 msgid "Succeeded!.\n"
 msgstr "Kết nối thành công!.\n"
 
-#: ../src/gtk-gui.cpp:243
+#: ../src/gtk-gui.cpp:256
 msgid "Failed.\n"
 msgstr "Không kết nối được.\n"
 
-#: ../src/gtk-gui.cpp:255
+#: ../src/gtk-gui.cpp:269
 #, c-format
 msgid ""
 "Successfully connected to %d Wiimote(s). Click 'Activate' to use your "
 "infrared pen.\n"
 msgstr "%d Wiimote đã được kết nối. Bấm 'Kích hoạt' để dùng bút nhập.\n"
 
-#: ../src/gtk-gui.cpp:260
+#: ../src/gtk-gui.cpp:274
 msgid "Unable to connect to any Wiimote.\n"
 msgstr "Không kết nối được với Wiimote nào cả.\n"
 
-#: ../src/gtk-gui.cpp:304 ../src/windows/main-window.glade.h:7
+#: ../src/gtk-gui.cpp:315 ../src/windows/main-window.glade.h:7
 msgid "De_activate"
 msgstr "Giải hoạt (_A)"
 
-#: ../src/gtk-gui.cpp:304 ../src/windows/main-window.glade.h:17
+#: ../src/gtk-gui.cpp:315 ../src/windows/main-window.glade.h:17
 msgid "_Activate"
 msgstr "Kích hoạt (_A)"
 
@@ -161,11 +168,11 @@ msgid "_Help"
 msgstr "Trợ giúp (_H)"
 
 #. Draws a static informational message
-#: ../src/gui.cpp:86
+#: ../src/gui.cpp:94
 msgid "Press 'Escape' (Esc) to quit calibration"
 msgstr "Bấm nút 'Escape' (Esc) để dừng"
 
-#: ../src/wiicursormanager.cpp:75
+#: ../src/wiicursormanager.cpp:71
 #, c-format
 msgid "Calibrating Wiimote #%d"
 msgstr "Đang chỉnh Wiimote số %d"
