@@ -28,14 +28,15 @@ void* wiicursormanager_connect_thread(void* ptr) {
     // NOTE: Error checking
     cwiid_wiimote_t* new_wiimote = 0;
     do {
-        data.events.start_each_connection(data.wiis.size() + 1);
+        data.events.start_each_connection();
 	if ( (new_wiimote = wii_connect(0)) )
 	    data.wiis.push_back( WiimoteAndTransformMatrix(new_wiimote) );
-	data.events.finish_each_connection(new_wiimote ? true : false);
+	data.last_connection_succeeded = new_wiimote != 0 ? true : false;
+	data.events.finish_each_connection();
     }
     while (new_wiimote);
 
-    data.events.done_connecting( data.wiis.size() );
+    data.events.done_connecting();
 
     return 0;
 }
