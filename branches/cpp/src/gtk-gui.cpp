@@ -66,11 +66,12 @@ MainGtkWindow::MainGtkWindow(int argc,char *argv[]) :
     m_gtk_label_wiimote_number(0),
     m_gtk_connecting_progress(0),
     m_time_text_tag( m_output_buffer->create_tag("bold") ),
+    m_wii_manager(m_connect_events),
     m_configurator(m_refXml)
 {
     // Thread safety, see: http://bugzilla.gnome.org/show_bug.cgi?id=524128
-    g_thread_init(0);
-    gdk_threads_init();
+    //g_thread_init(0);
+    //gdk_threads_init();
 
     // WARNING: Not checking for *any* return values here
     // WARNING: Constructing paths this way is not safe/portable, but I don't want to bother with g_free()
@@ -139,7 +140,7 @@ MainGtkWindow::MainGtkWindow(int argc,char *argv[]) :
     m_configurator.init();
     if ( m_configurator.load_config() )
 	print_to_output(_("Configurations successfully loaded.\n"));
-    else print_to_output(_("Failed to load configuration file, you need to calibrate it before activating the Wiimotes.\n"));
+    else print_to_output(_("Failed to load configuration file, you need to calibrate before activating the Wiimotes.\n"));
 
     m_wii_manager.tolerances( m_configurator.right_click_time() );
 
@@ -150,9 +151,12 @@ MainGtkWindow::MainGtkWindow(int argc,char *argv[]) :
     m_wii_manager.events().end_click_and_drag = sigc::ptr_fun(&wii_end_click_and_drag);
     m_wii_manager.events().mouse_moved = sigc::ptr_fun(&wii_mouse_moved);
 
-    m_wii_manager.connect_events().start_each_connection = sigc::mem_fun(*this, &MainGtkWindow::wiicursormanager_connect_start_connection);
-    m_wii_manager.connect_events().finish_each_connection = sigc::mem_fun(*this, &MainGtkWindow::wiicursormanager_connect_finish_connection);
-    m_wii_manager.connect_events().done_connecting = sigc::mem_fun(*this, &MainGtkWindow::wiicursormanager_connect_done_connecting);
+    m_connect_events.start_each_connection.connect(
+	sigc::mem_fun(*this, &MainGtkWindow::wiicursormanager_connect_start_connection));
+    m_connect_events.finish_each_connection.connect(
+	sigc::mem_fun(*this, &MainGtkWindow::wiicursormanager_connect_finish_connection));
+    m_connect_events.done_connecting.connect(
+	sigc::mem_fun(*this, &MainGtkWindow::wiicursormanager_connect_done_connecting));
 }
 
 int MainGtkWindow::run() {
@@ -231,11 +235,13 @@ void MainGtkWindow::about_dialog_response(int response_id) {
     }
 }
 
-void MainGtkWindow::wiicursormanager_connect_start_connection(unsigned int index) {
+void MainGtkWindow::wiicursormanager_connect_start_connection() {
+    unsigned int const index = m_wii_manager.connected() + 1;
+
     // WARNING: C function. I'd have used std::ostringstream if not for l10n.
     char out[1024];
-    sprintf(out, _("Connecting to Wiimote #%d... "), index);
-    //print_to_output(out);
+    sprintf(out, _("Connecting to Wiimote #%d...\n"), index);
+    print_to_output(out);
     m_gtk_label_wiimote_number->set_text(out);
     m_gtk_connecting_window->show();
 
@@ -243,21 +249,24 @@ void MainGtkWindow::wiicursormanager_connect_start_connection(unsigned int index
 	Glib::signal_timeout().connect(
 	    sigc::mem_fun(*this, &MainGtkWindow::connecting_window_progressbar_pulse), 50 );
 }
-void MainGtkWindow::wiicursormanager_connect_finish_connection(bool connected) {
-    //print_to_output(connected ? _("Succeeded!.\n") : _("Failed.\n"), false);
+void MainGtkWindow::wiicursormanager_connect_finish_connection() {
+    bool const connected = m_wii_manager.last_connection_succeeded();
+
+    print_to_output(connected ? _("Connection succeeded!.\n") : _("Connection failed.\n"));
 
     m_progressbar_pulse_connection.disconnect();
 
     m_gtk_connecting_window->hide();
 }
-void MainGtkWindow::wiicursormanager_connect_done_connecting(unsigned int number_of_connected) {
-    sync_wiimote_state_connection_phase(false);
+void MainGtkWindow::wiicursormanager_connect_done_connecting() {
+    unsigned int const number_of_connected = m_wii_manager.connected();
 
+    sync_wiimote_state_connection_phase(false);
     // WARNING: C function. I'd have used std::ostringstream if not for l10n.
     if (number_of_connected) {
 	char out[1024];
 	sprintf(out, _("Successfully connected to %d Wiimote(s). Click 'Activate' to use your infrared pen.\n"), number_of_connected);
-	//print_to_output(out);
+	print_to_output(out);
 
 	sync_wiimote_state(true);
     }

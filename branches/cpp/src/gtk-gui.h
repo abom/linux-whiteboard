@@ -67,9 +67,9 @@ private:
     void sim_quit_clicked();
     void menu_about_clicked();
     void about_dialog_response(int response_id);
-    void wiicursormanager_connect_start_connection(unsigned int index);
-    void wiicursormanager_connect_finish_connection(bool connected);
-    void wiicursormanager_connect_done_connecting(unsigned int number_of_connected);
+    void wiicursormanager_connect_start_connection();
+    void wiicursormanager_connect_finish_connection();
+    void wiicursormanager_connect_done_connecting();
     bool connecting_window_progressbar_pulse();
     bool key_pressed(GdkEventKey* event);
 
@@ -118,6 +118,7 @@ private:
 
     /* Data */
     WiiCursorManager m_wii_manager;
+    WiiCursorManagerConnectEvents m_connect_events;
     Configurator m_configurator;
 };
 

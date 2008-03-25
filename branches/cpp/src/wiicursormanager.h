@@ -37,16 +37,22 @@ void* wiicursormanager_connect_thread(void* ptr);
 
 // Used by wiicursormanager_connect_thread()
 struct WiiCursorManagerConnectEvents {
-    sigc::slot<void, unsigned int> start_each_connection;
-    sigc::slot<void, bool> finish_each_connection;
-    sigc::slot<void, unsigned int> done_connecting;
+    Glib::Dispatcher start_each_connection;
+    Glib::Dispatcher finish_each_connection;
+    Glib::Dispatcher done_connecting;
 };
 struct WiiCursorManagerThreadData {
-    WiiCursorManagerConnectEvents events;
+    WiiCursorManagerConnectEvents& events;
     std::vector<WiimoteAndTransformMatrix>& wiis;
+    bool& last_connection_succeeded;
 
-    WiiCursorManagerThreadData(std::vector<WiimoteAndTransformMatrix>& wiis) :
-	wiis(wiis)
+    WiiCursorManagerThreadData(
+	WiiCursorManagerConnectEvents& events,
+	std::vector<WiimoteAndTransformMatrix>& wiis,
+	bool& last_connection_succeeded) :
+	events(events),
+	wiis(wiis),
+	last_connection_succeeded(last_connection_succeeded)
     { }
 };
 
@@ -54,10 +60,11 @@ struct WiiCursorManagerThreadData {
 // Wiimotes and act as a virtual Wiimote to outsiders.
 class WiiCursorManager {
 public:
-    WiiCursorManager() :
+    WiiCursorManager(WiiCursorManagerConnectEvents& events) :
 	m_wiis(m_thread_data.wiimotes),
 	m_cal_window(0),
-	m_connect_thread_data(m_wiis)
+	m_last_connection_succeeded(false),
+	m_connect_thread_data(events, m_wiis, m_last_connection_succeeded)
     { }
 
     // Connects all available Wiimotes, asynchronously
@@ -85,9 +92,6 @@ public:
     WiiEvents& events() {
 	return m_thread_data.events;
     }
-    WiiCursorManagerConnectEvents& connect_events() {
-	return m_connect_thread_data.events;
-    }
 
     // Loads configurations
     // Returns true on success
@@ -96,11 +100,15 @@ public:
     // Returns true on success
     bool save_config() const;
 
-    bool connected() const {
-	return m_wiis.size() ? true : false;
+    // General queries
+    unsigned int connected() const {
+	return m_wiis.size(); // Number of conected Wiimotes
     }
     bool activated() const {
 	return connected() && m_thread_data.thread_running;
+    }
+    bool last_connection_succeeded() const {
+	return m_last_connection_succeeded;
     }
 private:
     WiiThreadFuncData m_thread_data; // For all Wiimotes
@@ -110,6 +118,7 @@ private:
     // This is needed because if user closes the app, we have to notify it somehow.
     CalibrationWindow* m_cal_window;
     // Used by wiicursormanager_connect_thread()
+    bool m_last_connection_succeeded; // To be used by others as a workaround for the lack of cross-thread data-passing technique
     WiiCursorManagerThreadData m_connect_thread_data;
 };
 
