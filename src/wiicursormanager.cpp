@@ -29,7 +29,7 @@ void WiiCursorManager::wiicursormanager_connect_thread() {
     do {
         events.start_each_connection();
 	if ( (new_wiimote = wii_connect(0)) )
-	    m_wiis.push_back( WiimoteAndTransformMatrix(new_wiimote) );
+	    m_wiis.push_back( WiimoteData(new_wiimote) );
 	m_last_connection_succeeded = (new_wiimote != 0) ? true : false;
 	events.finish_each_connection();
     }
@@ -50,7 +50,7 @@ bool WiiCursorManager::disconnect() {
     if (m_cal_window)
 	m_cal_window->quit();
     deactivate();
-    for (WiimoteAndTransformMatrixIterator iter = m_wiis.begin(); iter != m_wiis.end(); ++iter)
+    for (WiimoteDataIterator iter = m_wiis.begin(); iter != m_wiis.end(); ++iter)
 	wii_disconnect(iter->wiimote);
     m_wiis.clear();
 
@@ -62,7 +62,7 @@ bool WiiCursorManager::disconnect() {
 bool WiiCursorManager::calibrate() {
     bool ret = true;
 
-    for (WiimoteAndTransformMatrixIterator iter = m_wiis.begin(); iter != m_wiis.end(); ++iter) {
+    for (WiimoteDataIterator iter = m_wiis.begin(); iter != m_wiis.end(); ++iter) {
 	// Constructs a custom user message
 	// NOTE: Should be controllable from the main GUI, but not now
 	// WARNING: C function. I'd have used std::ostringstream if not for l10n.

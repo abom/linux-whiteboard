@@ -29,24 +29,28 @@ void* wii_thread_func(void* ptr) {
     wc.events() = data.events;
     wc.process(data.wiimotes, *data.wait_tolerance, data.thread_running); // The main loop
 
-    for (std::vector<WiimoteAndTransformMatrix>::iterator iter = data.wiimotes.begin(); iter != data.wiimotes.end(); ++iter)
+    for (std::vector<WiimoteData>::iterator iter = data.wiimotes.begin(); iter != data.wiimotes.end(); ++iter)
 	cwiid_disable(iter->wiimote, CWIID_FLAG_MESG_IFC);
-    data.this_thread = 0;
 
     return 0;
 }
-void start_wii_thread(WiiThreadFuncData& data) {                                                                                                               
-    start_wiimote_related_thread(data, &wii_thread_func);
+void start_wii_thread(WiiThreadFuncData& data) {
+    // NOTE: Not checking for any return value here
+    if (!data.thread_running) {
+	data.thread_running = true;
+	pthread_create(&data.this_thread, 0, &wii_thread_func, &data);
+    }
 }
 void finish_wii_thread(WiiThreadFuncData& data) {
-    finish_wiimote_related_thread(data);
+    if (data.thread_running) {
+	data.thread_running = false;
+	pthread_join(data.this_thread, 0);
+    }
 }
 
 
-void* wiicursor_thread_func(void* ptr) {
-    ASSERT(ptr != 0, "No data has been passed along");
-    WiiCursorThreadData& data = *static_cast<WiiCursorThreadData*>(ptr);
-    ASSERT(data.this_thread != 0, "This thread has become immortal, omfg!!!1");
+void WiiCursor::wiicursor_thread_func() {
+    WiiCursorThreadData& data = m_thread_data; // Readability
 
     // Sets up the timer
     delta_t_t last_time = 0;
@@ -78,26 +82,34 @@ void* wiicursor_thread_func(void* ptr) {
 		data.moved = squared_distance(data.ir, data.ir_on_mouse_down);
 	}
     }
-
-    data.this_thread = 0;
-
-    return 0;
 }
-void start_wiicursor_thread(WiiCursorThreadData& data) {
-    start_wiimote_related_thread(data, &wiicursor_thread_func);                                                                                                
+void WiiCursor::start_wiicursor_thread() {
+    WiiCursorThreadData& data = m_thread_data; // Readability
+
+    // NOTE: Not checking for any return value here
+    if (!data.thread_running) {
+	data.thread_running = true;
+	data.this_thread = Glib::Thread::create(
+	    sigc::mem_fun(*this, &WiiCursor::wiicursor_thread_func), true);
+    }
 }
-void finish_wiicursor_thread(WiiCursorThreadData& data) {
-    finish_wiimote_related_thread(data);
+void WiiCursor::finish_wiicursor_thread() {
+    WiiCursorThreadData& data = m_thread_data; // Readability
+
+    if (data.thread_running) {
+	data.thread_running = false;
+	data.this_thread->join();
+    }
 }
 
 
 void WiiCursor::process(
-	std::vector<WiimoteAndTransformMatrix>& wiimotes,
+	std::vector<WiimoteData>& wiimotes,
         delta_t_t const& wait_tolerance,
         bool const& running)
 {
     // Sets up the Wiimotes
-    for (std::vector<WiimoteAndTransformMatrix>::iterator iter = wiimotes.begin(); iter != wiimotes.end(); ++iter) {
+    for (std::vector<WiimoteData>::iterator iter = wiimotes.begin(); iter != wiimotes.end(); ++iter) {
 	cwiid_enable(iter->wiimote, CWIID_FLAG_MESG_IFC);
 	cwiid_disable(iter->wiimote, CWIID_FLAG_NONBLOCK);
     }
@@ -126,7 +138,7 @@ void WiiCursor::process(
 }
 
 void get_wiis_event_data_collect_all_events(
-    std::vector<WiimoteAndTransformMatrix>& wiimotes,
+    std::vector<WiimoteData>& wiimotes,
     point_t const& ir_old,
     std::vector< std::vector<WiiEvent> >& event_batches,
     unsigned int& max_event_counts)
@@ -169,7 +181,7 @@ void get_wiis_event_data_rebalance_events(unsigned int max_event_counts, std::ve
 void get_wiis_event_data_process_events(
     std::vector< std::vector<WiiEvent> > const& event_batches,
     unsigned int current_event_index,
-    std::vector<WiimoteAndTransformMatrix> const& wiimotes,
+    std::vector<WiimoteData> const& wiimotes,
     point_t const& ir_old,
     std::vector<point_t>& irs,
     std::vector<matrix_t const*>& transforms,
@@ -211,7 +223,7 @@ void get_wiis_event_data_process_events(
     else events.push_back( WiiEvent( point_t(INVALID_IR_POS, 0), 0) );
 }
 
-void get_wiis_event_data(std::vector<WiimoteAndTransformMatrix>& wiimotes, point_t const& ir_old, std::vector<WiiEvent>& events) {
+void get_wiis_event_data(std::vector<WiimoteData>& wiimotes, point_t const& ir_old, std::vector<WiiEvent>& events) {
     // This set of events will then be filtered and desirable events
     // will be added to event_data.
     std::vector< std::vector<WiiEvent> > event_batches( wiimotes.size() );
@@ -249,7 +261,7 @@ void WiiCursor::process_ir_events(point_t ir_new, matrix_t const* transform) {
     }
     if ( (ir_new.x != INVALID_IR_POS) && (ir_old.x == INVALID_IR_POS) ) { // MOUSE_DOWN
 	m_thread_data.ir_on_mouse_down = ir_new;
-	start_wiicursor_thread(m_thread_data);
+	start_wiicursor_thread();
 	wii_events.mouse_down(wii_event_data);
     }
     if ( (ir_new.x == INVALID_IR_POS) && (ir_old.x != INVALID_IR_POS) ) { // MOUSE_UP
@@ -265,6 +277,6 @@ void WiiCursor::process_ir_events(point_t ir_new, matrix_t const* transform) {
 	    }
 	    else wii_events.right_button_up(wii_event_data); // Right click
 	}
-	finish_wiicursor_thread(m_thread_data);
+	finish_wiicursor_thread();
     }
 }

@@ -23,7 +23,6 @@
 
 #include <gtkmm.h>
 #include <libglademm.h>
-#include <pthread.h>
 #include <string>
 #include <ctime>
 #include <cstdio>
