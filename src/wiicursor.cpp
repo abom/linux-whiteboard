@@ -20,7 +20,7 @@
 #include "wiicursor.h"
 
 
-void* wii_thread_func(void* ptr) {
+void* wiicursor_thread_func(void* ptr) {
     ASSERT(ptr != 0, "No data has been passed along");
     WiiThreadFuncData& data = *static_cast<WiiThreadFuncData*>(ptr);
     ASSERT(data.this_thread != 0, "This thread has become immortal, omfg!!!1");
@@ -34,14 +34,14 @@ void* wii_thread_func(void* ptr) {
 
     return 0;
 }
-void start_wii_thread(WiiThreadFuncData& data) {
+void start_wiicursor_thread(WiiThreadFuncData& data) {
     // NOTE: Not checking for any return value here
     if (!data.thread_running) {
 	data.thread_running = true;
-	pthread_create(&data.this_thread, 0, &wii_thread_func, &data);
+	pthread_create(&data.this_thread, 0, &wiicursor_thread_func, &data);
     }
 }
-void finish_wii_thread(WiiThreadFuncData& data) {
+void finish_wiicursor_thread(WiiThreadFuncData& data) {
     if (data.thread_running) {
 	data.thread_running = false;
 	pthread_join(data.this_thread, 0);
@@ -49,7 +49,7 @@ void finish_wii_thread(WiiThreadFuncData& data) {
 }
 
 
-void WiiCursor::wiicursor_thread_func() {
+void WiiCursor::right_click_thread_func() {
     WiiCursorThreadData& data = m_thread_data; // Readability
 
     // Sets up the timer
@@ -83,17 +83,17 @@ void WiiCursor::wiicursor_thread_func() {
 	}
     }
 }
-void WiiCursor::start_wiicursor_thread() {
+void WiiCursor::start_right_click_thread() {
     WiiCursorThreadData& data = m_thread_data; // Readability
 
     // NOTE: Not checking for any return value here
     if (!data.thread_running) {
 	data.thread_running = true;
 	data.this_thread = Glib::Thread::create(
-	    sigc::mem_fun(*this, &WiiCursor::wiicursor_thread_func), true);
+	    sigc::mem_fun(*this, &WiiCursor::right_click_thread_func), true);
     }
 }
-void WiiCursor::finish_wiicursor_thread() {
+void WiiCursor::finish_right_click_thread() {
     WiiCursorThreadData& data = m_thread_data; // Readability
 
     if (data.thread_running) {
@@ -261,7 +261,7 @@ void WiiCursor::process_ir_events(point_t ir_new, matrix_t const* transform) {
     }
     if ( (ir_new.x != INVALID_IR_POS) && (ir_old.x == INVALID_IR_POS) ) { // MOUSE_DOWN
 	m_thread_data.ir_on_mouse_down = ir_new;
-	start_wiicursor_thread();
+	start_right_click_thread();
 	wii_events.mouse_down(wii_event_data);
     }
     if ( (ir_new.x == INVALID_IR_POS) && (ir_old.x != INVALID_IR_POS) ) { // MOUSE_UP
@@ -277,6 +277,6 @@ void WiiCursor::process_ir_events(point_t ir_new, matrix_t const* transform) {
 	    }
 	    else wii_events.right_button_up(wii_event_data); // Right click
 	}
-	finish_wiicursor_thread();
+	finish_right_click_thread();
     }
 }

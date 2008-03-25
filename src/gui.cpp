@@ -204,7 +204,7 @@ bool CalibrationWindow::wiimote_blinking() {
 
 void CalibrationWindow::quit() {
     // Cleans up as needed
-    finish_wii_thread(m_thread_data);
+    finish_wiicursor_thread(m_thread_data);
 
     m_gtk_window->hide();
 }
@@ -254,7 +254,7 @@ bool CalibrationWindow::get_calibration_points(WiimoteCalibratedPoints& p_wii) {
     Gtk::Main gtk_kit(0, 0); // NOTE: Bypassing potential arguments for GTK+ here
 
     // Starts the main loop
-    start_wii_thread(m_thread_data);
+    start_wiicursor_thread(m_thread_data);
     sigc::connection redraw_sigc_connection =
 	Glib::signal_timeout().connect(
 	    sigc::mem_fun(*this, &CalibrationWindow::redraw_calibration_area), 100 );
@@ -268,7 +268,7 @@ bool CalibrationWindow::get_calibration_points(WiimoteCalibratedPoints& p_wii) {
     set_led_state(m_thread_data.wiimotes.front().wiimote, WIIMOTE_LED_CONNECTED); // Resets the LEDs's state
     m_wiimote_blinking_connection.disconnect();
     redraw_sigc_connection.disconnect();
-    // NOTE: No need to finish_wii_thread() here as it is handled by
+    // NOTE: No need to finish_wiicursor_thread() here as it is handled by
     // quit() if user selected 'Quit' from the menu. It self-terminated otherwise.
 
     // Returns p_wii only if succeeded

@@ -83,7 +83,7 @@ struct WiimoteData {
 
 
 // Helpers, help reduce duplications
-// Will be passed to wii_thread_func()
+// Will be passed to wiicursor_thread_func()
 struct WiiThreadFuncData {
     WiiThreadFuncData() :
 	wait_tolerance(0),
@@ -101,9 +101,9 @@ struct WiiThreadFuncData {
 };
 // NOTE: More descriptive names would be helpful
 // Creates a separate thread so the GUI will not be blocked
-void* wii_thread_func(void* ptr);
-void start_wii_thread(WiiThreadFuncData& data);
-void finish_wii_thread(WiiThreadFuncData& data);
+void* wiicursor_thread_func(void* ptr);
+void start_wiicursor_thread(WiiThreadFuncData& data);
+void finish_wiicursor_thread(WiiThreadFuncData& data);
 
 
 // Used internally by WiiCursor
@@ -199,9 +199,9 @@ private:
 	WiiEvents events; // Callback functions for events
 	WiiEventData event_data; // To be passed to event handlers
     } m_thread_data;
-    void wiicursor_thread_func();
-    void start_wiicursor_thread();
-    void finish_wiicursor_thread();
+    void right_click_thread_func();
+    void start_right_click_thread();
+    void finish_right_click_thread();
 
     // Other data
     IrFilter m_ir_filter;
