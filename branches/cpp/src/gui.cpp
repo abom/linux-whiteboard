@@ -238,7 +238,7 @@ CalibrationWindow::CalibrationWindow(
     m_gtk_window->show();
 
     // Data
-    m_thread_data.wiimotes.push_back( WiimoteAndTransformMatrix(wiimote) );
+    m_thread_data.wiimotes.push_back( WiimoteData(wiimote) );
 
     m_thread_data.wait_tolerance = &wait_tolerance;
 

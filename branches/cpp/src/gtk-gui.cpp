@@ -164,6 +164,11 @@ int MainGtkWindow::run() {
 
 void MainGtkWindow::toggle_wiimote_clicked() {
     if ( !m_wii_manager.connected() ) {
+	// NOTE: This is mainly to force the GUI to update itself
+	// WARNING: Somehow I still feel the problem has not
+	// been completely solved.
+	print_to_output(_("Preparing to connect...\n"));
+
 	sync_wiimote_state_connection_phase(true);
 
 	m_wii_manager.connect();
