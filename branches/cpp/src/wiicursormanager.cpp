@@ -86,13 +86,13 @@ bool WiiCursorManager::calibrate() {
 
 
 bool WiiCursorManager::activate() {
-    start_wii_thread(m_thread_data);
+    start_wiicursor_thread(m_thread_data);
 
     // NOTE: Always returns true for now
     return true;
 }
 bool WiiCursorManager::deactivate() {
-    finish_wii_thread(m_thread_data);
+    finish_wiicursor_thread(m_thread_data);
 
     // NOTE: Always returns true for now
     return true;
