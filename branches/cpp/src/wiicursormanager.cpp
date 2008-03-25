@@ -20,25 +20,22 @@
 #include "wiicursormanager.h"
 
 
-void* wiicursormanager_connect_thread(void* ptr) {
-    ASSERT(ptr != 0, "No data has been passed along");
-    WiiCursorManagerThreadData& data = *static_cast<WiiCursorManagerThreadData*>(ptr);
+void WiiCursorManager::wiicursormanager_connect_thread() {
+    WiiCursorManagerConnectEvents& events = m_connect_events; // Readability
 
     // Trying to connect to as many Wiimotes as possible
     // NOTE: Error checking
     cwiid_wiimote_t* new_wiimote = 0;
     do {
-        data.events.start_each_connection();
+        events.start_each_connection();
 	if ( (new_wiimote = wii_connect(0)) )
-	    data.wiis.push_back( WiimoteAndTransformMatrix(new_wiimote) );
-	data.last_connection_succeeded = new_wiimote != 0 ? true : false;
-	data.events.finish_each_connection();
+	    m_wiis.push_back( WiimoteAndTransformMatrix(new_wiimote) );
+	m_last_connection_succeeded = (new_wiimote != 0) ? true : false;
+	events.finish_each_connection();
     }
     while (new_wiimote);
 
-    data.events.done_connecting();
-
-    return 0;
+    events.done_connecting();
 }
 
 
@@ -46,8 +43,8 @@ void WiiCursorManager::connect()
 {
     // NOTE: We are throwing away the thread ID because we trust
     // the caller to NOT call this repeatedly at the same time.
-    pthread_t this_thread;
-    pthread_create(&this_thread, 0, &wiicursormanager_connect_thread, &m_connect_thread_data);
+    // Also not joinable.
+    Glib::Thread::create(sigc::mem_fun(*this, &WiiCursorManager::wiicursormanager_connect_thread), false);
 }
 bool WiiCursorManager::disconnect() {
     if (m_cal_window)
@@ -66,22 +63,21 @@ bool WiiCursorManager::calibrate() {
     bool ret = true;
 
     for (WiimoteAndTransformMatrixIterator iter = m_wiis.begin(); iter != m_wiis.end(); ++iter) {
-	std::vector<WiimoteAndTransformMatrix> one_wiimote;
-	one_wiimote.push_back( WiimoteAndTransformMatrix(iter->wiimote, iter->transform) );
-	CalibrationData cal_data;
-	// NOTE: A simple Wiimote index for now
+	// Constructs a custom user message
+	// NOTE: Should be controllable from the main GUI, but not now
 	// WARNING: C function. I'd have used std::ostringstream if not for l10n.
 	unsigned int const current_wii_index = iter - m_wiis.begin() + 1;
 	char message[1024];
 	sprintf(message, _("Calibrating Wiimote #%d"), current_wii_index);
 
-	CalibrationWindow cal_window( one_wiimote, cal_data, message, *m_thread_data.wait_tolerance);
+	CalibrationWindow cal_window(iter->wiimote, message, *m_thread_data.wait_tolerance);
 	m_cal_window = &cal_window;
-	if ( cal_window.get_calibration_points() ) {
+	WiimoteCalibratedPoints p_wii;
+	if ( !cal_window.get_calibration_points(p_wii) ) {
 	    ret = false;
 	    break;
 	}
-	else iter->transform = calculate_transformation_matrix(cal_data.p_wii);
+	else iter->transform = calculate_transformation_matrix(p_wii);
     }
     m_cal_window = 0; // If it gets to this point, the window's been closed
 

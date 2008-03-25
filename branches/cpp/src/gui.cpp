@@ -21,7 +21,7 @@
 
 
 void CalibrationWindow::calibration_right_button_down(WiiEventData const& data) {
-    m_cal_data.p_wii[m_cal_data.active_point++] = data.ir_pos;
+    m_cal_data.p_wii.p[m_cal_data.active_point++] = data.ir_pos;
 }
 void CalibrationWindow::calibration_mouse_moved(WiiEventData const& data) {
     m_cal_data.ir_pos = data.ir_pos;
@@ -34,7 +34,7 @@ void CalibrationWindow::calibration_mouse_down(WiiEventData const& data) {
 }
 void CalibrationWindow::calibration_mouse_up(WiiEventData const& data) {
     m_cal_data.ir_pos.x = INVALID_IR_POS; // So it will not be drawn later
-    if (m_cal_data.active_point == 4)
+    if (m_cal_data.active_point == WIIMOTE_NUM_CALIBRATED_POINTS)
 	quit();
 }
 void CalibrationWindow::calibration_begin_click_and_drag(WiiEventData const& data) {
@@ -42,7 +42,15 @@ void CalibrationWindow::calibration_begin_click_and_drag(WiiEventData const& dat
 }
 
 
-void draw_calibration_points(Cairo::RefPtr<Cairo::Context> cr, point_t const points[4], unsigned int active, bool active_light_up) {
+void draw_calibration_points(
+    Cairo::RefPtr<Cairo::Context> cr,
+    point_t const points[WIIMOTE_NUM_CALIBRATED_POINTS],
+    unsigned int active, bool active_light_up)
+{
+    // NOTE: Currently the number of points are not hard-coded,
+    // but it is drawn to 4.
+    // That number can be made configurable if needed.
+
     unsigned int const RADIUS = 10;
     for (unsigned int i = 0; i != sizeof(points); ++i) {
 	{ // Draws a cross inside the rectangle for easier viewing
@@ -115,13 +123,13 @@ bool CalibrationWindow::calibration_area_exposed(GdkEventExpose* event) {
 	cr->stroke();
     }
 
-    // 4 calibration points
+    // Calibration points
     cr->set_source_rgb(1.0, 1.0, 1.0);
     cr->set_line_width(2.0);
     m_cal_data.active_light_up = !m_cal_data.active_light_up;
-    point_t p_screen[4];
+    point_t p_screen[WIIMOTE_NUM_CALIBRATED_POINTS];
     screen_corners(p_screen);
-    draw_calibration_points(cr, p_screen, m_cal_data.active_point, m_cal_data.active_light_up); // 4 calibration points
+    draw_calibration_points(cr, p_screen, m_cal_data.active_point, m_cal_data.active_light_up);
     cr->stroke();
 
     // Draws bounding boxes around the screen's edges, for easier viewing
@@ -202,14 +210,13 @@ void CalibrationWindow::quit() {
 }
 
 CalibrationWindow::CalibrationWindow(
-    std::vector<WiimoteAndTransformMatrix>& wiimotes,
-    CalibrationData& cal_data, char const* user_message,
+    cwiid_wiimote_t* wiimote,
+    char const* user_message,
     delta_t_t const& wait_tolerance) :
     m_gtk_window(0),
     m_gtk_calibration_area(0),
     m_wiimote_blinking_lighted_up_led(0),
     m_wiimote_blinking_led_direction(-1),
-    m_cal_data(cal_data),
     m_user_message(user_message)
 {
     // Gets the widgets
@@ -231,7 +238,7 @@ CalibrationWindow::CalibrationWindow(
     m_gtk_window->show();
 
     // Data
-    m_thread_data.wiimotes = wiimotes;
+    m_thread_data.wiimotes.push_back( WiimoteAndTransformMatrix(wiimote) );
 
     m_thread_data.wait_tolerance = &wait_tolerance;
 
@@ -243,7 +250,7 @@ CalibrationWindow::CalibrationWindow(
 }
 
 
-int CalibrationWindow::get_calibration_points() {
+bool CalibrationWindow::get_calibration_points(WiimoteCalibratedPoints& p_wii) {
     Gtk::Main gtk_kit(0, 0); // NOTE: Bypassing potential arguments for GTK+ here
 
     // Starts the main loop
@@ -264,5 +271,10 @@ int CalibrationWindow::get_calibration_points() {
     // NOTE: No need to finish_wii_thread() here as it is handled by
     // quit() if user selected 'Quit' from the menu. It self-terminated otherwise.
 
-    return m_cal_data.active_point != 4;
+    // Returns p_wii only if succeeded
+    bool const succeeded = (m_cal_data.active_point == WIIMOTE_NUM_CALIBRATED_POINTS);
+    if (succeeded)
+	p_wii = m_cal_data.p_wii;
+
+    return succeeded;
 }

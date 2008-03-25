@@ -79,5 +79,11 @@ enum WiimoteLedStates {
     //WIIMOTE_LED_CALIBRATING = CWIID_LED1_ON | CWIID_LED2_ON | CWIID_LED3_ON | CWIID_LED4_ON,
 };
 
+// To avoid point_t p_wii[4] BS
+#define WIIMOTE_NUM_CALIBRATED_POINTS static_cast<unsigned int>(4)
+struct WiimoteCalibratedPoints {
+    point_t p[WIIMOTE_NUM_CALIBRATED_POINTS];
+};
+
 
 #endif   /* __COMMON_H__ */

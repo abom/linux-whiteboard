@@ -32,48 +32,25 @@
 #include "common.h"
 
 
-// For future needs and to avoid point_t p_wii[4] BS
-struct CalibrationData {
-    point_t p_wii[4];
-    unsigned int active_point; // Index of the current point that is being calibrated
-    bool active_light_up; // Makes current point blink as needed
-    point_t ir_pos; // Current IR pointer's location
-    point_t ir_on_mouse_down; // IR pointer on left button down event
-    delta_t_t waited; // For drawing of a pretty circle
-    unsigned int move_tolerance; // For drawing IR inaccuracies
-    bool border_crossed; // Will be true if the IR pointer 'moved' (i.e., no longer valid as a point)
-
-    CalibrationData() :
-	active_point(0),
-	active_light_up(true),
-	ir_pos(INVALID_IR_POS, 0),
-	waited(0),
-	move_tolerance(1), // NOTE: Thread problems, to avoid division-by-zero
-	border_crossed(false)
-    { }
-};
-
-
-/* Draws the 4 calibration points, paints the
+/* Draws the calibration points, paints the
  * active point a blinking square, and paints the
  * calibrated ones static squares */
-void draw_calibration_points(Cairo::RefPtr<Cairo::Context> cr, point_t const points[4], unsigned int active, bool active_light_up);
-
-// NOTE: The *only* reason this is not in CalibrationWindow is
-// because pthread is a C library
-void* calibration_thread_func(void* ptr);
+void draw_calibration_points(
+    Cairo::RefPtr<Cairo::Context> cr,
+    point_t const points[WIIMOTE_NUM_CALIBRATED_POINTS],
+    unsigned int active, bool active_light_up);
 
 class CalibrationWindow {
 public:
     CalibrationWindow(
-	std::vector<WiimoteAndTransformMatrix>& wiimotes,
-	CalibrationData& cal_data, char const* user_message,
+	cwiid_wiimote_t* wiimote,
+	char const* user_message,
 	delta_t_t const& wait_tolerance);
 
-    /* Get 4 calibration points from users
+    /* Get calibration points from users
      * Points are written to p_wii
-     * Returns 0 on success, -1 on error or user escapes */
-    int get_calibration_points();
+     * Returns true on success */
+    bool get_calibration_points(WiimoteCalibratedPoints& p_wii);
 
     void quit(); // Tells GTK+ to quit, either successfully calibrated or not
 private:
@@ -98,9 +75,29 @@ private:
     int m_wiimote_blinking_led_direction;
 
     /* Data */
-    CalibrationData& m_cal_data;
     char const* m_user_message;
     WiiThreadFuncData m_thread_data;
+    // Calibration data
+    struct CalibrationData {
+	WiimoteCalibratedPoints p_wii;
+	unsigned int active_point; // Index of the current point that is being calibrated
+	bool active_light_up; // Makes current point blink as needed
+	point_t ir_pos; // Current IR pointer's location
+	point_t ir_on_mouse_down; // IR pointer on left button down event
+	delta_t_t waited; // For drawing of a pretty circle
+	unsigned int move_tolerance; // For drawing of IR inaccuracies
+	bool border_crossed; // Will be true if the IR pointer 'moved' (i.e., no longer valid as a point)
+
+	CalibrationData() :
+	    active_point(0),
+	    active_light_up(true),
+	    ir_pos(INVALID_IR_POS, 0),
+	    ir_on_mouse_down(INVALID_IR_POS, 0),
+	    waited(0),
+	    move_tolerance(1), // NOTE: Thread problems, to avoid division-by-zero
+	    border_crossed(false)
+	{ }
+    } m_cal_data;
 };
 
 
