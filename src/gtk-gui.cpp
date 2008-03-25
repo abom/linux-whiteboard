@@ -235,7 +235,7 @@ void MainGtkWindow::wiicursormanager_connect_start_connection(unsigned int index
     // WARNING: C function. I'd have used std::ostringstream if not for l10n.
     char out[1024];
     sprintf(out, _("Connecting to Wiimote #%d... "), index);
-    print_to_output(out);
+    //print_to_output(out);
     m_gtk_label_wiimote_number->set_text(out);
     m_gtk_connecting_window->show();
 
@@ -244,7 +244,7 @@ void MainGtkWindow::wiicursormanager_connect_start_connection(unsigned int index
 	    sigc::mem_fun(*this, &MainGtkWindow::connecting_window_progressbar_pulse), 50 );
 }
 void MainGtkWindow::wiicursormanager_connect_finish_connection(bool connected) {
-    print_to_output(connected ? _("Succeeded!.\n") : _("Failed.\n"), false);
+    //print_to_output(connected ? _("Succeeded!.\n") : _("Failed.\n"), false);
 
     m_progressbar_pulse_connection.disconnect();
 
@@ -257,7 +257,7 @@ void MainGtkWindow::wiicursormanager_connect_done_connecting(unsigned int number
     if (number_of_connected) {
 	char out[1024];
 	sprintf(out, _("Successfully connected to %d Wiimote(s). Click 'Activate' to use your infrared pen.\n"), number_of_connected);
-	print_to_output(out);
+	//print_to_output(out);
 
 	sync_wiimote_state(true);
     }
@@ -300,8 +300,9 @@ void MainGtkWindow::print_to_output(char const* text, bool add_time_stamp) {
     // Scrolls to the newest text
     // NOTE: Disabled it for now since I couldn't figure out
     // how to make it thread-safety.
-    //Gtk::Adjustment *const vadj = m_gtk_output_scroll->get_vadjustment();
-    //vadj->set_value( vadj->get_upper() );
+    // NOTE: Enabled it again and disabled the connecting messages
+    Gtk::Adjustment *const vadj = m_gtk_output_scroll->get_vadjustment();
+    vadj->set_value( vadj->get_upper() );
 }
 void MainGtkWindow::sync_activation_state(bool activated) {
     m_gtk_toggle_activation->set_label(activated ? _("De_activate") : _("_Activate"));
