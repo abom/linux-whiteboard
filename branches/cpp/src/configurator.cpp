@@ -17,11 +17,26 @@
  */
 
 
-#include "gtk-configurator.h"
+#include "configurator.h"
 
 
-void Configurator::init() {
-    m_refXml->get_widget("spin-right-click", m_gtk_right_click_time);
+std::string config_file_path() {
+    // WARNING: Unsafe, one should use something like g_build_filename() and g_get_home_dir()
+    return std::string(getenv("HOME")) + "/.whiteboardrc";
+}
+
+
+// Gets access to the configurator with this function
+Configurator& get_configurator() {
+    // NOTE: Not thread-safe
+    static Configurator config;
+
+    return config;
+}
+
+
+void Configurator::init(Glib::RefPtr<Gnome::Glade::Xml>& refXml) {
+    refXml->get_widget("spin-right-click", m_gtk_right_click_time);
 
     // Right click time
     right_click_time_changed();

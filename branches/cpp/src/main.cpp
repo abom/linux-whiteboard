@@ -17,6 +17,7 @@
  */
 
 
+#include "configurator.h"
 #include "gtk-gui.h"
 
 
@@ -34,6 +35,12 @@ int main(int argc,char *argv[])
     bindtextdomain(GETTEXT_PACKAGE, WHITEBOARDLOCALEDIR);
     bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
     textdomain(GETTEXT_PACKAGE);
+
+    // NOTE: Triggers the creation of the static configurator
+    // object. static/singleton/global vars... are bad, but
+    // I don't want to pass those into the deepest bottom
+    // of the code.
+    get_configurator();
 
     MainGtkWindow main_window(argc, argv);
     return main_window.run();

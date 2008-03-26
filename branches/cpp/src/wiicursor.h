@@ -27,8 +27,8 @@
 #include <vector>
 #include <glibmm.h>
 
+#include "configurator.h"
 #include "auxiliary.h"
-#include "matrix.h"
 #include "common.h"
 #include "events.h"
 #include "wiicontrol.h"
@@ -66,40 +66,20 @@ struct WiiEvents {
 };
 
 
-// NOTE: Another badly named structure :-<
-struct WiimoteData {
-    WiimoteData(cwiid_wiimote_t* wiimote) :
-	wiimote(wiimote),
-	transform(TRANSFORM_MATRIX_ROWS, TRANSFORM_MATRIX_COLS)
-    { }
-    WiimoteData(cwiid_wiimote_t* wiimote, matrix_t const& transform) :
-	wiimote(wiimote),
-	transform(transform)
-    { }
-
-    cwiid_wiimote_t* wiimote;
-    matrix_t transform;
-};
-
-
-// Helpers, help reduce duplications
 // Will be passed to wiicursor_thread_func()
 struct WiiThreadFuncData {
-    WiiThreadFuncData() :
-	wait_tolerance(0),
+    WiiThreadFuncData(std::vector<WiimoteData>& wiimotes) :
+	wiimotes(wiimotes),
 	this_thread(0),
 	thread_running(false)
     { }
 
-    std::vector<WiimoteData> wiimotes;
+    std::vector<WiimoteData>& wiimotes;
     WiiEvents events;
-
-    delta_t_t const* wait_tolerance;
 
     pthread_t this_thread;
     bool thread_running;
 };
-// NOTE: More descriptive names would be helpful
 // Creates a separate thread so the GUI will not be blocked
 void* wiicursor_thread_func(void* ptr);
 void start_wiicursor_thread(WiiThreadFuncData& data);
@@ -153,10 +133,7 @@ public:
 	m_ir_filter(m_thread_data.ir, m_thread_data.move_tolerance)
     { }
 
-    void process(
-	std::vector<WiimoteData>& wiimotes,
-	delta_t_t const& wait_tolerance,
-	bool const& running);
+    void process(std::vector<WiimoteData>& wiimotes, bool const& running);
 
     // Events
     WiiEvents& events() {
@@ -175,13 +152,13 @@ private:
 	    thread_running(false),
 	    this_thread(0),
 	    move_tolerance(0),
-	    wait_tolerance(0),
+	    wait_tolerance( get_configurator().wait_tolerance() ),
 	    running(0),
 	    event_data(ir, ir_on_mouse_down, waited, move_tolerance)
 	{ }
 
 	bool click_and_drag() const { return moved > sqr(move_tolerance); }
-	bool right_click() const { return waited > *wait_tolerance; }
+	bool right_click() const { return waited > wait_tolerance; }
 	bool all_running() const { return *running && thread_running; }
 
 	// Data
@@ -193,7 +170,7 @@ private:
 	Glib::Thread* this_thread;
 
 	unsigned int move_tolerance;
-	delta_t_t const* wait_tolerance;
+	delta_t_t const& wait_tolerance;
 	bool const* running;
 
 	WiiEvents events; // Callback functions for events

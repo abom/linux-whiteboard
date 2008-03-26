@@ -26,6 +26,7 @@
 #include <libglademm.h>
 #include <cairomm/context.h>
 
+#include "configurator.h"
 #include "auxiliary.h"
 #include "wiicursor.h"
 #include "wiicontrol.h"
@@ -42,10 +43,7 @@ void draw_calibration_points(
 
 class CalibrationWindow {
 public:
-    CalibrationWindow(
-	cwiid_wiimote_t* wiimote,
-	char const* user_message,
-	delta_t_t const& wait_tolerance);
+    CalibrationWindow(cwiid_wiimote_t* wiimote, char const* user_message);
 
     /* Get calibration points from users
      * Points are written to p_wii
@@ -75,6 +73,7 @@ private:
 
     /* Data */
     char const* m_user_message;
+    std::vector<WiimoteData> m_wiimote; // To be passed to m_thread_data
     WiiThreadFuncData m_thread_data;
     // Calibration data
     struct CalibrationData {

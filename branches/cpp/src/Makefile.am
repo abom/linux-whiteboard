@@ -12,8 +12,8 @@ whiteboard_CXXFLAGS = 	${whiteboard_CFLAGS} \
 whiteboard_LDFLAGS = ${whiteboard_LIBS} $(LIBINTL)
 whiteboard_SOURCES = 	main.cpp common.h matrix.h \
 			auxiliary.cpp auxiliary.h events.cpp events.h \
+			configurator.cpp configurator.h \
 			irfilter.cpp irfilter.h \
-			gtk-configurator.cpp gtk-configurator.h \
 			gui.cpp gui.h wiicontrol.cpp wiicontrol.h \
 			wiicursor.cpp wiicursor.h gtk-gui.cpp gtk-gui.h \
 			wiicursormanager.cpp wiicursormanager.h \

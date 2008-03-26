@@ -23,17 +23,11 @@
 
 #include <sys/time.h>
 #include <iostream>
-#include <fstream>
-#include <string>
-#include <cstdlib>
 #include <unistd.h>
+#include <X11/extensions/XTest.h>
 
 #include "matrix.h"
 #include "common.h" // ASSERT
-
-// NOTE: Due to glibmm, it must be included after glibmm.h. Try moving to the top.
-// Yeah, this is bad.
-#include <X11/extensions/XTest.h>
 
 
 struct OptionStates {
@@ -68,12 +62,6 @@ point_t infrared_data(point_t const& ir_pos_new, matrix_t const& transform);
 
 unsigned int sqr(int n);
 unsigned int squared_distance(point_t const& p1, point_t const& p2);
-
-std::string config_file_path();
-/* Isn't it obvious? :)
- * Returns true on success */
-bool load_config(matrix_t& transform);
-bool save_config(matrix_t const& transform);
 
 /* Returns true on success */
 bool process_options(int argc,char *argv[], OptionStates& opt_states);

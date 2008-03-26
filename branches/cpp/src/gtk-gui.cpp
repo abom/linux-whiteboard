@@ -42,7 +42,6 @@ void wii_mouse_moved(WiiEventData const& data) {
 
 
 MainGtkWindow::MainGtkWindow(int argc,char *argv[]) :
-    m_refXml(0),
     m_gtk_kit(argc, argv),
     m_gtk_main_window(0),
     m_gtk_output_scroll(0),
@@ -66,37 +65,37 @@ MainGtkWindow::MainGtkWindow(int argc,char *argv[]) :
     m_gtk_label_wiimote_number(0),
     m_gtk_connecting_progress(0),
     m_time_text_tag( m_output_buffer->create_tag("bold") ),
-    m_wii_manager(m_connect_events),
-    m_configurator(m_refXml)
+    m_configurator( get_configurator() ),
+    m_wii_manager(m_connect_events)
 {
     // WARNING: Not checking for *any* return values here
     // WARNING: Constructing paths this way is not safe/portable, but I don't want to bother with g_free()
 
-    // Gets GUI components
+    /* Gets GUI components */
     std::string const WINDOWS_DIR(WINDOWSDIR);
     std::string const PIXMAPS_DIR(PIXMAPSDIR); // NOTE: Glade's bug, 'icon' does nothing
-    m_refXml = Gnome::Glade::Xml::create(WINDOWS_DIR + "/main-window.glade");
+    Glib::RefPtr<Gnome::Glade::Xml> refXml = Gnome::Glade::Xml::create(WINDOWS_DIR + "/main-window.glade");
 
-    m_refXml->get_widget("main-window", m_gtk_main_window);
-    m_refXml->get_widget("output-scroll", m_gtk_output_scroll);
-    m_refXml->get_widget("output", m_gtk_output);
-    m_refXml->get_widget("toggle-wiimote", m_gtk_toggle_wiimote);
-    m_refXml->get_widget("toggle-activation", m_gtk_toggle_activation);
-    m_refXml->get_widget("calibrate", m_gtk_calibrate);
-    m_refXml->get_widget("status-icon-menu", m_gtk_status_icon_menu);
-    m_refXml->get_widget("sim-connect", m_gtk_sim_connect);
-    m_refXml->get_widget("sim-disconnect", m_gtk_sim_disconnect);
-    m_refXml->get_widget("sim-activate", m_gtk_sim_activate);
-    m_refXml->get_widget("sim-deactivate", m_gtk_sim_deactivate);
-    m_refXml->get_widget("sim-calibrate", m_gtk_sim_calibrate);
-    m_refXml->get_widget("sim-quit", m_gtk_sim_quit);
-    m_refXml->get_widget("menuitem-close", m_gtk_menu_close);
-    m_refXml->get_widget("menuitem-quit", m_gtk_menu_quit);
-    m_refXml->get_widget("menuitem-about", m_gtk_menu_about);
-    m_refXml->get_widget("about-dialog", m_gtk_about_dialog);
-    m_refXml->get_widget("connecting-window", m_gtk_connecting_window);
-    m_refXml->get_widget("connecting-window-label-wiimote-number", m_gtk_label_wiimote_number);
-    m_refXml->get_widget("connecting-window-progress", m_gtk_connecting_progress);
+    refXml->get_widget("main-window", m_gtk_main_window);
+    refXml->get_widget("output-scroll", m_gtk_output_scroll);
+    refXml->get_widget("output", m_gtk_output);
+    refXml->get_widget("toggle-wiimote", m_gtk_toggle_wiimote);
+    refXml->get_widget("toggle-activation", m_gtk_toggle_activation);
+    refXml->get_widget("calibrate", m_gtk_calibrate);
+    refXml->get_widget("status-icon-menu", m_gtk_status_icon_menu);
+    refXml->get_widget("sim-connect", m_gtk_sim_connect);
+    refXml->get_widget("sim-disconnect", m_gtk_sim_disconnect);
+    refXml->get_widget("sim-activate", m_gtk_sim_activate);
+    refXml->get_widget("sim-deactivate", m_gtk_sim_deactivate);
+    refXml->get_widget("sim-calibrate", m_gtk_sim_calibrate);
+    refXml->get_widget("sim-quit", m_gtk_sim_quit);
+    refXml->get_widget("menuitem-close", m_gtk_menu_close);
+    refXml->get_widget("menuitem-quit", m_gtk_menu_quit);
+    refXml->get_widget("menuitem-about", m_gtk_menu_about);
+    refXml->get_widget("about-dialog", m_gtk_about_dialog);
+    refXml->get_widget("connecting-window", m_gtk_connecting_window);
+    refXml->get_widget("connecting-window-label-wiimote-number", m_gtk_label_wiimote_number);
+    refXml->get_widget("connecting-window-progress", m_gtk_connecting_progress);
 
     m_gtk_toggle_wiimote->signal_clicked().connect(sigc::mem_fun(*this, &MainGtkWindow::toggle_wiimote_clicked));
     m_gtk_toggle_activation->signal_clicked().connect(sigc::mem_fun(*this, &MainGtkWindow::toggle_activation_clicked));
@@ -116,7 +115,7 @@ MainGtkWindow::MainGtkWindow(int argc,char *argv[]) :
     m_gtk_menu_about->signal_activate().connect(sigc::mem_fun(*this, &MainGtkWindow::menu_about_clicked));
     m_gtk_about_dialog->signal_response().connect(sigc::mem_fun(*this, &MainGtkWindow::about_dialog_response));
 
-    // Sets up widgets
+    /* Sets up widgets */
     m_gtk_output->set_buffer(m_output_buffer);
     m_time_text_tag->property_font() = "bold";
 
@@ -129,30 +128,24 @@ MainGtkWindow::MainGtkWindow(int argc,char *argv[]) :
 
     sync_wiimote_state(false); // Disconnected by default
 
-    // NOTE: I don't fscking understand :-< Gtk(mm) is fscking unstable
-    m_gtk_connecting_window->hide();
-
     /* Data */
-    m_configurator.init();
+    m_configurator.init(refXml);
     if ( m_configurator.load_config() )
 	print_to_output(_("Configurations successfully loaded.\n"));
     else print_to_output(_("Failed to load configuration file, you need to calibrate before activating the Wiimotes.\n"));
-
-    m_wii_manager.tolerances( m_configurator.right_click_time() );
-
-    m_wii_manager.events().left_clicked = sigc::ptr_fun(&wii_left_clicked);
-    m_wii_manager.events().right_button_down = sigc::ptr_fun(&wii_right_button_down);
-    m_wii_manager.events().right_button_up = sigc::ptr_fun(&wii_right_button_up);
-    m_wii_manager.events().begin_click_and_drag = sigc::ptr_fun(&wii_begin_click_and_drag);
-    m_wii_manager.events().end_click_and_drag = sigc::ptr_fun(&wii_end_click_and_drag);
-    m_wii_manager.events().mouse_moved = sigc::ptr_fun(&wii_mouse_moved);
 
     m_connect_events.start_each_connection.connect(
 	sigc::mem_fun(*this, &MainGtkWindow::wiicursormanager_connect_start_connection));
     m_connect_events.finish_each_connection.connect(
 	sigc::mem_fun(*this, &MainGtkWindow::wiicursormanager_connect_finish_connection));
     m_connect_events.done_connecting.connect(
-	sigc::mem_fun(*this, &MainGtkWindow::wiicursormanager_connect_done_connecting));
+	sigc::mem_fun(*this, &MainGtkWindow::wiicursormanager_connect_done_connecting)); 
+    m_wii_manager.events().left_clicked = sigc::ptr_fun(&wii_left_clicked);
+    m_wii_manager.events().right_button_down = sigc::ptr_fun(&wii_right_button_down);
+    m_wii_manager.events().right_button_up = sigc::ptr_fun(&wii_right_button_up);
+    m_wii_manager.events().begin_click_and_drag = sigc::ptr_fun(&wii_begin_click_and_drag);
+    m_wii_manager.events().end_click_and_drag = sigc::ptr_fun(&wii_end_click_and_drag);
+    m_wii_manager.events().mouse_moved = sigc::ptr_fun(&wii_mouse_moved);
 }
 
 int MainGtkWindow::run() {
