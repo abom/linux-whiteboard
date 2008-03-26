@@ -70,7 +70,6 @@ private:
     Gtk::Window* m_gtk_window;
     Gtk::DrawingArea* m_gtk_calibration_area;
     // Don't worry about those below, these are just for fun
-    sigc::connection m_wiimote_blinking_connection;
     unsigned int m_wiimote_blinking_lighted_up_led;
     int m_wiimote_blinking_led_direction;
 

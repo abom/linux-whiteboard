@@ -32,8 +32,7 @@ class Configurator {
 public:
     Configurator(Glib::RefPtr<Gnome::Glade::Xml>& refXml) :
 	m_refXml(refXml),
-	m_gtk_right_click_time(0),
-	m_right_click_time(0)
+	m_gtk_right_click_time(0)
     { }
 
     // NOTE: This function must be called *after* 'refXml' has
@@ -41,7 +40,7 @@ public:
     void init();
 
     delta_t_t const& right_click_time() const {
-	return m_right_click_time;
+	return m_config_data.right_click_time;
     }
 
     // NOTE: I will refrain from creating a separate class
@@ -55,11 +54,14 @@ private:
 
     /* Event handlers */
     void right_click_time_changed() {
-	m_right_click_time = m_gtk_right_click_time->get_value_as_int();
+	m_config_data.right_click_time = m_gtk_right_click_time->get_value_as_int();
     }
 
     /* Data */
-    delta_t_t m_right_click_time;
+    struct ConfigurationData {
+	delta_t_t right_click_time;
+	std::vector<matrix_t> transforms;
+    } m_config_data;
 };
 
 
