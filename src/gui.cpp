@@ -183,21 +183,19 @@ bool CalibrationWindow::calibration_area_exposed(GdkEventExpose* event) {
 	cr->fill();
     }
 
-    return true;
-}
-bool CalibrationWindow::redraw_calibration_area() {
-    m_gtk_calibration_area->queue_draw();
-
-    return true;
-}
-bool CalibrationWindow::wiimote_blinking() {
+    // NOTE: Updates the Wiimote LEDs as well
+    // In a sense, this is a GUI feature
     if ( (m_wiimote_blinking_lighted_up_led == 3) || (m_wiimote_blinking_lighted_up_led == 0) )
 	m_wiimote_blinking_led_direction = -m_wiimote_blinking_led_direction;
-
     // NOTE: We know there is only one wiimote here so no need for a loop
     unsigned int const leds[4] = {CWIID_LED1_ON, CWIID_LED2_ON, CWIID_LED3_ON, CWIID_LED4_ON};
     set_led_state(m_thread_data.wiimotes.front().wiimote, leds[m_wiimote_blinking_lighted_up_led]);
     m_wiimote_blinking_lighted_up_led += m_wiimote_blinking_led_direction;
+
+    return true;
+}
+bool CalibrationWindow::redraw_calibration_area() {
+    m_gtk_calibration_area->queue_draw();
 
     return true;
 }
@@ -255,19 +253,15 @@ bool CalibrationWindow::get_calibration_points(WiimoteCalibratedPoints& p_wii) {
 
     // Starts the main loop
     start_wiicursor_thread(m_thread_data);
-    sigc::connection redraw_sigc_connection =
+    sigc::connection redraw_connection =
 	Glib::signal_timeout().connect(
 	    sigc::mem_fun(*this, &CalibrationWindow::redraw_calibration_area), 100 );
-    m_wiimote_blinking_connection =
-	Glib::signal_timeout().connect(
-	    sigc::mem_fun(*this, &CalibrationWindow::wiimote_blinking), 100);
 
     gtk_kit.run(*m_gtk_window);
 
     // Finished at this point, whether succeeded or escaped by user
     set_led_state(m_thread_data.wiimotes.front().wiimote, WIIMOTE_LED_CONNECTED); // Resets the LEDs's state
-    m_wiimote_blinking_connection.disconnect();
-    redraw_sigc_connection.disconnect();
+    redraw_connection.disconnect();
     // NOTE: No need to finish_wiicursor_thread() here as it is handled by
     // quit() if user selected 'Quit' from the menu. It self-terminated otherwise.
 
