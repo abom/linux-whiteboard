@@ -26,6 +26,8 @@
 #include "gui.h"
 #include "matrix.h"
 #include "wiicursor.h"
+#include "wiicontrol.h"
+#include "configurator.h"
 
 
 struct WiiCursorManagerConnectEvents {
@@ -39,6 +41,7 @@ struct WiiCursorManagerConnectEvents {
 class WiiCursorManager {
 public:
     WiiCursorManager(WiiCursorManagerConnectEvents& events) :
+	m_thread_data( get_configurator().wiimotes() ),
 	m_wiis(m_thread_data.wiimotes),
 	m_cal_window(0),
 	m_last_connection_succeeded(false),
@@ -62,22 +65,10 @@ public:
     // Returns false if anyone of those failed to deactivate
     bool deactivate();
 
-    // Sets up tolerances
-    // NOTE: Should be removed
-    void tolerances(delta_t_t const& wait_tolerance) {
-	m_thread_data.wait_tolerance = &wait_tolerance;
-    }
-    // Mouse events
+    // Mouse events - To be handled by callers
     WiiEvents& events() {
 	return m_thread_data.events;
     }
-
-    // Loads configurations
-    // Returns true on success
-    bool load_config();
-    // Saves configurations
-    // Returns true on success
-    bool save_config() const;
 
     // General queries
     unsigned int connected() const {

@@ -152,7 +152,8 @@ bool CalibrationWindow::calibration_area_exposed(GdkEventExpose* event) {
     cr->arc(circle_time_pos.x, circle_time_pos.y, CIRCLE_RADIUS, 0, FULL_CIRCLE);
     cr->stroke();
     // 'Hand'?
-    double const hand_angle = FULL_CIRCLE * static_cast<double>(m_cal_data.waited) / static_cast<double>(*m_thread_data.wait_tolerance);
+    double const wait_tolerance = get_configurator().wait_tolerance();
+    double const hand_angle = FULL_CIRCLE * static_cast<double>(m_cal_data.waited) / wait_tolerance;
     cr->set_source_rgb(0.75, 1.0, 1.0);
     cr->set_line_width(2.0);
     cr->move_to(circle_time_pos.x, circle_time_pos.y);
@@ -207,15 +208,13 @@ void CalibrationWindow::quit() {
     m_gtk_window->hide();
 }
 
-CalibrationWindow::CalibrationWindow(
-    cwiid_wiimote_t* wiimote,
-    char const* user_message,
-    delta_t_t const& wait_tolerance) :
+CalibrationWindow::CalibrationWindow(cwiid_wiimote_t* wiimote, char const* user_message) :
     m_gtk_window(0),
     m_gtk_calibration_area(0),
     m_wiimote_blinking_lighted_up_led(0),
     m_wiimote_blinking_led_direction(-1),
-    m_user_message(user_message)
+    m_user_message(user_message),
+    m_thread_data(m_wiimote)
 {
     // Gets the widgets
     std::string const WINDOWS_DIR(WINDOWSDIR);
@@ -236,9 +235,7 @@ CalibrationWindow::CalibrationWindow(
     m_gtk_window->show();
 
     // Data
-    m_thread_data.wiimotes.push_back( WiimoteData(wiimote) );
-
-    m_thread_data.wait_tolerance = &wait_tolerance;
+    m_wiimote.push_back( WiimoteData(wiimote) );
 
     m_thread_data.events.right_button_down = sigc::mem_fun(*this, &CalibrationWindow::calibration_right_button_down);
     m_thread_data.events.mouse_moved = sigc::mem_fun(*this, &CalibrationWindow::calibration_mouse_moved);
@@ -260,6 +257,9 @@ bool CalibrationWindow::get_calibration_points(WiimoteCalibratedPoints& p_wii) {
     gtk_kit.run(*m_gtk_window);
 
     // Finished at this point, whether succeeded or escaped by user
+    // NOTE: A minor bug when user selects 'Quit' from the menu:
+    // 'Error setting LED state'. The wiimote pointer had probably
+    // been invalidated before CalWindow was notified.
     set_led_state(m_thread_data.wiimotes.front().wiimote, WIIMOTE_LED_CONNECTED); // Resets the LEDs's state
     redraw_connection.disconnect();
     // NOTE: No need to finish_wiicursor_thread() here as it is handled by

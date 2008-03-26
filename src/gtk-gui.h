@@ -24,17 +24,11 @@
 #include <gtkmm.h>
 #include <libglademm.h>
 #include <string>
-#include <ctime>
 #include <cstdio>
 #include <glib.h>
 
-#include "common.h"
-#include "matrix.h"
-#include "auxiliary.h"
-#include "gui.h"
 #include "wiicursormanager.h"
-#include "events.h"
-#include "gtk-configurator.h"
+#include "configurator.h"
 
 
 // NOTE: GUI stuff is allowed to be a bit messy since they are disposable
@@ -82,7 +76,7 @@ private:
     void sync_wiimote_state_connection_phase(bool starting); // If false then it has finished
 
     /* GUI */
-    Glib::RefPtr<Gnome::Glade::Xml> m_refXml;
+    //Glib::RefPtr<Gnome::Glade::Xml> m_refXml; // Not necessary
     // Main window
     Gtk::Main m_gtk_kit;
     Gtk::Window* m_gtk_main_window;
@@ -116,9 +110,9 @@ private:
     Glib::RefPtr<Gtk::TextTag> m_time_text_tag;
 
     /* Data */
-    WiiCursorManager m_wii_manager;
+    Configurator& m_configurator;
     WiiCursorManagerConnectEvents m_connect_events;
-    Configurator m_configurator;
+    WiiCursorManager m_wii_manager;
 };
 
 

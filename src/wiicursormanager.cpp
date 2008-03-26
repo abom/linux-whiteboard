@@ -70,7 +70,7 @@ bool WiiCursorManager::calibrate() {
 	char message[1024];
 	sprintf(message, _("Calibrating Wiimote #%d"), current_wii_index);
 
-	CalibrationWindow cal_window(iter->wiimote, message, *m_thread_data.wait_tolerance);
+	CalibrationWindow cal_window(iter->wiimote, message);
 	m_cal_window = &cal_window;
 	WiimoteCalibratedPoints p_wii;
 	if ( !cal_window.get_calibration_points(p_wii) ) {

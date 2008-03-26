@@ -22,7 +22,6 @@
 
 
 #include <X11/extensions/XTest.h>
-#include <cstdio>
 
 // Fakes mouse move and mouse buttons events
 void fake_move(int x, int y);

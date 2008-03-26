@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.2 on Mon Mar 24 15:27:09 2008 -->
+<!--Generated with glade3 3.4.2 on Wed Mar 26 01:01:24 2008 -->
 <glade-interface>
   <widget class="GtkWindow" id="main-window">
     <property name="visible">True</property>
@@ -313,7 +313,6 @@ Tu Anh Vuong &lt;VAnhTu1987@gmail.com&gt;</property>
     </child>
   </widget>
   <widget class="GtkWindow" id="connecting-window">
-    <property name="visible">True</property>
     <property name="title" translatable="yes">Connecting...</property>
     <property name="window_position">GTK_WIN_POS_CENTER</property>
     <property name="destroy_with_parent">True</property>

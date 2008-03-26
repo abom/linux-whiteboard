@@ -27,7 +27,7 @@ void* wiicursor_thread_func(void* ptr) {
                                                                                                                                                                
     WiiCursor wc;
     wc.events() = data.events;
-    wc.process(data.wiimotes, *data.wait_tolerance, data.thread_running); // The main loop
+    wc.process(data.wiimotes, data.thread_running); // The main loop
 
     for (std::vector<WiimoteData>::iterator iter = data.wiimotes.begin(); iter != data.wiimotes.end(); ++iter)
 	cwiid_disable(iter->wiimote, CWIID_FLAG_MESG_IFC);
@@ -103,11 +103,7 @@ void WiiCursor::finish_right_click_thread() {
 }
 
 
-void WiiCursor::process(
-	std::vector<WiimoteData>& wiimotes,
-        delta_t_t const& wait_tolerance,
-        bool const& running)
-{
+void WiiCursor::process(std::vector<WiimoteData>& wiimotes, bool const& running) {
     // Sets up the Wiimotes
     for (std::vector<WiimoteData>::iterator iter = wiimotes.begin(); iter != wiimotes.end(); ++iter) {
 	cwiid_enable(iter->wiimote, CWIID_FLAG_MESG_IFC);
@@ -115,7 +111,6 @@ void WiiCursor::process(
     }
 
     // Sets up itself
-    m_thread_data.wait_tolerance = &wait_tolerance;
     m_thread_data.running = &running; // No need to check anything here since running is a reference
 
     while (running) {

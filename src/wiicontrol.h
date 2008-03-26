@@ -25,7 +25,6 @@
 
 #include <cwiid.h>
 
-#include "matrix.h"
 #include "auxiliary.h"
 #include "common.h"
 
