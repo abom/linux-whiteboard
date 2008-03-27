@@ -130,9 +130,9 @@ MainGtkWindow::MainGtkWindow(int argc,char *argv[]) :
 
     /* Data */
     m_configurator.init(refXml);
-    if ( m_configurator.load_config() )
+    if ( m_configurator.load_other_config() )
 	print_to_output(_("Configurations successfully loaded.\n"));
-    else print_to_output(_("Failed to load configuration file, you need to calibrate before activating the Wiimotes.\n"));
+    else print_to_output(_("Failed to load configuration file.\n"));
 
     m_connect_events.start_each_connection.connect(
 	sigc::mem_fun(*this, &MainGtkWindow::wiicursormanager_connect_start_connection));
@@ -168,8 +168,13 @@ void MainGtkWindow::toggle_wiimote_clicked() {
 	// The stopping process will be handled in wiicursor_connect_done_connecting()
     }
     else {
+	// Activation
 	if ( m_wii_manager.activated() )
 	    toggle_activation_clicked();
+	// Configurations
+	// NOTE: We don't check anything here because we will *not* do anything if it fails
+	m_configurator.save_config();
+	// Connections
 	if ( m_wii_manager.disconnect() )
 	    print_to_output(_("Successfully disconnected all Wiimotes.\n"));
 	else print_to_output(_("There was an error disconnecting the Wiimotes. Hell's broken loose!!1.\n"));
@@ -188,12 +193,8 @@ void MainGtkWindow::toggle_activation_clicked() {
     }
 }
 void MainGtkWindow::calibrate_clicked() {
-    if ( m_wii_manager.calibrate() ) {
-	if ( m_configurator.save_config() )
-	    print_to_output(_("Configurations saved.\n"));
-	else print_to_output(_("Failed to save configuration file.\n"));
+    if ( m_wii_manager.calibrate() )
 	print_to_output(_("Calibration succeeded.\n"));
-    }
     else print_to_output(_("User escaped or there was an error during calibration.\n"));
 }
 void MainGtkWindow::status_icon_clicked() {
@@ -204,10 +205,8 @@ void MainGtkWindow::status_icon_popup(guint button, guint32 activate_time) {
 }
 void MainGtkWindow::sim_quit_clicked() {
     // Cleans up as needed
-    m_wii_manager.disconnect();
-
-    // NOTE: We don't check anything here because we can do nothing if it fails
-    m_configurator.save_config();
+    if ( m_wii_manager.connected() )
+	toggle_wiimote_clicked();
 
     m_gtk_kit.quit();
 }
@@ -259,8 +258,14 @@ void MainGtkWindow::wiicursormanager_connect_done_connecting() {
     // WARNING: C function. I'd have used std::ostringstream if not for l10n.
     if (number_of_connected) {
 	char out[1024];
-	sprintf(out, _("Successfully connected to %d Wiimote(s). Click 'Activate' to use your infrared pen.\n"), number_of_connected);
+	sprintf(out, _("Successfully connected to %d Wiimote(s). Loading all Wiimotes's configurations...\n"), number_of_connected);
 	print_to_output(out);
+
+	if ( m_configurator.load_wiimotes_config() )
+	    print_to_output(_("Done!. Click 'Activate' to use your infrared pen.\n"));
+	else print_to_output(_( "Failed."
+				" Please check if you have the same number of Wiimotes"
+				" as earlier. You need to calibrate before activating.\n"));
 
 	sync_wiimote_state(true);
     }

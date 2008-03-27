@@ -43,9 +43,63 @@ void Configurator::init(Glib::RefPtr<Gnome::Glade::Xml>& refXml) {
     m_gtk_right_click_time->signal_value_changed().connect( sigc::mem_fun(*this, &Configurator::right_click_time_changed) );
 }
 
-bool Configurator::load_config() {
-    return false;
+bool Configurator::load_other_config() {
+    bool ret = true;
+
+    try {
+	ConfigFileParser config( config_file_path() );
+
+	// CONFIG_RIGHT_CLICK_TIME
+	try {
+	    m_gtk_right_click_time->set_value( config.getValue<int>(CONFIG_RIGHT_CLICK_TIME) );
+	} catch(ConfigFileParser::KeyNotFound) {
+	    printf("Configuration key '%s' not found.\n", CONFIG_RIGHT_CLICK_TIME);
+	    ret = false;
+	}
+    } catch(ConfigFileParser::FileNotFound) {
+	printf("Configuration file not found.\n");
+	ret = false;
+    }
+
+    return ret;
+}
+bool Configurator::load_wiimotes_config() {
+    bool ret = true;
+
+    try {
+	ConfigFileParser config( config_file_path() );
+
+	// CONFIG_MATRIX
+	try {
+	    std::vector<WiimoteData>& wiis = m_config_data.wiimotes;
+	    for (unsigned int i = 0; i != wiis.size(); ++i)
+		wiis[i].transform =
+		    construct_matrix_from_key_value( config.getValue<std::string>(construct_matrix_key_name(i)) );
+	} catch(ConfigFileParser::KeyNotFound) {
+	    printf("Matrix configuration key not found.\n");
+	    ret = false;
+	}
+    } catch(ConfigFileParser::FileNotFound) {
+	printf("Configuration file not found.\n");
+	ret = false;
+    }
+
+    return ret;
 }
 bool Configurator::save_config() {
-    return false;
+    // WARNING: Not checking for anything here
+
+    ConfigFileParser config;
+
+    // CONFIG_RIGHT_CLICK_TIME
+    config.add<unsigned int>(CONFIG_RIGHT_CLICK_TIME, m_config_data.wait_tolerance);
+    // CONFIG_MATRIX
+    std::vector<WiimoteData> const& wiis = m_config_data.wiimotes;
+    for (unsigned int i = 0; i != wiis.size(); ++i)
+	config.add<std::string>( construct_matrix_key_name(i), construct_matrix_key_value(wiis[i].transform) );
+
+    config.saveCfgFile( config_file_path() );
+
+    // NOTE: Always returns true for now
+    return true;
 }
