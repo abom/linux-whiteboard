@@ -1,3 +1,15 @@
+2008/03/27:
+ - Version bumped to 0.3 .
+ - Eliminated motion jerkiness.
+ - Can tolerate short disappearances of IR signals.
+ - Application's launcher now shows up on the GNOME and KDE menu, and others
+   which are compatible with the X Desktop Sepcification.
+ - Added a PNG icon for KDE users.
+ - Major GUI improvements.
+ - Configurations saving/loading are back.
+ - Some settings can be changed in real-time.
+ - Current Wiimotes being calibrated can blink to notice users.
+
 2008/03/13:
  - Added supports for multiple Wiimotes.
  - No loading/saving configuration file yet, this
