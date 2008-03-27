@@ -83,7 +83,6 @@ public:
 private:
     WiiThreadFuncData m_thread_data; // For all Wiimotes
     std::vector<WiimoteData>& m_wiis; // To not have to look at m_thread_data all the time
-    typedef std::vector<WiimoteData>::iterator WiimoteDataIterator;
     // NOTE: Basically a hack, because I don't want to keep a real cal_window around
     // This is needed because if user closes the app, we have to notify it somehow.
     CalibrationWindow* m_cal_window;

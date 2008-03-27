@@ -26,10 +26,10 @@
 #include <string>
 #include <cstdlib>
 #include <cwiid.h>
-#include <confuse.h>
 
 #include "auxiliary.h"
 #include "matrix.h"
+#include "ConfigFileParser.h"
 
 
 std::string config_file_path();
@@ -51,7 +51,11 @@ struct WiimoteData {
     cwiid_wiimote_t* wiimote;
     matrix_t transform;
 };
+typedef std::vector<WiimoteData>::iterator WiimoteDataIterator;
 
+// Configuration key types
+#define CONFIG_RIGHT_CLICK_TIME "right_click_time"
+#define CONFIG_MATRIX "matrix"
 
 // Handles configurations
 // NOTE: We should have a separate Configurator class
@@ -78,18 +82,36 @@ public:
 	return m_config_data.wiimotes;
     }
 
-    // NOTE: Configurator class's members
-    bool load_config();
+    // NOTE: Should be Configurator class's members
+    bool load_other_config();
+    bool load_wiimotes_config();
     bool save_config();
 private:
-    /* GUI */
-    Gtk::SpinButton* m_gtk_right_click_time;
-
     /* Event handlers */
     void right_click_time_changed() {
 	m_config_data.wait_tolerance = m_gtk_right_click_time->get_value_as_int();
     }
 
+    /* Helpers */
+    std::string construct_matrix_key_name(unsigned int index) {
+	std::ostringstream ret;
+	ret << CONFIG_MATRIX << index;
+	return ret.str();
+    }
+    std::string construct_matrix_key_value(matrix_t const& transform) {
+	std::ostringstream ret;
+	ret << '\"' << transform << '\"';
+	return ret.str();
+    }
+    matrix_t construct_matrix_from_key_value(std::string const& key_value) {
+	matrix_t ret(TRANSFORM_MATRIX_ROWS, TRANSFORM_MATRIX_COLS);
+	std::istringstream stream(key_value);
+	stream >> ret;
+	return ret;
+    }
+
+    /* GUI */
+    Gtk::SpinButton* m_gtk_right_click_time;
     /* Data */
     struct ConfigurationData { // Holds everything that can be saved/loaded
 	delta_t_t wait_tolerance;
