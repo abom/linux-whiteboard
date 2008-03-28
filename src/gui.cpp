@@ -115,13 +115,24 @@ bool CalibrationWindow::calibration_area_exposed(GdkEventExpose* event) {
     if (ir_pos.x != INVALID_IR_POS) { // There's no point in drawing an invalid IR pointer
 	cr->set_source_rgb(1.0, 1.0, 0.0);
 	cr->set_line_width(2.0);
-	point_t const MAX_WII(1020, 760);
-	point_t const ir_pointer_center(
-		(screen_center.x-WII_VIEWING_AREA_RADIUS) + static_cast<int>( ((float) ir_pos.x / (float) MAX_WII.x)*(WII_VIEWING_AREA_RADIUS*2)),
-		(screen_center.y+WII_VIEWING_AREA_RADIUS) - static_cast<int>( ((float) ir_pos.y / (float) MAX_WII.y)*(WII_VIEWING_AREA_RADIUS*2)) );
+	point_t const ir_pointer_center( wii_ir_pos_to_screen_pos(screen_center, WII_VIEWING_AREA_RADIUS, ir_pos) );
 	cr->rectangle(ir_pointer_center.x-1.0, ir_pointer_center.y-1.0, 1.0, 1.0);
 	cr->stroke();
     }
+    // Lines connecting those IR pointers's locations
+    cr->set_source_rgb(1.0, 1.0, 0.25);
+    cr->set_line_width(2.0);
+    for (unsigned int i = 0; i != m_cal_data.active_point; ++i) {
+	point_t const wii_ir_pos_current(
+		wii_ir_pos_to_screen_pos(screen_center, WII_VIEWING_AREA_RADIUS, m_cal_data.p_wii.p[i]) );
+	cr->line_to(wii_ir_pos_current.x, wii_ir_pos_current.y);
+    }
+    if (m_cal_data.active_point == WIIMOTE_NUM_CALIBRATED_POINTS) { // NOTE: Duplication :(
+	point_t const wii_ir_pos_first(
+	    wii_ir_pos_to_screen_pos(screen_center, WII_VIEWING_AREA_RADIUS, m_cal_data.p_wii.p[0]) );
+	cr->line_to(wii_ir_pos_first.x, wii_ir_pos_first.y);
+    }
+    cr->stroke();
 
     // Calibration points
     cr->set_source_rgb(1.0, 1.0, 1.0);

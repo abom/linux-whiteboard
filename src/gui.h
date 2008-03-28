@@ -64,6 +64,15 @@ private:
     void calibration_mouse_up(WiiEventData const& data);
     void calibration_begin_click_and_drag(WiiEventData const& data);
 
+    /* Helpers */
+    point_t wii_ir_pos_to_screen_pos(point_t const& screen_center, unsigned int wii_area_radius, point_t const& ir_pos) {
+	// NOTE: Needs improvement, it looks fugly
+	point_t const MAX_WII(1020, 760);
+	return point_t(
+	    (screen_center.x-wii_area_radius) + static_cast<int>( ((float) ir_pos.x / (float) MAX_WII.x)*(wii_area_radius*2)),
+	    (screen_center.y+wii_area_radius) - static_cast<int>( ((float) ir_pos.y / (float) MAX_WII.y)*(wii_area_radius*2)) );
+    }
+
     /* GUI stuff */
     Gtk::Window* m_gtk_window;
     Gtk::DrawingArea* m_gtk_calibration_area;
