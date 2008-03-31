@@ -1,18 +1,17 @@
-# translation of ca.po to català
-# German translations for Wiimote Whiteboard package.
+# Catalan translations for Wiimote Whiteboard package.
 # Copyright (C) 2008 THE Wiimote Whiteboard'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the Wiimote Whiteboard package.
 #
-# VAnhTu1987 <matthiasgies@gmx.de>, 2008.
+# VAnhTu1987 <VAnhTu1987@gmail.com>, 2008.
 # Antoni Ubieto <antoni.ubieto@gmail.com>, 2008.
 msgid ""
 msgstr ""
 "Project-Id-Version: ca\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-03-31 01:56+0100\n"
+"POT-Creation-Date: 2008-04-01 00:09+0100\n"
 "PO-Revision-Date: 2008-03-30 15:38+0200\n"
 "Last-Translator: Antoni Ubieto <antoni.ubieto@gmail.com>\n"
-"Language-Team: català <ca@li.org>\n"
+"Language-Team: català\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -83,8 +82,8 @@ msgid ""
 "Failed. Please check if you have the same number of Wiimotes as earlier. You "
 "need to calibrate before activating.\n"
 msgstr ""
-"Ha fallat. Comproveu si us plau que teniu el mateix nombre de Wimootes que "
-"abans. Heu de calibrar abans d'activar.\n"
+"Ha fallat. Comproveu que teniu el mateix nombre de Wimootes que anteriorment."
+"Heu de calibrar abans d'activar.\n"
 
 #: ../src/gtk-gui.cpp:272
 msgid "Unable to connect to any Wiimote.\n"
@@ -128,7 +127,7 @@ msgstr "Connectant..."
 
 #: ../src/windows/main-window.glade.h:5
 msgid "Control your mouse pointer with the Wiimote."
-msgstr "Controleu el punter de ratolí amb el Wiimote."
+msgstr "Controleu el punter del ratolí amb el Wiimote."
 
 #: ../src/windows/main-window.glade.h:6
 msgid "Copyright © 2007-2008 The Whiteboard authors"
@@ -136,7 +135,7 @@ msgstr "Copyright © 2007-2008 Els autors de Whiteboard (Pissarra)"
 
 #: ../src/windows/main-window.glade.h:8
 msgid "Please press both <b>1</b> and <b>2</b> buttons on your Wiimote."
-msgstr "Premeu alhora els botons <b>1</b>i <b>2</b> del vostre Wiimote."
+msgstr "Premeu alhora els botons <b>1</b> i <b>2</b> del vostre Wiimote."
 
 #: ../src/windows/main-window.glade.h:9
 msgid "Right-click waiting _time (in ms):"
@@ -189,6 +188,3 @@ msgstr "Premeu 'Escape' (Esc) per sortir de la calibració"
 #, c-format
 msgid "Calibrating Wiimote #%d"
 msgstr "Calibrant el Wiimote #%d"
-
-#~ msgid "Tu Anh Vuong <VAnhTu1987@gmail.com>"
-#~ msgstr "Tu Anh Vuong <VAnhTu1987@gmail.com>"

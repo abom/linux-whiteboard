@@ -1,144 +1,149 @@
-# Vietnamese translations for Wiimote Whiteboard package.
+# Spanish translations for Wiimote Whiteboard package.
 # Copyright (C) 2008 THE Wiimote Whiteboard'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the Wiimote Whiteboard package.
-# VAnhTu1987 <VAnhTu1987@gmail.com>, 2008.
 #
+# VAnhTu1987 <VAnhTu1987@gmail.com>, 2008.
+# Antoni Ubieto <antoni.ubieto@gmail.com>, 2008.
 msgid ""
 msgstr ""
-"Project-Id-Version: Wiimote Whiteboard 0.3\n"
+"Project-Id-Version: es\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-04-01 00:09+0100\n"
-"PO-Revision-Date: 2008-03-09 17:16+0000\n"
-"Last-Translator: VAnhTu1987 <VAnhTu1987@gmail.com>\n"
-"Language-Team: Vietnamese\n"
+"PO-Revision-Date: 2008-03-30 15:38+0200\n"
+"Last-Translator: Antoni Ubieto <antoni.ubieto@gmail.com>\n"
+"Language-Team: español\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: KBabel 1.11.4\n"
 
 #: ../src/gtk-gui.cpp:134
 msgid "Configurations successfully loaded.\n"
-msgstr "Đã nạp xong các thiết lập.\n"
+msgstr "Configuraciones cargadas.\n"
 
 #: ../src/gtk-gui.cpp:135
 msgid "Failed to load configuration file.\n"
-msgstr "Không nạp được các thiết lập cũ.\n"
+msgstr "No se ha cargado el fichero de configuración.\n"
 
 #. NOTE: This is mainly to force the GUI to update itself
 #. WARNING: Somehow I still feel the problem has not
 #. been completely solved.
 #: ../src/gtk-gui.cpp:163
 msgid "Preparing to connect...\n"
-msgstr "Chuẩn bị kết nối...\n"
+msgstr "Preparando para conectar...\n"
 
 #: ../src/gtk-gui.cpp:179
 msgid "Successfully disconnected all Wiimotes.\n"
-msgstr "Ngắt kết nối thành công.\n"
+msgstr "Se han desconectado todos los Wiimotes.\n"
 
 #: ../src/gtk-gui.cpp:180
 msgid ""
 "There was an error disconnecting the Wiimotes. Hell's broken loose!!1.\n"
-msgstr ""
-"Không ngắt kết nối với Wiimote được!. Bạn nên khởi động lại chương trình.\n"
+msgstr "Error en la desconnexión de los Wiimotes!!.\n"
 
 #: ../src/gtk-gui.cpp:197
 msgid "Calibration succeeded.\n"
-msgstr "Đã chỉnh xong Wiimote.\n"
+msgstr "Calibración correcta.\n"
 
 #: ../src/gtk-gui.cpp:198
 msgid "User escaped or there was an error during calibration.\n"
-msgstr "Người dùng đã bấm nút thoát hoặc có lỗi khi chỉnh Wiimote.\n"
+msgstr ""
+"El usuario ha salido (Esc) o ha habido un error durante la calibración.\n"
 
 #: ../src/gtk-gui.cpp:236
 #, c-format
 msgid "Connecting to Wiimote #%d... "
-msgstr "Đang kết nối tới Wiimote số %d... "
+msgstr "Connectando con el Wiimote #%d... "
 
 #: ../src/gtk-gui.cpp:248
 msgid "Succeeded!.\n"
-msgstr "Kết nối thành công!.\n"
+msgstr "¡Correcto!.\n"
 
 #: ../src/gtk-gui.cpp:248
 msgid "Failed.\n"
-msgstr "Không kết nối được.\n"
+msgstr "Ha fallado.\n"
 
 #: ../src/gtk-gui.cpp:261
 #, c-format
 msgid ""
 "Successfully connected to %d Wiimote(s). Loading all Wiimotes's "
 "configurations...\n"
-msgstr "%d Wiimote đã được kết nối. Đang nạp thiết lập của từng Wiimote....\n"
+msgstr ""
+"Connectado correctamente con el(los) Wiimote(s) %d. Cargando las "
+"configuraciones de todos los Wiimotes....\n"
 
 #: ../src/gtk-gui.cpp:265
 msgid "Done!. Click 'Activate' to use your infrared pen.\n"
-msgstr "Thành công!. Bấm 'Kích hoạt' để dùng bút nhập.\n"
+msgstr "Hecho!. Clicad 'Activar' para utilizar el puntero infrarojo.\n"
 
 #: ../src/gtk-gui.cpp:266
 msgid ""
 "Failed. Please check if you have the same number of Wiimotes as earlier. You "
 "need to calibrate before activating.\n"
 msgstr ""
-"Không đọc được các thiết lập cũ. Bạn cần chỉnh Wiimote trước khi sử dụng.\n"
+"Ha fallado. Comprovad que haya el mismo número de Wimootes que "
+"anteriormente. Se tiene que calibrar antes que activar.\n"
 
 #: ../src/gtk-gui.cpp:272
 msgid "Unable to connect to any Wiimote.\n"
-msgstr "Không kết nối được với Wiimote nào cả.\n"
+msgstr "No se puede conectar con ningún Wiimote.\n"
 
 #: ../src/gtk-gui.cpp:313 ../src/windows/main-window.glade.h:7
 msgid "De_activate"
-msgstr "Giải hoạt (_A)"
+msgstr "Des_activar"
 
 #: ../src/gtk-gui.cpp:313 ../src/windows/main-window.glade.h:16
 msgid "_Activate"
-msgstr "Kích hoạt (_A)"
+msgstr "_Activar"
 
 #: ../src/whiteboard.desktop.in.h:1
 msgid "Control your mouse pointer with the Wiimote"
-msgstr "Điều khiển con trỏ chuột bằng Wiimote"
+msgstr "Controlad el puntero del ratón con el Wiimote"
 
 #: ../src/whiteboard.desktop.in.h:2
 msgid "Wiimote Whiteboard"
-msgstr "Màn Hình Cảm Ứng Dùng Wiimote"
+msgstr "Pizarra para Wiimote (Wiimote Whiteboard)"
 
 #: ../src/windows/calibration-window.glade.h:1
 msgid "Wiimote Calibration"
-msgstr "Chỉnh Wiimote"
+msgstr "Calibración del Wiimote"
 
 #: ../src/windows/main-window.glade.h:1
 msgid "<b>_Settings</b>"
-msgstr "<b>Tùy Chọn (_S)</b>"
+msgstr "<b>_Ajustes</b>"
 
 #: ../src/windows/main-window.glade.h:2
 msgid "About Whiteboard"
-msgstr "Thông Tin Về Chương Trình"
+msgstr "Acerca de Pizarra (Whiteboard)"
 
 #: ../src/windows/main-window.glade.h:3
 msgid "Calib_rate"
-msgstr "Chỉnh Wiimote (_R)"
+msgstr "Vel_cal"
 
 #: ../src/windows/main-window.glade.h:4
 msgid "Connecting..."
-msgstr "Đang Kết Nối..."
+msgstr "Connectando..."
 
 #: ../src/windows/main-window.glade.h:5
 msgid "Control your mouse pointer with the Wiimote."
-msgstr "Điều khiển con trỏ chuột bằng Wiimote."
+msgstr "Controlad el puntero del ratón con el Wiimote."
 
 #: ../src/windows/main-window.glade.h:6
 msgid "Copyright © 2007-2008 The Whiteboard authors"
-msgstr "Bản quyên năm 2007-2008 thuộc về các lập trình viên của Whiteboard"
+msgstr "Copyright © 2007-2008 Los autores de Whiteboard (Pizarra)"
 
 #: ../src/windows/main-window.glade.h:8
 msgid "Please press both <b>1</b> and <b>2</b> buttons on your Wiimote."
-msgstr "Hãy bấm hai nút <b>1</b> và <b>2</b> trên Wiimote của bạn."
+msgstr "Pulsad a la vez los botones <b>1</b> y <b>2</b> del Wiimote."
 
 #: ../src/windows/main-window.glade.h:9
 msgid "Right-click waiting _time (in ms):"
-msgstr "Bấm nút phải chuột cần đợi trong (theo mili giây) (_T): "
+msgstr "Tiempo de espera para el clic derecho (en ms):"
 
 #: ../src/windows/main-window.glade.h:10
 msgid "Whiteboard"
-msgstr "Màn hình cảm ứng dùng Wiimote"
+msgstr "Pizarra (Whiteboard)"
 
 #: ../src/windows/main-window.glade.h:11
 msgid ""
@@ -156,19 +161,30 @@ msgid ""
 "Glade; if not, write to the Free Software Foundation, Inc., 51 Franklin "
 "Street, Fifth Floor, Boston, MA 02110-1301, USA."
 msgstr ""
-"Bản quyền GPL 2 và các phiên bản sau của GPL. Xin vào trang Web của họ để "
-"biết thêm chi tiết."
+"Whiteboard is free software; you can redistribute it and/or modify it under "
+"the terms of the GNU General Public Licence as published by the Free "
+"Software Foundation; either version 2 of the Licence, or (at your option) "
+"any later version.\n"
+"\n"
+"Whiteboard is distributed in the hope that it will be useful, but WITHOUT "
+"ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or "
+"FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public Licence for "
+"more details.\n"
+"\n"
+"You should have received a copy of the GNU General Public Licence along with "
+"Glade; if not, write to the Free Software Foundation, Inc., 51 Franklin "
+"Street, Fifth Floor, Boston, MA 02110-1301, USA."
 
 #: ../src/windows/main-window.glade.h:17
 msgid "_Help"
-msgstr "Trợ giúp (_H)"
+msgstr "_Ayuda"
 
 #. Draws a static informational message
 #: ../src/gui.cpp:94
 msgid "Press 'Escape' (Esc) to quit calibration"
-msgstr "Bấm nút 'Escape' (Esc) để dừng"
+msgstr "Pulsad 'Escape' (Esc) para salir de la calibración"
 
 #: ../src/wiicursormanager.cpp:71
 #, c-format
 msgid "Calibrating Wiimote #%d"
-msgstr "Đang chỉnh Wiimote số %d"
+msgstr "Calibrando el Wiimote #%d"
