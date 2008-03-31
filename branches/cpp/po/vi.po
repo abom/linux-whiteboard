@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Wiimote Whiteboard 0.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-03-31 01:47+0100\n"
+"POT-Creation-Date: 2008-03-31 01:56+0100\n"
 "PO-Revision-Date: 2008-03-09 17:16+0000\n"
 "Last-Translator: VAnhTu1987 <VAnhTu1987@gmail.com>\n"
 "Language-Team: Vietnamese\n"
@@ -88,7 +88,7 @@ msgstr "Không kết nối được với Wiimote nào cả.\n"
 msgid "De_activate"
 msgstr "Giải hoạt (_A)"
 
-#: ../src/gtk-gui.cpp:313 ../src/windows/main-window.glade.h:17
+#: ../src/gtk-gui.cpp:313 ../src/windows/main-window.glade.h:16
 msgid "_Activate"
 msgstr "Kích hoạt (_A)"
 
@@ -137,14 +137,10 @@ msgid "Right-click waiting _time (in ms):"
 msgstr "Bấm nút phải chuột cần đợi trong (theo mili giây) (_T): "
 
 #: ../src/windows/main-window.glade.h:10
-msgid "Tu Anh Vuong <VAnhTu1987@gmail.com>"
-msgstr "Vương Anh Tú <VAnhTu1987@gmail.com>"
-
-#: ../src/windows/main-window.glade.h:11
 msgid "Whiteboard"
 msgstr "Màn hình cảm ứng dùng Wiimote"
 
-#: ../src/windows/main-window.glade.h:12
+#: ../src/windows/main-window.glade.h:11
 msgid ""
 "Whiteboard is free software; you can redistribute it and/or modify it under "
 "the terms of the GNU General Public Licence as published by the Free "
@@ -163,7 +159,7 @@ msgstr ""
 "Bản quyền GPL 2 và các phiên bản sau của GPL. Xin vào trang Web của họ để "
 "biết thêm chi tiết."
 
-#: ../src/windows/main-window.glade.h:18
+#: ../src/windows/main-window.glade.h:17
 msgid "_Help"
 msgstr "Trợ giúp (_H)"
 
@@ -176,6 +172,9 @@ msgstr "Bấm nút 'Escape' (Esc) để dừng"
 #, c-format
 msgid "Calibrating Wiimote #%d"
 msgstr "Đang chỉnh Wiimote số %d"
+
+#~ msgid "Tu Anh Vuong <VAnhTu1987@gmail.com>"
+#~ msgstr "Vương Anh Tú <VAnhTu1987@gmail.com>"
 
 #~ msgid "Configurations saved.\n"
 #~ msgstr "Đã lưu các thiết lập mới.\n"
