@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.2 on Mon Mar 31 01:50:02 2008 -->
+<!--Generated with glade3 3.4.2 on Mon Mar 31 01:56:33 2008 -->
 <glade-interface>
   <widget class="GtkWindow" id="main-window">
     <property name="visible">True</property>
@@ -292,7 +292,7 @@ Whiteboard is distributed in the hope that it will be useful, but WITHOUT ANY WA
 You should have received a copy of the GNU General Public Licence along with Glade; if not, write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.</property>
     <property name="authors">Pere Negre &lt;?&gt;
 Tu Anh Vuong &lt;VAnhTu1987@gmail.com&gt;</property>
-    <property name="translator_credits" translatable="yes">Tu Anh Vuong &lt;VAnhTu1987@gmail.com&gt;
+    <property name="translator_credits">Tu Anh Vuong &lt;VAnhTu1987@gmail.com&gt;
 Antoni Ubieto &lt;antoni.ubieto@gmail.com&gt;</property>
     <property name="logo_icon_name">whiteboard</property>
     <property name="wrap_license">True</property>

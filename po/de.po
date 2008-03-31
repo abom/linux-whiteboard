@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Wiimote Whiteboard 0.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-03-31 01:47+0100\n"
+"POT-Creation-Date: 2008-03-31 01:56+0100\n"
 "PO-Revision-Date: 2008-03-24 14:51+0000\n"
 "Last-Translator: VAnhTu1987 <matthiasgies@gmx.de>\n"
 "Language-Team: German\n"
@@ -86,7 +86,7 @@ msgstr ""
 msgid "De_activate"
 msgstr ""
 
-#: ../src/gtk-gui.cpp:313 ../src/windows/main-window.glade.h:17
+#: ../src/gtk-gui.cpp:313 ../src/windows/main-window.glade.h:16
 msgid "_Activate"
 msgstr ""
 
@@ -135,14 +135,10 @@ msgid "Right-click waiting _time (in ms):"
 msgstr ""
 
 #: ../src/windows/main-window.glade.h:10
-msgid "Tu Anh Vuong <VAnhTu1987@gmail.com>"
-msgstr ""
-
-#: ../src/windows/main-window.glade.h:11
 msgid "Whiteboard"
 msgstr ""
 
-#: ../src/windows/main-window.glade.h:12
+#: ../src/windows/main-window.glade.h:11
 msgid ""
 "Whiteboard is free software; you can redistribute it and/or modify it under "
 "the terms of the GNU General Public Licence as published by the Free "
@@ -159,7 +155,7 @@ msgid ""
 "Street, Fifth Floor, Boston, MA 02110-1301, USA."
 msgstr ""
 
-#: ../src/windows/main-window.glade.h:18
+#: ../src/windows/main-window.glade.h:17
 msgid "_Help"
 msgstr ""
 
