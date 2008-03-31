@@ -1,3 +1,10 @@
+2008/03/31:
+ - Version bumped to 0.3.1 .
+ - Draws a utilized tracking area in the calibration window.
+ - Fixed version number in the About dialog.
+ - Catalan translation added, thanks to Antoni Ubieto
+ <antoni.ubieto@gmail.com> .
+
 2008/03/27:
  - Version bumped to 0.3 .
  - Eliminated motion jerkiness.

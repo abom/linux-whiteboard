@@ -1,65 +1,69 @@
+# translation of ca.po to català
 # German translations for Wiimote Whiteboard package.
 # Copyright (C) 2008 THE Wiimote Whiteboard'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the Wiimote Whiteboard package.
-# VAnhTu1987 <matthiasgies@gmx.de>, 2008.
 #
+# VAnhTu1987 <matthiasgies@gmx.de>, 2008.
+# Antoni Ubieto <antoni.ubieto@gmail.com>, 2008.
 msgid ""
 msgstr ""
-"Project-Id-Version: Wiimote Whiteboard 0.3\n"
+"Project-Id-Version: ca\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-03-31 01:47+0100\n"
-"PO-Revision-Date: 2008-03-24 14:51+0000\n"
-"Last-Translator: VAnhTu1987 <matthiasgies@gmx.de>\n"
-"Language-Team: German\n"
+"PO-Revision-Date: 2008-03-30 15:38+0200\n"
+"Last-Translator: Antoni Ubieto <antoni.ubieto@gmail.com>\n"
+"Language-Team: català <ca@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: KBabel 1.11.4\n"
 
 #: ../src/gtk-gui.cpp:134
 msgid "Configurations successfully loaded.\n"
-msgstr ""
+msgstr "Configuracions carregades.\n"
 
 #: ../src/gtk-gui.cpp:135
 msgid "Failed to load configuration file.\n"
-msgstr ""
+msgstr "No s'ha carregat el fitxer de configuració.\n"
 
 #. NOTE: This is mainly to force the GUI to update itself
 #. WARNING: Somehow I still feel the problem has not
 #. been completely solved.
 #: ../src/gtk-gui.cpp:163
 msgid "Preparing to connect...\n"
-msgstr ""
+msgstr "Preparant per connectar...\n"
 
 #: ../src/gtk-gui.cpp:179
 msgid "Successfully disconnected all Wiimotes.\n"
-msgstr ""
+msgstr "S'han desconnectat tots els Wiimotes.\n"
 
 #: ../src/gtk-gui.cpp:180
 msgid ""
 "There was an error disconnecting the Wiimotes. Hell's broken loose!!1.\n"
-msgstr ""
+msgstr "Errada en la desconnexió dels Wiimotes!!.\n"
 
 #: ../src/gtk-gui.cpp:197
 msgid "Calibration succeeded.\n"
-msgstr ""
+msgstr "Calibració correcta.\n"
 
 #: ../src/gtk-gui.cpp:198
 msgid "User escaped or there was an error during calibration.\n"
 msgstr ""
+"L'usuari ha sortit (Esc) o hi ha hagut una errada durant la calibració.\n"
 
 #: ../src/gtk-gui.cpp:236
 #, c-format
 msgid "Connecting to Wiimote #%d... "
-msgstr ""
+msgstr "Connectant amb el Wiimote #%d... "
 
 #: ../src/gtk-gui.cpp:248
 msgid "Succeeded!.\n"
-msgstr ""
+msgstr "Correcte!.\n"
 
 #: ../src/gtk-gui.cpp:248
 msgid "Failed.\n"
-msgstr ""
+msgstr "Ha fallat.\n"
 
 #: ../src/gtk-gui.cpp:261
 #, c-format
@@ -67,80 +71,84 @@ msgid ""
 "Successfully connected to %d Wiimote(s). Loading all Wiimotes's "
 "configurations...\n"
 msgstr ""
+"Connectat correctament amb el(s) Wiimote(s) %d. Carregant les configuracions "
+"de tots els Wiimotes....\n"
 
 #: ../src/gtk-gui.cpp:265
 msgid "Done!. Click 'Activate' to use your infrared pen.\n"
-msgstr ""
+msgstr "Fet!. Cliqueu 'Activar' per utilitzar el punter infraroig.\n"
 
 #: ../src/gtk-gui.cpp:266
 msgid ""
 "Failed. Please check if you have the same number of Wiimotes as earlier. You "
 "need to calibrate before activating.\n"
 msgstr ""
+"Ha fallat. Comproveu si us plau que teniu el mateix nombre de Wimootes que "
+"abans. Heu de calibrar abans d'activar.\n"
 
 #: ../src/gtk-gui.cpp:272
 msgid "Unable to connect to any Wiimote.\n"
-msgstr ""
+msgstr "No es pot connectar amb cap Wiimote.\n"
 
 #: ../src/gtk-gui.cpp:313 ../src/windows/main-window.glade.h:7
 msgid "De_activate"
-msgstr ""
+msgstr "Des_activar"
 
 #: ../src/gtk-gui.cpp:313 ../src/windows/main-window.glade.h:17
 msgid "_Activate"
-msgstr ""
+msgstr "_Activar"
 
 #: ../src/whiteboard.desktop.in.h:1
 msgid "Control your mouse pointer with the Wiimote"
-msgstr ""
+msgstr "Controleu el punter de ratolí amb el Wiimote"
 
 #: ../src/whiteboard.desktop.in.h:2
 msgid "Wiimote Whiteboard"
-msgstr ""
+msgstr "Pissarra per Wiimote (Wiimote Whiteboard)"
 
 #: ../src/windows/calibration-window.glade.h:1
 msgid "Wiimote Calibration"
-msgstr ""
+msgstr "Calibració del Wiimote"
 
 #: ../src/windows/main-window.glade.h:1
 msgid "<b>_Settings</b>"
-msgstr ""
+msgstr "<b>_Ajustos</b>"
 
 #: ../src/windows/main-window.glade.h:2
 msgid "About Whiteboard"
-msgstr ""
+msgstr "Sobre Pissarra (Whiteboard)"
 
 #: ../src/windows/main-window.glade.h:3
 msgid "Calib_rate"
-msgstr ""
+msgstr "Vel_cal"
 
 #: ../src/windows/main-window.glade.h:4
 msgid "Connecting..."
-msgstr ""
+msgstr "Connectant..."
 
 #: ../src/windows/main-window.glade.h:5
 msgid "Control your mouse pointer with the Wiimote."
-msgstr ""
+msgstr "Controleu el punter de ratolí amb el Wiimote."
 
 #: ../src/windows/main-window.glade.h:6
 msgid "Copyright © 2007-2008 The Whiteboard authors"
-msgstr ""
+msgstr "Copyright © 2007-2008 Els autors de Whiteboard (Pissarra)"
 
 #: ../src/windows/main-window.glade.h:8
 msgid "Please press both <b>1</b> and <b>2</b> buttons on your Wiimote."
-msgstr ""
+msgstr "Premeu alhora els botons <b>1</b>i <b>2</b> del vostre Wiimote."
 
 #: ../src/windows/main-window.glade.h:9
 msgid "Right-click waiting _time (in ms):"
-msgstr ""
+msgstr "Temps d'espera pel clic dret (en ms):"
 
 #: ../src/windows/main-window.glade.h:10
 msgid "Tu Anh Vuong <VAnhTu1987@gmail.com>"
-msgstr ""
+msgstr "Tu Anh Vuong <VAnhTu1987@gmail.com>"
 
 #: ../src/windows/main-window.glade.h:11
 msgid "Whiteboard"
-msgstr ""
+msgstr "Pissarra (Whiteboard)"
 
 #: ../src/windows/main-window.glade.h:12
 msgid ""
@@ -158,17 +166,30 @@ msgid ""
 "Glade; if not, write to the Free Software Foundation, Inc., 51 Franklin "
 "Street, Fifth Floor, Boston, MA 02110-1301, USA."
 msgstr ""
+"Whiteboard is free software; you can redistribute it and/or modify it under "
+"the terms of the GNU General Public Licence as published by the Free "
+"Software Foundation; either version 2 of the Licence, or (at your option) "
+"any later version.\n"
+"\n"
+"Whiteboard is distributed in the hope that it will be useful, but WITHOUT "
+"ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or "
+"FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public Licence for "
+"more details.\n"
+"\n"
+"You should have received a copy of the GNU General Public Licence along with "
+"Glade; if not, write to the Free Software Foundation, Inc., 51 Franklin "
+"Street, Fifth Floor, Boston, MA 02110-1301, USA."
 
 #: ../src/windows/main-window.glade.h:18
 msgid "_Help"
-msgstr ""
+msgstr "_Ajuda"
 
 #. Draws a static informational message
 #: ../src/gui.cpp:94
 msgid "Press 'Escape' (Esc) to quit calibration"
-msgstr ""
+msgstr "Premeu 'Escape' (Esc) per sortir de la calibració"
 
 #: ../src/wiicursormanager.cpp:71
 #, c-format
 msgid "Calibrating Wiimote #%d"
-msgstr ""
+msgstr "Calibrant el Wiimote #%d"
