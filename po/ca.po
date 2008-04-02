@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ca\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-04-01 00:09+0100\n"
-"PO-Revision-Date: 2008-03-30 15:38+0200\n"
+"POT-Creation-Date: 2008-04-02 03:14+0100\n"
+"PO-Revision-Date: 2008-04-01 23:40+0200\n"
 "Last-Translator: Antoni Ubieto <antoni.ubieto@gmail.com>\n"
 "Language-Team: català\n"
 "MIME-Version: 1.0\n"
@@ -111,7 +111,7 @@ msgstr "Calibració del Wiimote"
 
 #: ../src/windows/main-window.glade.h:1
 msgid "<b>_Settings</b>"
-msgstr "<b>_Ajustos</b>"
+msgstr "<b>Ajusto_s</b>"
 
 #: ../src/windows/main-window.glade.h:2
 msgid "About Whiteboard"
@@ -119,7 +119,7 @@ msgstr "Sobre Pissarra (Whiteboard)"
 
 #: ../src/windows/main-window.glade.h:3
 msgid "Calib_rate"
-msgstr "Vel_cal"
+msgstr "Calib_rar"
 
 #: ../src/windows/main-window.glade.h:4
 msgid "Connecting..."
@@ -139,7 +139,7 @@ msgstr "Premeu alhora els botons <b>1</b> i <b>2</b> del vostre Wiimote."
 
 #: ../src/windows/main-window.glade.h:9
 msgid "Right-click waiting _time (in ms):"
-msgstr "Temps d'espera pel clic dret (en ms):"
+msgstr "_Temps d'espera pel clic dret (en ms):"
 
 #: ../src/windows/main-window.glade.h:10
 msgid "Whiteboard"
@@ -177,7 +177,7 @@ msgstr ""
 
 #: ../src/windows/main-window.glade.h:17
 msgid "_Help"
-msgstr "_Ajuda"
+msgstr "Ajuda (_H)"
 
 #. Draws a static informational message
 #: ../src/gui.cpp:94
