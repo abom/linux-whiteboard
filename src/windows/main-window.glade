@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.2 on Mon Mar 31 01:56:33 2008 -->
+<!--Generated with glade3 3.4.2 on Mon Apr  7 18:50:56 2008 -->
 <glade-interface>
   <widget class="GtkWindow" id="main-window">
     <property name="visible">True</property>
@@ -281,7 +281,7 @@
     <property name="type_hint">GDK_WINDOW_TYPE_HINT_DIALOG</property>
     <property name="skip_taskbar_hint">True</property>
     <property name="program_name">whiteboard</property>
-    <property name="version">0.3.1</property>
+    <property name="version">0.3.3</property>
     <property name="copyright" translatable="yes">Copyright © 2007-2008 The Whiteboard authors</property>
     <property name="comments" translatable="yes">Control your mouse pointer with the Wiimote.</property>
     <property name="website">http://code.google.com/p/linux-whiteboard</property>
@@ -293,7 +293,8 @@ You should have received a copy of the GNU General Public Licence along with Gla
     <property name="authors">Pere Negre &lt;?&gt;
 Tu Anh Vuong &lt;VAnhTu1987@gmail.com&gt;</property>
     <property name="translator_credits">Tu Anh Vuong &lt;VAnhTu1987@gmail.com&gt;
-Antoni Ubieto &lt;antoni.ubieto@gmail.com&gt;</property>
+Antoni Ubieto &lt;antoni.ubieto@gmail.com&gt;
+Matthias Gies &lt;matthiasgies@gmx.de&gt;</property>
     <property name="logo_icon_name">whiteboard</property>
     <property name="wrap_license">True</property>
     <child internal-child="vbox">
