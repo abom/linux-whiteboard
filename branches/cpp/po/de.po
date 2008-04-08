@@ -1,65 +1,69 @@
+# translation of de.po to
 # German translations for Wiimote Whiteboard package.
 # Copyright (C) 2008 THE Wiimote Whiteboard'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the Wiimote Whiteboard package.
-# VAnhTu1987 <matthiasgies@gmx.de>, 2008.
 #
+# VAnhTu1987 <matthiasgies@gmx.de>, 2008.
+# Matthias Gies <matthiasgies@gmx.de>, 2008.
 msgid ""
 msgstr ""
-"Project-Id-Version: Wiimote Whiteboard 0.3\n"
+"Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-04-02 03:14+0100\n"
-"PO-Revision-Date: 2008-03-24 14:51+0000\n"
-"Last-Translator: VAnhTu1987 <matthiasgies@gmx.de>\n"
-"Language-Team: German\n"
+"POT-Creation-Date: 2008-04-08 03:04+0100\n"
+"PO-Revision-Date: 2008-04-07 21:24+0200\n"
+"Last-Translator: Matthias Gies <matthiasgies@gmx.de>\n"
+"Language-Team:  <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: KBabel 1.11.4\n"
 
 #: ../src/gtk-gui.cpp:134
 msgid "Configurations successfully loaded.\n"
-msgstr ""
+msgstr "Konfiguration erfolgreich geladen.\n"
 
 #: ../src/gtk-gui.cpp:135
 msgid "Failed to load configuration file.\n"
-msgstr ""
+msgstr "Speichern der Konfigurationsdatei fehlgeschlagen.\n"
 
 #. NOTE: This is mainly to force the GUI to update itself
 #. WARNING: Somehow I still feel the problem has not
 #. been completely solved.
 #: ../src/gtk-gui.cpp:163
 msgid "Preparing to connect...\n"
-msgstr ""
+msgstr "Vorbereiten auf Verbindung...\n"
 
 #: ../src/gtk-gui.cpp:179
 msgid "Successfully disconnected all Wiimotes.\n"
-msgstr ""
+msgstr "Erfolgreich alle verbundenen Wiimotes getrennt.\n"
 
 #: ../src/gtk-gui.cpp:180
 msgid ""
 "There was an error disconnecting the Wiimotes. Hell's broken loose!!1.\n"
-msgstr ""
+msgstr "Es gab einen Fehler bei der Verbindungstrennung der Wiimotes.\n"
 
 #: ../src/gtk-gui.cpp:197
 msgid "Calibration succeeded.\n"
-msgstr ""
+msgstr "Kalibrierung erfolgreich.\n"
 
 #: ../src/gtk-gui.cpp:198
 msgid "User escaped or there was an error during calibration.\n"
 msgstr ""
+"Abbruch durch Benutzer oder es gab einen Fehler während der Kalbibrierung.\n"
 
 #: ../src/gtk-gui.cpp:236
 #, c-format
 msgid "Connecting to Wiimote #%d... "
-msgstr ""
+msgstr "Verbinde mit Wiimote #%d... "
 
 #: ../src/gtk-gui.cpp:248
 msgid "Succeeded!.\n"
-msgstr ""
+msgstr "Erfolgreich!\n"
 
 #: ../src/gtk-gui.cpp:248
 msgid "Failed.\n"
-msgstr ""
+msgstr "Fehlgeschlagen.\n"
 
 #: ../src/gtk-gui.cpp:261
 #, c-format
@@ -67,76 +71,82 @@ msgid ""
 "Successfully connected to %d Wiimote(s). Loading all Wiimotes's "
 "configurations...\n"
 msgstr ""
+"Erfolgriech mit %d Wiimotes(s) verbunden. Klicken Sie auf 'Aktivieren' um "
+"ihren Infrarotsender zu benutzen.\n"
 
 #: ../src/gtk-gui.cpp:265
 msgid "Done!. Click 'Activate' to use your infrared pen.\n"
 msgstr ""
+"Erfolgriech mit %d Wiimotes(s) verbunden. Klicken Sie auf 'Aktivieren' um "
+"ihren Infrarotsender zu benutzen.\n"
 
 #: ../src/gtk-gui.cpp:266
 msgid ""
 "Failed. Please check if you have the same number of Wiimotes as earlier. You "
 "need to calibrate before activating.\n"
 msgstr ""
+"Fehler beim Laden der Konfigurationsdatei. Sie sollten die Wiimote "
+"kalibrieren bevor Sie sie aktivieren.\n"
 
 #: ../src/gtk-gui.cpp:272
 msgid "Unable to connect to any Wiimote.\n"
-msgstr ""
+msgstr "Konnte keine Wiimote verbinden.\n"
 
 #: ../src/gtk-gui.cpp:313 ../src/windows/main-window.glade.h:7
 msgid "De_activate"
-msgstr ""
+msgstr "De_aktivieren"
 
 #: ../src/gtk-gui.cpp:313 ../src/windows/main-window.glade.h:16
 msgid "_Activate"
-msgstr ""
+msgstr "_Aktivieren"
 
 #: ../src/whiteboard.desktop.in.h:1
 msgid "Control your mouse pointer with the Wiimote"
-msgstr ""
+msgstr "Steuere deinen Mauszeiger mit der Wiimote"
 
 #: ../src/whiteboard.desktop.in.h:2
 msgid "Wiimote Whiteboard"
-msgstr ""
+msgstr "Wiimote Whiteboard"
 
 #: ../src/windows/calibration-window.glade.h:1
 msgid "Wiimote Calibration"
-msgstr ""
+msgstr "Wiimote Kalibrierung"
 
 #: ../src/windows/main-window.glade.h:1
 msgid "<b>_Settings</b>"
-msgstr ""
+msgstr "<b>Ein_stellungen</b>"
 
 #: ../src/windows/main-window.glade.h:2
 msgid "About Whiteboard"
-msgstr ""
+msgstr "Über Whiteboard"
 
 #: ../src/windows/main-window.glade.h:3
 msgid "Calib_rate"
-msgstr ""
+msgstr "Kalib_rierung"
 
 #: ../src/windows/main-window.glade.h:4
 msgid "Connecting..."
-msgstr ""
+msgstr "Verbinde..."
 
 #: ../src/windows/main-window.glade.h:5
 msgid "Control your mouse pointer with the Wiimote."
-msgstr ""
+msgstr "Steuere deinen Mauszeiger mit der Wiimote."
 
 #: ../src/windows/main-window.glade.h:6
 msgid "Copyright © 2007-2008 The Whiteboard authors"
-msgstr ""
+msgstr "Copyright © 2007-2008 The Whiteboard authors"
 
 #: ../src/windows/main-window.glade.h:8
 msgid "Please press both <b>1</b> and <b>2</b> buttons on your Wiimote."
-msgstr ""
+msgstr "Bitte die Tasten <b>1</b> und <b>2</b> auf der Wiimote drücken."
 
 #: ../src/windows/main-window.glade.h:9
 msgid "Right-click waiting _time (in ms):"
-msgstr ""
+msgstr "Rechtsklick War_tezeit (in ms):"
 
 #: ../src/windows/main-window.glade.h:10
 msgid "Whiteboard"
-msgstr ""
+msgstr "Whiteboard"
 
 #: ../src/windows/main-window.glade.h:11
 msgid ""
@@ -154,17 +164,31 @@ msgid ""
 "Glade; if not, write to the Free Software Foundation, Inc., 51 Franklin "
 "Street, Fifth Floor, Boston, MA 02110-1301, USA."
 msgstr ""
+"Whiteboard ist freie Software; Sie können sie weiterverbreiten und/oder "
+"modifizieren unter den Bedingungen der GNU General Public Licence die von "
+"der Free Software Foundation veröffentlicht wird; entweder Version 2 der "
+"Lizenz oder (wenn Sie möchten)jede neuere Version dieser Lizenz.\n"
+"\n"
+"Whiteboard wird mit der Hoffnung entwickelt, dass es hilfreich sein kann. Es "
+"kommt jedoch ohne jegliche Garantie/Gewährleistung. Die Software wird noch "
+"als experimentell eingestuft und wird noch cniht für den Alltagsgebrauch "
+"oder einen bestimmten Zweck empfohlen. Für weitere Informationen lesen Sie "
+"bitte in der GNU General Public Licence nach.\n"
+"\n"
+"Sie sollten eine Kopie der GNU General Public Licence mit dieser Software "
+"erhalten haben; falls nicht, schreiben Sie der Free Software Foundation, "
+"Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA."
 
 #: ../src/windows/main-window.glade.h:17
 msgid "_Help"
-msgstr ""
+msgstr "_Hilfe"
 
 #. Draws a static informational message
 #: ../src/gui.cpp:94
 msgid "Press 'Escape' (Esc) to quit calibration"
-msgstr ""
+msgstr "Escape drücken (Esc) zum Abbruch der Kalibrierung"
 
 #: ../src/wiicursormanager.cpp:71
 #, c-format
 msgid "Calibrating Wiimote #%d"
-msgstr ""
+msgstr "Kalibriere Wiimote #%d"
