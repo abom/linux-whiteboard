@@ -13,6 +13,8 @@ To build whiteboard, you'll need the usual toolchain (gcc, g++ and make - these 
   * libcairomm-1.0-dev
   * libsigc++-2.0-dev
   * libgnome2-dev
+  * intltool
+  * libbluetooth-dev 
 
 If you have checked out whiteboard from our SVN repository, you probably need those too: 
   * autoconf
