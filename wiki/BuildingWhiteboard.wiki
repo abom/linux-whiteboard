@@ -43,7 +43,7 @@ After 'make install', whiteboard will be installed to the directory 'whiteboard'
 
 ----
 
-To build a Debian/Ubuntu package (same rules applied if you use *Ubuntu Gutsy Gibbon*):
+To build a Debian/Ubuntu package (for Ubuntu Hardy Heron only, one needs to modify the 'debian' directory to account for version differences in other distros):
   * Install *fakeroot* if you haven't got it already.
   * Issue these commands:
 {{{
