@@ -24,6 +24,7 @@
 #include <sys/time.h>
 #include <iostream>
 #include <unistd.h>
+#include <sstream>
 #include <X11/extensions/XTest.h>
 
 #include "matrix.h"
@@ -57,7 +58,7 @@ delta_t_t get_delta_t(delta_t_t& last_time);
 
 /* This function transforms the provided infrared coordinates to screen's
  * coordinates using the transformation matrix built earlier */
-point_t infrared_data(point_t const& ir_pos_new, matrix_t const& transform);
+point_t infrared_data(point_t const& ir_pos, matrix_t const& transform);
 
 
 unsigned int sqr(int n);

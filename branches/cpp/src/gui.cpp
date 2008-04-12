@@ -21,23 +21,35 @@
 
 
 void CalibrationWindow::calibration_right_button_down(WiiEventData const& data) {
+    DEBUG_MSG(1, "Right button down, registering IR pos #%d at %dx%d\n", m_cal_data.active_point, data.ir_pos.x, data.ir_pos.y);
+
     m_cal_data.p_wii.p[m_cal_data.active_point++] = data.ir_pos;
 }
 void CalibrationWindow::calibration_mouse_moved(WiiEventData const& data) {
+    //DEBUG_MSG(1, "Mouse moved\n");
+
     m_cal_data.ir_pos = data.ir_pos;
     m_cal_data.waited = data.waited;
     m_cal_data.move_tolerance = data.move_tolerance;
 }
 void CalibrationWindow::calibration_mouse_down(WiiEventData const& data) {
+    DEBUG_MSG(1, "Mouse down, waiting for right click event\n");
+
     m_cal_data.ir_on_mouse_down = data.ir_on_mouse_down;
     m_cal_data.border_crossed = false;
 }
 void CalibrationWindow::calibration_mouse_up(WiiEventData const& data) {
+    DEBUG_MSG(1, "Mouse up, checking for finish...\n");
+
     m_cal_data.ir_pos.x = INVALID_IR_POS; // So it will not be drawn later
-    if (m_cal_data.active_point == WIIMOTE_NUM_CALIBRATED_POINTS)
+    if (m_cal_data.active_point == WIIMOTE_NUM_CALIBRATED_POINTS) {
+	DEBUG_MSG(1, "All points calibrated, quitting...\n");
 	quit();
+    }
 }
 void CalibrationWindow::calibration_begin_click_and_drag(WiiEventData const& data) {
+    DEBUG_MSG(1, "Mouse click-n-drag, calibration invalidated\n");
+
     m_cal_data.border_crossed = true;
 }
 
@@ -66,12 +78,18 @@ void draw_calibration_points(
 }
 
 bool CalibrationWindow::calibration_area_key_pressed(GdkEventKey* event) {
-    if (event->keyval == GDK_Escape)
+    DEBUG_MSG(1, "Calibration window: Key pressed\n");
+
+    if (event->keyval == GDK_Escape) {
+	DEBUG_MSG(1, "Calibration window: Escape pressed, quitting...\n");
 	quit();
+    }
 
     return true;
 }
 bool CalibrationWindow::calibration_area_exposed(GdkEventExpose* event) {
+    DEBUG_MSG(3, "Calibration window: Began drawing\n");
+
     Glib::RefPtr<Gdk::Window> window = m_gtk_calibration_area->get_window();
     Cairo::RefPtr<Cairo::Context> cr = window->create_cairo_context();
     point_t const scr_size = screen_size();
@@ -204,6 +222,8 @@ bool CalibrationWindow::calibration_area_exposed(GdkEventExpose* event) {
     set_led_state(m_thread_data.wiimotes.front().wiimote, leds[m_wiimote_blinking_lighted_up_led]);
     m_wiimote_blinking_lighted_up_led += m_wiimote_blinking_led_direction;
 
+    DEBUG_MSG(3, "Calibration window: Finished drawing\n");
+
     return true;
 }
 bool CalibrationWindow::redraw_calibration_area() {
@@ -214,8 +234,10 @@ bool CalibrationWindow::redraw_calibration_area() {
 
 void CalibrationWindow::quit() {
     // Cleans up as needed
+    DEBUG_MSG(1, "Stopping WiiCursor thread\n");
     finish_wiicursor_thread(m_thread_data);
 
+    DEBUG_MSG(1, "Hiding calibration window\n");
     m_gtk_window->hide();
 }
 
@@ -227,6 +249,8 @@ CalibrationWindow::CalibrationWindow(cwiid_wiimote_t* wiimote, char const* user_
     m_user_message(user_message),
     m_thread_data(m_wiimote)
 {
+    DEBUG_MSG(1, "Initilializing calibration window...\n");
+
     // Gets the widgets
     std::string const WINDOWS_DIR(WINDOWSDIR);
     std::string const PIXMAPS_DIR(PIXMAPSDIR);
@@ -234,6 +258,8 @@ CalibrationWindow::CalibrationWindow(cwiid_wiimote_t* wiimote, char const* user_
 
     refXml->get_widget("calibration-window", m_gtk_window);
     refXml->get_widget("calibration-area", m_gtk_calibration_area);
+
+    DEBUG_MSG(1, "Calibration window: Got widgets\n");
 
     // Prepares the widgets
     m_gtk_calibration_area->modify_bg( Gtk::STATE_NORMAL, Gdk::Color("black") );
@@ -245,6 +271,8 @@ CalibrationWindow::CalibrationWindow(cwiid_wiimote_t* wiimote, char const* user_
     m_gtk_window->fullscreen();
     m_gtk_window->show();
 
+    DEBUG_MSG(1, "Calibration window: Modified widgets' properties\n");
+
     // Data
     m_wiimote.push_back( WiimoteData(wiimote) );
 
@@ -253,24 +281,34 @@ CalibrationWindow::CalibrationWindow(cwiid_wiimote_t* wiimote, char const* user_
     m_thread_data.events.mouse_down = sigc::mem_fun(*this, &CalibrationWindow::calibration_mouse_down);
     m_thread_data.events.mouse_up = sigc::mem_fun(*this, &CalibrationWindow::calibration_mouse_up);
     m_thread_data.events.begin_click_and_drag = sigc::mem_fun(*this, &CalibrationWindow::calibration_begin_click_and_drag);
+
+    DEBUG_MSG(1, "Calibration window: Event handlers connected\n");
+
+    DEBUG_MSG(1, "Calibration window initialized\n");
 }
 
 
 bool CalibrationWindow::get_calibration_points(WiimoteCalibratedPoints& p_wii) {
+    DEBUG_MSG(1, "Starting calibration process...\n");
+
+    DEBUG_MSG(1, "Calibration window: Starting gtk_kit\n");
     Gtk::Main gtk_kit(0, 0); // NOTE: Bypassing potential arguments for GTK+ here
 
     // Starts the main loop
+    DEBUG_MSG(1, "Calibration window: Starting Wiicursor threads\n");
     start_wiicursor_thread(m_thread_data);
     sigc::connection redraw_connection =
 	Glib::signal_timeout().connect(
 	    sigc::mem_fun(*this, &CalibrationWindow::redraw_calibration_area), 100 );
 
+    DEBUG_MSG(1, "Calibration window: Running calibration window\n");
     gtk_kit.run(*m_gtk_window);
 
     // Finished at this point, whether succeeded or escaped by user
     // NOTE: A minor bug when user selects 'Quit' from the menu:
     // 'Error setting LED state'. The wiimote pointer had probably
     // been invalidated before CalWindow was notified.
+    DEBUG_MSG(1, "Calibration window: Done calibrating, cleaning up...\n");
     set_led_state(m_thread_data.wiimotes.front().wiimote, WIIMOTE_LED_CONNECTED); // Resets the LEDs's state
     redraw_connection.disconnect();
     // NOTE: No need to finish_wiicursor_thread() here as it is handled by
@@ -278,8 +316,10 @@ bool CalibrationWindow::get_calibration_points(WiimoteCalibratedPoints& p_wii) {
 
     // Returns p_wii only if succeeded
     bool const succeeded = (m_cal_data.active_point == WIIMOTE_NUM_CALIBRATED_POINTS);
-    if (succeeded)
+    if (succeeded) {
+	DEBUG_MSG(1, "Calibration succeeded, will return data\n");
 	p_wii = m_cal_data.p_wii;
+    }
 
     return succeeded;
 }

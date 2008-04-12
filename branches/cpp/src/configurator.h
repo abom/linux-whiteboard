@@ -30,6 +30,7 @@
 #include "auxiliary.h"
 #include "matrix.h"
 #include "ConfigFileParser.h"
+#include "common.h"
 
 
 std::string config_file_path();
@@ -90,6 +91,7 @@ private:
     /* Event handlers */
     void right_click_time_changed() {
 	m_config_data.wait_tolerance = m_gtk_right_click_time->get_value_as_int();
+	DEBUG_MSG(2, "Right-click-time changed to %d\n", m_config_data.wait_tolerance);
     }
 
     /* Helpers */

@@ -24,13 +24,15 @@ void fake_move(int x, int y)
 {
     Display* display = XOpenDisplay(0);
     XTestFakeMotionEvent(display, -1, x, y, 0);
-    //printf("MOUSE MOVE: %d %d\n", x, y);
     XCloseDisplay(display);
+
+    DEBUG_MSG(4, "Mouse moved: %dx%d\n", x, y);
 }
 void fake_button(int button, bool pressed)
 {
     Display* display = XOpenDisplay(0);
     XTestFakeButtonEvent(display, button, pressed, 0);
-    //printf("MOUSE %d's state changed to %d\n", button, pressed);
     XCloseDisplay(display);
+
+    DEBUG_MSG(4, "Mouse button #%d's state changed to %d\n", button, pressed);
 }

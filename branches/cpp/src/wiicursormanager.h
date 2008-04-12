@@ -28,6 +28,7 @@
 #include "wiicursor.h"
 #include "wiicontrol.h"
 #include "configurator.h"
+#include "common.h"
 
 
 struct WiiCursorManagerConnectEvents {

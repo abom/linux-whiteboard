@@ -25,18 +25,20 @@
 void set_led_state(cwiid_wiimote_t *wiimote, unsigned char led_state)                                                                                         
 {
     if (cwiid_command(wiimote, CWIID_CMD_LED, led_state)) {
-	fprintf(stderr, "Error setting LEDs.\n");
+	DEBUG_MSG(4, "Error setting LEDs.\n");
     }
 }
 void set_rpt_mode(cwiid_wiimote_t *wiimote, unsigned char rpt_mode)
 {
     if (cwiid_command(wiimote, CWIID_CMD_RPT_MODE, rpt_mode)) {
-	fprintf(stderr, "Error setting report mode.\n");
+	DEBUG_MSG(1, "Error setting report mode.\n");
     }
 }
 
 cwiid_wiimote_t* wii_connect(char *mac)
 {
+    DEBUG_MSG(3, "wii_connect() called\n");
+
     /* Remember this when things get serious */
     /* cwiid_set_err(err); */
 
@@ -48,21 +50,25 @@ cwiid_wiimote_t* wii_connect(char *mac)
 
     /* Connect to the wiimote */
     cwiid_wiimote_t* wiimote = 0;
-    printf("Put Wiimote in discoverable mode now (press 1+2)...\n");
+    DEBUG_MSG(1, "Put Wiimote in discoverable mode now (press 1+2)...\n");
     if ( (wiimote = cwiid_connect(&bdaddr, 0)) ) {
-	printf("Connected!!!\n");
+	DEBUG_MSG(1, "Connected!!!\n");
 
 	set_led_state(wiimote, WIIMOTE_LED_CONNECTED); /* Notifies user */
 	set_rpt_mode(wiimote, CWIID_RPT_IR | CWIID_RPT_BTN);
 
 	return wiimote;
     }
-    else fprintf(stderr, "Unable to connect to wiimote\n");
+    else DEBUG_MSG(1, "Unable to connect to wiimote\n");
+
+    DEBUG_MSG(3, "wii_connect() exit\n");
 
     return 0;
 }
 int wii_disconnect(cwiid_wiimote_t* wiimote)
 {
+    DEBUG_MSG(3, "wii_disconnect() called and exit\n");
+
     /* set_led_state(wiimote,0); */
     return cwiid_disconnect(wiimote);
 }
@@ -75,12 +81,14 @@ int wii_disconnect(cwiid_wiimote_t* wiimote)
  * These INVALIDs are defined in common.h */
 int process_messages(cwiid_mesg const& mesg, point_t* ir_pos, uint16_t* buttons)
 {
+    DEBUG_MSG(4, "Got Wiimote events\n");
+
     int ret = 0;
 
     switch (mesg.type) {
 	case CWIID_MESG_BTN:
 	    if (buttons) {
-		printf("Button Report: %.4X\n", mesg.btn_mesg.buttons);
+		DEBUG_MSG(4, "Button Report: %.4X\n", mesg.btn_mesg.buttons);
 		*buttons = mesg.btn_mesg.buttons;
 	    }
 	    break;

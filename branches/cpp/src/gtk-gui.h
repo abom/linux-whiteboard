@@ -29,6 +29,7 @@
 
 #include "wiicursormanager.h"
 #include "configurator.h"
+#include "common.h"
 
 
 // NOTE: GUI stuff is allowed to be a bit messy since they are disposable

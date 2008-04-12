@@ -21,6 +21,8 @@
 
 
 void WiiCursorManager::wiicursormanager_connect_thread() {
+    DEBUG_MSG(3, "Entering WiiCursorManager::wiicursormanager_connect_thread()\n");
+
     WiiCursorManagerConnectEvents& events = m_connect_events; // Readability
 
     // Trying to connect to as many Wiimotes as possible
@@ -36,20 +38,30 @@ void WiiCursorManager::wiicursormanager_connect_thread() {
     while (new_wiimote);
 
     events.done_connecting();
+
+    DEBUG_MSG(3, "Exiting WiiCursorManager::wiicursormanager_connect_thread()\n");
 }
 
 
 void WiiCursorManager::connect()
 {
+    DEBUG_MSG(1, "WiiCursorManager::connect() called\n");
+
     // NOTE: We are throwing away the thread ID because we trust
     // the caller to NOT call this repeatedly at the same time.
     // Also not joinable.
     Glib::Thread::create(sigc::mem_fun(*this, &WiiCursorManager::wiicursormanager_connect_thread), false);
 }
 bool WiiCursorManager::disconnect() {
-    if (m_cal_window)
+    DEBUG_MSG(1, "WiiCursorManager::disconnect() called\n");
+
+    if (m_cal_window) {
+	DEBUG_MSG(1, "Calibration window is alive (user escaped), quitting..\n");
 	m_cal_window->quit();
+    }
+    DEBUG_MSG(1, "Deactivating all Wiicursors...\n");
     deactivate();
+    DEBUG_MSG(1, "Disconnecting all Wiimotes...\n");
     for (WiimoteDataIterator iter = m_wiis.begin(); iter != m_wiis.end(); ++iter)
 	wii_disconnect(iter->wiimote);
     m_wiis.clear();
@@ -60,6 +72,8 @@ bool WiiCursorManager::disconnect() {
 
 
 bool WiiCursorManager::calibrate() {
+    DEBUG_MSG(1, "WiiCursorManager::calibrate() called\n");
+
     bool ret = true;
 
     for (WiimoteDataIterator iter = m_wiis.begin(); iter != m_wiis.end(); ++iter) {
@@ -70,14 +84,19 @@ bool WiiCursorManager::calibrate() {
 	char message[1024];
 	sprintf(message, _("Calibrating Wiimote #%d"), current_wii_index);
 
+	DEBUG_MSG(1, "Initializing calibration window #%d...\n", current_wii_index);
 	CalibrationWindow cal_window(iter->wiimote, message);
 	m_cal_window = &cal_window;
 	WiimoteCalibratedPoints p_wii;
 	if ( !cal_window.get_calibration_points(p_wii) ) {
+	    DEBUG_MSG(1, "Failed to calibrate\n");
 	    ret = false;
 	    break;
 	}
-	else iter->transform = calculate_transformation_matrix(p_wii);
+	else {
+	    DEBUG_MSG(1, "Calibration succeeded\n");
+	    iter->transform = calculate_transformation_matrix(p_wii);
+	}
     }
     m_cal_window = 0; // If it gets to this point, the window's been closed
 
@@ -86,12 +105,16 @@ bool WiiCursorManager::calibrate() {
 
 
 bool WiiCursorManager::activate() {
+    DEBUG_MSG(1, "Starting all Wiicursors...\n");
+
     start_wiicursor_thread(m_thread_data);
 
     // NOTE: Always returns true for now
     return true;
 }
 bool WiiCursorManager::deactivate() {
+    DEBUG_MSG(1, "Stopping all Wiicursors...\n");
+
     finish_wiicursor_thread(m_thread_data);
 
     // NOTE: Always returns true for now
