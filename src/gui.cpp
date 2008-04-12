@@ -311,7 +311,7 @@ bool CalibrationWindow::get_calibration_points(WiimoteCalibratedPoints& p_wii) {
     set_led_state(m_thread_data.wiimotes.front().wiimote, WIIMOTE_LED_CONNECTED); // Resets the LEDs's state
     redraw_connection.disconnect();
     // NOTE: No need to finish_wiicursor_thread() here as it is handled by
-    // quit() if user selected 'Quit' from the menu. It self-terminated otherwise.
+    // quit() if user selected 'Quit' from the menu. It self-terminated (using quit()) otherwise.
 
     // Returns p_wii only if succeeded
     bool const succeeded = (m_cal_data.active_point == WIIMOTE_NUM_CALIBRATED_POINTS);
