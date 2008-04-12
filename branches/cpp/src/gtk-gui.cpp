@@ -238,9 +238,10 @@ void MainGtkWindow::toggle_activation_clicked() {
 void MainGtkWindow::calibrate_clicked() {
     DEBUG_MSG(1, "Calibrate button clicked\n");
 
-    if ( m_wii_manager.calibrate() )
-	print_to_output(_("Calibration succeeded.\n"));
-    else print_to_output(_("User escaped or there was an error during calibration.\n"));
+    //if ( m_wii_manager.calibrate() )
+	//print_to_output(_("Calibration succeeded.\n"));
+    //else print_to_output(_("User escaped or there was an error during calibration.\n"));
+    m_wii_manager.calibrate();
 }
 void MainGtkWindow::status_icon_clicked() {
     DEBUG_MSG(1, "Status icon clicked\n");
