@@ -24,7 +24,8 @@ void DEBUG_MSG(unsigned int level, char const* s, ...) {
 #ifdef DEBUG_LVL
     unsigned int const current_debug_level = DEBUG_LVL;
     if (current_debug_level >= level) {
-	printf("DEBUG_LVL %d: ", level);
+	std::string const padding(level, ' ');
+	printf("%sDEBUG %d: ", padding.c_str(), level);
 
 	va_list ap;
 	va_start(ap, s);

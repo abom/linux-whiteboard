@@ -49,7 +49,7 @@ void screen_corners(point_t p_screen[4]) {
 }
 
 matrix_t calculate_transformation_matrix(WiimoteCalibratedPoints const& p_wii) {
-    DEBUG_MSG(1, "Calculating coefficients... ");
+    DEBUG_MSG(1, "Calculating coefficients...\n");
 
     point_t p_screen[4];
     screen_corners(p_screen);
@@ -83,8 +83,6 @@ matrix_t calculate_transformation_matrix(WiimoteCalibratedPoints const& p_wii) {
     matrix_t out(TRANSFORM_MATRIX_ROWS, TRANSFORM_MATRIX_COLS);
     matrix_t const r = m.invert() * n;
     memcpy(out.elems(), r.elems(), 8*sizeof(matrix_elem_t)); // NOTE: Do *something* about it!. memcpy, ugh...
-
-    DEBUG_MSG(1, "Done!\n");
 
     std::ostringstream oss;
     oss << out;
