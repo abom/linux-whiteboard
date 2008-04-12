@@ -1,4 +1,4 @@
-/* Copyright (C) 2008 Pere Negre                                                                                                                              
+/* Copyright (C) 2008 Tu Anh Vuong
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -17,20 +17,19 @@
  */
 
 
-#ifndef  __EVENTS_H__
-#define  __EVENTS_H__
-
-
-#include <X11/extensions/XTest.h>
-
 #include "common.h"
 
 
-// Fakes mouse move and mouse buttons events
-void fake_move(int x, int y);
-void fake_button(int button, bool pressed);
-// Fakes key events
-// {to be implemented}
+void DEBUG_MSG(unsigned int level, char const* s, ...) {
+#ifdef DEBUG_LVL
+    unsigned int const current_debug_level = DEBUG_LVL;
+    if (current_debug_level >= level) {
+	printf("DEBUG_LVL %d: ", level);
 
-
-#endif /* __EVENTS_H__ */
+	va_list ap;
+	va_start(ap, s);
+	vprintf(s, ap);
+	va_end(ap);
+    }
+#endif // DEBUG_LVL
+}

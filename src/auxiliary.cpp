@@ -31,7 +31,9 @@ point_t screen_size() {
     Display* display = XOpenDisplay(0);
     int const screen = DefaultScreen(display);
     point_t const scr_size( DisplayWidth(display, screen), DisplayHeight(display, screen) );
-    XCloseDisplay(display);                                                                                                                                    
+    XCloseDisplay(display);
+
+    DEBUG_MSG(4, "Screen size: %dx%d\n", scr_size.x, scr_size.y);
 
     return scr_size;
 }
@@ -47,7 +49,7 @@ void screen_corners(point_t p_screen[4]) {
 }
 
 matrix_t calculate_transformation_matrix(WiimoteCalibratedPoints const& p_wii) {
-    printf("Calculating coefficients... ");
+    DEBUG_MSG(1, "Calculating coefficients... ");
 
     point_t p_screen[4];
     screen_corners(p_screen);
@@ -82,7 +84,11 @@ matrix_t calculate_transformation_matrix(WiimoteCalibratedPoints const& p_wii) {
     matrix_t const r = m.invert() * n;
     memcpy(out.elems(), r.elems(), 8*sizeof(matrix_elem_t)); // NOTE: Do *something* about it!. memcpy, ugh...
 
-    printf("Done!\n");
+    DEBUG_MSG(1, "Done!\n");
+
+    std::ostringstream oss;
+    oss << out;
+    DEBUG_MSG(2, "Transformation matrix: %s\n", oss.str().c_str());
 
     return out;
 }
@@ -94,6 +100,8 @@ delta_t_t get_delta_t(delta_t_t& last_time) {
     gettimeofday(&current, 0);
     delta_t_t const current_time =
 	static_cast<delta_t_t>( static_cast<double>(current.tv_sec)*1000.0 + static_cast<double>(current.tv_usec)/1000.0 );
+
+    DEBUG_MSG(4, "Time stamps: Current %lld; Last %lld\n", current_time, last_time);
 
     ASSERT (current_time >= last_time, "Time is going backwards. omgwtf!!!1");
     delta_t_t const ret = current_time - last_time;
@@ -108,24 +116,26 @@ delta_t_t get_delta_t(delta_t_t& last_time) {
 }*/
 
 
-point_t infrared_data(point_t const& ir_pos_new, matrix_t const& transform) {
-    point_t ir_pos;
+point_t infrared_data(point_t const& ir_pos, matrix_t const& transform) {
+    point_t cursor_pos;
 
     matrix_t const& t = transform; // For readability
-    ir_pos.x = static_cast<int> (
-	    (t[0][0]*ir_pos_new.x + t[0][1]*ir_pos_new.y + t[0][2]) /
-	    (t[2][0]*ir_pos_new.x + t[2][1]*ir_pos_new.y + 1.0) );
-    ir_pos.y = static_cast<int> (
-	    (t[1][0]*ir_pos_new.x + t[1][1]*ir_pos_new.y + t[1][2]) /
-	    (t[2][0]*ir_pos_new.x + t[2][1]*ir_pos_new.y + 1.0) );
+    cursor_pos.x = static_cast<int> (
+	    (t[0][0]*ir_pos.x + t[0][1]*ir_pos.y + t[0][2]) /
+	    (t[2][0]*ir_pos.x + t[2][1]*ir_pos.y + 1.0) );
+    cursor_pos.y = static_cast<int> (
+	    (t[1][0]*ir_pos.x + t[1][1]*ir_pos.y + t[1][2]) /
+	    (t[2][0]*ir_pos.x + t[2][1]*ir_pos.y + 1.0) );
 
     point_t const scr_size = screen_size();
-    if (ir_pos.x<0)       ir_pos.x = 0; 
-    if (ir_pos.x>=scr_size.x)  ir_pos.x = scr_size.x-1;
-    if (ir_pos.y<0)       ir_pos.y = 0;
-    if (ir_pos.y>=scr_size.y)  ir_pos.y = scr_size.y-1;
+    if (cursor_pos.x<0)       cursor_pos.x = 0; 
+    if (cursor_pos.x>=scr_size.x)  cursor_pos.x = scr_size.x-1;
+    if (cursor_pos.y<0)       cursor_pos.y = 0;
+    if (cursor_pos.y>=scr_size.y)  cursor_pos.y = scr_size.y-1;
 
-    return ir_pos;
+    DEBUG_MSG(4, "Cursor pos: %dx%d\n", cursor_pos.x, cursor_pos.y);
+
+    return cursor_pos;
 }
 
 

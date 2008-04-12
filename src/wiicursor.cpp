@@ -21,6 +21,8 @@
 
 
 void* wiicursor_thread_func(void* ptr) {
+    DEBUG_MSG(3, "Entering wiicursor_thread_func()\n");
+
     ASSERT(ptr != 0, "No data has been passed along");
     WiiThreadFuncData& data = *static_cast<WiiThreadFuncData*>(ptr);
     ASSERT(data.this_thread != 0, "This thread has become immortal, omfg!!!1");
@@ -32,9 +34,13 @@ void* wiicursor_thread_func(void* ptr) {
     for (std::vector<WiimoteData>::iterator iter = data.wiimotes.begin(); iter != data.wiimotes.end(); ++iter)
 	cwiid_disable(iter->wiimote, CWIID_FLAG_MESG_IFC);
 
+    DEBUG_MSG(3, "Exiting wiicursor_thread_func()\n");
+
     return 0;
 }
 void start_wiicursor_thread(WiiThreadFuncData& data) {
+    DEBUG_MSG(1, "Starting Wiicursor thread...\n");
+
     // NOTE: Not checking for any return value here
     if (!data.thread_running) {
 	data.thread_running = true;
@@ -42,6 +48,8 @@ void start_wiicursor_thread(WiiThreadFuncData& data) {
     }
 }
 void finish_wiicursor_thread(WiiThreadFuncData& data) {
+    DEBUG_MSG(1, "Finishing Wiicursor thread...\n");
+
     if (data.thread_running) {
 	data.thread_running = false;
 	pthread_join(data.this_thread, 0);

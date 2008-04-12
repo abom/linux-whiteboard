@@ -1,4 +1,4 @@
-/* Copyright (C) 2008 Pere Negre
+/* Copyright (C) 2008 Tu Anh Vuong
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -41,6 +41,15 @@
 	assert (1); \
     } \
 }
+
+/* There are 4 debugging message levels:
+ * 1: Messages about working on something
+ * 2: Internal values of Whiteboard at some functions
+ * 3: Messages when entering and exiting functions
+ * 4: Internal values of the functions called :s .
+ * 5: ???
+*/
+void DEBUG_MSG(unsigned int level, char const* s, ...);
 
 
 template<typename T>
