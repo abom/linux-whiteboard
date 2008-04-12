@@ -92,7 +92,7 @@ MainGtkWindow::MainGtkWindow(int argc,char *argv[]) :
     std::string const PIXMAPS_DIR(PIXMAPSDIR); // NOTE: Glade's bug, 'icon' does nothing
     DEBUG_MSG(2, "Pixmap dir: %s\n", PIXMAPS_DIR.c_str());
     Glib::RefPtr<Gnome::Glade::Xml> refXml = Gnome::Glade::Xml::create(WINDOWS_DIR + "/main-window.glade");
-    DEBUG_MSG(1, "Loaded glade files\n");
+    DEBUG_MSG(2, "Loaded glade files\n");
 
     refXml->get_widget("main-window", m_gtk_main_window);
     refXml->get_widget("output-scroll", m_gtk_output_scroll);
@@ -114,7 +114,7 @@ MainGtkWindow::MainGtkWindow(int argc,char *argv[]) :
     refXml->get_widget("connecting-window", m_gtk_connecting_window);
     refXml->get_widget("connecting-window-label-wiimote-number", m_gtk_label_wiimote_number);
     refXml->get_widget("connecting-window-progress", m_gtk_connecting_progress);
-    DEBUG_MSG(1, "Loaded GUI components\n");
+    DEBUG_MSG(2, "Loaded GUI components\n");
 
     m_gtk_toggle_wiimote->signal_clicked().connect(sigc::mem_fun(*this, &MainGtkWindow::toggle_wiimote_clicked));
     m_gtk_toggle_activation->signal_clicked().connect(sigc::mem_fun(*this, &MainGtkWindow::toggle_activation_clicked));
@@ -133,7 +133,7 @@ MainGtkWindow::MainGtkWindow(int argc,char *argv[]) :
     m_gtk_menu_quit->signal_activate().connect(sigc::mem_fun(*this, &MainGtkWindow::sim_quit_clicked));
     m_gtk_menu_about->signal_activate().connect(sigc::mem_fun(*this, &MainGtkWindow::menu_about_clicked));
     m_gtk_about_dialog->signal_response().connect(sigc::mem_fun(*this, &MainGtkWindow::about_dialog_response));
-    DEBUG_MSG(1, "All signals connected\n");
+    DEBUG_MSG(2, "All signals connected\n");
 
     /* Sets up widgets */
     m_gtk_output->set_buffer(m_output_buffer);
@@ -148,15 +148,11 @@ MainGtkWindow::MainGtkWindow(int argc,char *argv[]) :
 
     sync_wiimote_state(false); // Disconnected by default
 
-    DEBUG_MSG(1, "Widgets have been synchronized\n");
-
     /* Data */
     m_configurator.init(refXml);
     if ( m_configurator.load_other_config() )
 	print_to_output(_("Configurations successfully loaded.\n"));
     else print_to_output(_("Failed to load configuration file.\n"));
-
-    DEBUG_MSG(1, "Attempted to load config file\n");
 
     m_connect_events.start_each_connection.connect(
 	sigc::mem_fun(*this, &MainGtkWindow::wiicursormanager_connect_start_connection));
@@ -171,13 +167,13 @@ MainGtkWindow::MainGtkWindow(int argc,char *argv[]) :
     m_wii_manager.events().end_click_and_drag = sigc::ptr_fun(&wii_end_click_and_drag);
     m_wii_manager.events().mouse_moved = sigc::ptr_fun(&wii_mouse_moved);
 
-    DEBUG_MSG(1, "Mouse event handlers connected\n");
+    DEBUG_MSG(2, "Mouse event handlers connected\n");
 
     DEBUG_MSG(1, "Main GUI initialized\n");
 }
 
 int MainGtkWindow::run() {
-    DEBUG_MSG(1, "About to run the main GUI...\n");
+    DEBUG_MSG(1, "Running the main GUI...\n");
     m_gtk_kit.run();
     DEBUG_MSG(1, "Main GUI's run() exit\n");
 
@@ -189,21 +185,20 @@ void MainGtkWindow::toggle_wiimote_clicked() {
     DEBUG_MSG(1, "Toggle Wiimote button clicked\n");
 
     if ( !m_wii_manager.connected() ) {
-	DEBUG_MSG(1, "Wiimotes not connected\n");
+	DEBUG_MSG(1, "Wiimotes not connected. Connecting\n");
 	// NOTE: This is mainly to force the GUI to update itself
 	// WARNING: Somehow I still feel the problem has not
 	// been completely solved.
 	print_to_output(_("Preparing to connect...\n"));
 
 	sync_wiimote_state_connection_phase(true);
-	DEBUG_MSG(1, "Widgets synchrorized to 'connecting' phase\n");
 
 	DEBUG_MSG(1, "Begin connecting to all Wiimotes...\n");
 	m_wii_manager.connect();
 	// The stopping process will be handled in wiicursor_connect_done_connecting()
     }
     else {
-	DEBUG_MSG(1, "Wiimotes connected\n");
+	DEBUG_MSG(1, "Wiimotes connected. Disconnecting\n");
 	// Activation
 	if ( m_wii_manager.activated() ) {
 	    DEBUG_MSG(1, "Wiimotes activated. Deactivating...\n");
@@ -217,20 +212,20 @@ void MainGtkWindow::toggle_wiimote_clicked() {
 	if ( m_wii_manager.disconnect() )
 	    print_to_output(_("Successfully disconnected all Wiimotes.\n"));
 	else print_to_output(_("There was an error disconnecting the Wiimotes. Hell's broken loose!!1.\n"));
-	DEBUG_MSG(1, "Attempted to disconnect all Wiimotes\n");
 	// But we assume it was successfully disconnected anyway, can't do anything about that
 	sync_wiimote_state(false);
-	DEBUG_MSG(1, "Widgets synchronized\n");
     }
 }
 void MainGtkWindow::toggle_activation_clicked() {
     DEBUG_MSG(1, "Toggle Wiimote activation button clicked\n");
 
     if ( !m_wii_manager.activated() ) {
+	DEBUG_MSG(1, "Activating all Wiimotes...\n");
 	sync_activation_state(true);
 	m_wii_manager.activate();
     }
     else {
+	DEBUG_MSG(1, "Deactivating all Wiimotes...\n");
 	m_wii_manager.deactivate();
 	sync_activation_state(false);
     }
@@ -238,10 +233,9 @@ void MainGtkWindow::toggle_activation_clicked() {
 void MainGtkWindow::calibrate_clicked() {
     DEBUG_MSG(1, "Calibrate button clicked\n");
 
-    //if ( m_wii_manager.calibrate() )
-	//print_to_output(_("Calibration succeeded.\n"));
-    //else print_to_output(_("User escaped or there was an error during calibration.\n"));
-    m_wii_manager.calibrate();
+    if ( m_wii_manager.calibrate() )
+	print_to_output(_("Calibration succeeded.\n"));
+    else print_to_output(_("User escaped or there was an error during calibration.\n"));
 }
 void MainGtkWindow::status_icon_clicked() {
     DEBUG_MSG(1, "Status icon clicked\n");
@@ -322,7 +316,6 @@ void MainGtkWindow::wiicursormanager_connect_done_connecting() {
     unsigned int const number_of_connected = m_wii_manager.connected();
 
     sync_wiimote_state_connection_phase(false);
-    DEBUG_MSG(1, "Widgets synched to 'not connected' state\n");
     // WARNING: C function. I'd have used std::ostringstream if not for l10n.
     if (number_of_connected) {
 	char out[1024];
@@ -334,10 +327,8 @@ void MainGtkWindow::wiicursormanager_connect_done_connecting() {
 	else print_to_output(_( "Failed."
 				" Please check if you have the same number of Wiimotes"
 				" as earlier. You need to calibrate before activating.\n"));
-	DEBUG_MSG(1, "Attempted to load config file...\n");
 
 	sync_wiimote_state(true);
-	DEBUG_MSG(1, "Widgets synched to 'ready to activate and calibrate' state\n");
     }
     else print_to_output(_("Unable to connect to any Wiimote.\n"));
 }
@@ -390,6 +381,8 @@ void MainGtkWindow::print_to_output(char const* text, bool add_time_stamp) {
     DEBUG_MSG(3, "Done printing messages\n");
 }
 void MainGtkWindow::sync_activation_state(bool activated) {
+    DEBUG_MSG(1, "Activation state is '%s'. Syncing widgets\n", activated ? "activated" : "deactivated");
+
     m_gtk_toggle_activation->set_label(activated ? _("De_activate") : _("_Activate"));
     m_gtk_calibrate->set_sensitive(!activated);
 
@@ -398,6 +391,8 @@ void MainGtkWindow::sync_activation_state(bool activated) {
     m_gtk_sim_calibrate->set_sensitive(!activated);
 }
 void MainGtkWindow::sync_wiimote_state(bool connected) {
+    DEBUG_MSG(1, "Wiimote connection state is '%s'. Syncing widgets\n", connected ? "connected" : "disconnected");
+
     m_gtk_toggle_wiimote->set_label(connected ? "gtk-disconnect" : "gtk-connect");
     m_gtk_toggle_activation->set_sensitive(connected);
     m_gtk_calibrate->set_sensitive(connected);
@@ -409,6 +404,8 @@ void MainGtkWindow::sync_wiimote_state(bool connected) {
     m_gtk_sim_calibrate->set_sensitive(connected);
 }
 void MainGtkWindow::sync_wiimote_state_connection_phase(bool starting) {
+    DEBUG_MSG(1, "Connection phase's state is '%s'. Syncing widgets\n", starting ? "starting" : "finished");
+
     m_gtk_toggle_wiimote->set_sensitive(!starting);
     m_gtk_sim_connect->set_sensitive(!starting);
 }

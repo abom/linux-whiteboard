@@ -31,14 +31,12 @@ void set_led_state(cwiid_wiimote_t *wiimote, unsigned char led_state)
 void set_rpt_mode(cwiid_wiimote_t *wiimote, unsigned char rpt_mode)
 {
     if (cwiid_command(wiimote, CWIID_CMD_RPT_MODE, rpt_mode)) {
-	DEBUG_MSG(1, "Error setting report mode.\n");
+	DEBUG_MSG(4, "Error setting report mode.\n");
     }
 }
 
 cwiid_wiimote_t* wii_connect(char *mac)
 {
-    DEBUG_MSG(3, "wii_connect() called\n");
-
     /* Remember this when things get serious */
     /* cwiid_set_err(err); */
 
@@ -50,9 +48,8 @@ cwiid_wiimote_t* wii_connect(char *mac)
 
     /* Connect to the wiimote */
     cwiid_wiimote_t* wiimote = 0;
-    DEBUG_MSG(1, "Put Wiimote in discoverable mode now (press 1+2)...\n");
     if ( (wiimote = cwiid_connect(&bdaddr, 0)) ) {
-	DEBUG_MSG(1, "Connected!!!\n");
+	DEBUG_MSG(1, "Connected to a Wiimote\n");
 
 	set_led_state(wiimote, WIIMOTE_LED_CONNECTED); /* Notifies user */
 	set_rpt_mode(wiimote, CWIID_RPT_IR | CWIID_RPT_BTN);
@@ -61,14 +58,10 @@ cwiid_wiimote_t* wii_connect(char *mac)
     }
     else DEBUG_MSG(1, "Unable to connect to wiimote\n");
 
-    DEBUG_MSG(3, "wii_connect() exit\n");
-
     return 0;
 }
 int wii_disconnect(cwiid_wiimote_t* wiimote)
 {
-    DEBUG_MSG(3, "wii_disconnect() called and exit\n");
-
     /* set_led_state(wiimote,0); */
     return cwiid_disconnect(wiimote);
 }

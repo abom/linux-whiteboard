@@ -24,8 +24,6 @@ std::string config_file_path() {
     // WARNING: Unsafe, one should use something like g_build_filename() and g_get_home_dir()
     std::string const ret( std::string(getenv("HOME")) + "/.whiteboardrc" );
 
-    DEBUG_MSG(2, "Config file path: %s\n", ret.c_str());
-
     return ret;
 }
 
@@ -87,7 +85,7 @@ bool Configurator::load_wiimotes_config() {
 	    DEBUG_MSG(1, "Getting all transformation matrices...\n");
 	    std::vector<WiimoteData>& wiis = m_config_data.wiimotes;
 	    for (unsigned int i = 0; i != wiis.size(); ++i) {
-		DEBUG_MSG(1, "Getting matrix #%d...", i);
+		DEBUG_MSG(1, "Getting matrix #%d...\n", i);
 		wiis[i].transform =
 		    construct_matrix_from_key_value( config.getValue<std::string>(construct_matrix_key_name(i)) );
 		DEBUG_MSG(1, "Got!\n");

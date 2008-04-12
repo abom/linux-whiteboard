@@ -45,16 +45,12 @@ void WiiCursorManager::wiicursormanager_connect_thread() {
 
 void WiiCursorManager::connect()
 {
-    DEBUG_MSG(1, "WiiCursorManager::connect() called\n");
-
     // NOTE: We are throwing away the thread ID because we trust
     // the caller to NOT call this repeatedly at the same time.
     // Also not joinable.
     Glib::Thread::create(sigc::mem_fun(*this, &WiiCursorManager::wiicursormanager_connect_thread), false);
 }
 bool WiiCursorManager::disconnect() {
-    DEBUG_MSG(1, "WiiCursorManager::disconnect() called\n");
-
     if (m_cal_window) {
 	DEBUG_MSG(1, "Calibration window is alive (user escaped), quitting..\n");
 	m_cal_window->quit();
@@ -72,8 +68,6 @@ bool WiiCursorManager::disconnect() {
 
 
 bool WiiCursorManager::calibrate() {
-    DEBUG_MSG(1, "WiiCursorManager::calibrate() called\n");
-
     bool ret = true;
 
     for (WiimoteDataIterator iter = m_wiis.begin(); iter != m_wiis.end(); ++iter) {
@@ -99,22 +93,19 @@ bool WiiCursorManager::calibrate() {
 	}
     }
     m_cal_window = 0; // If it gets to this point, the window's been closed
+    DEBUG_MSG(1, "m_cal_window set to 0\n");
 
     return ret;
 }
 
 
 bool WiiCursorManager::activate() {
-    DEBUG_MSG(1, "Starting all Wiicursors...\n");
-
     start_wiicursor_thread(m_thread_data);
 
     // NOTE: Always returns true for now
     return true;
 }
 bool WiiCursorManager::deactivate() {
-    DEBUG_MSG(1, "Stopping all Wiicursors...\n");
-
     finish_wiicursor_thread(m_thread_data);
 
     // NOTE: Always returns true for now

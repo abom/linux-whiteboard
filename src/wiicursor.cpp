@@ -31,8 +31,10 @@ void* wiicursor_thread_func(void* ptr) {
     wc.events() = data.events;
     wc.process(data.wiimotes, data.thread_running); // The main loop
 
-    for (std::vector<WiimoteData>::iterator iter = data.wiimotes.begin(); iter != data.wiimotes.end(); ++iter)
+    for (std::vector<WiimoteData>::iterator iter = data.wiimotes.begin(); iter != data.wiimotes.end(); ++iter) {
+	DEBUG_MSG(1, "Disabling reporting of events in Wiimote #%d...\n", iter-data.wiimotes.begin());
 	cwiid_disable(iter->wiimote, CWIID_FLAG_MESG_IFC);
+    }
 
     DEBUG_MSG(3, "Exiting wiicursor_thread_func()\n");
 
@@ -114,6 +116,7 @@ void WiiCursor::finish_right_click_thread() {
 void WiiCursor::process(std::vector<WiimoteData>& wiimotes, bool const& running) {
     // Sets up the Wiimotes
     for (std::vector<WiimoteData>::iterator iter = wiimotes.begin(); iter != wiimotes.end(); ++iter) {
+	DEBUG_MSG(1, "Enabling reporting of events and non-block signal checking in Wiimote #%d...\n", iter-wiimotes.begin());
 	cwiid_enable(iter->wiimote, CWIID_FLAG_MESG_IFC);
 	cwiid_disable(iter->wiimote, CWIID_FLAG_NONBLOCK);
     }
