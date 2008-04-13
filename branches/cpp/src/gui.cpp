@@ -88,7 +88,7 @@ bool CalibrationWindow::calibration_area_key_pressed(GdkEventKey* event) {
     return true;
 }
 bool CalibrationWindow::calibration_area_exposed(GdkEventExpose* event) {
-    DEBUG_MSG(3, "Calibration window: Began drawing\n");
+    DEBUG_MSG(5, "Calibration window: Began drawing\n");
 
     Glib::RefPtr<Gdk::Window> window = m_gtk_calibration_area->get_window();
     Cairo::RefPtr<Cairo::Context> cr = window->create_cairo_context();
@@ -222,7 +222,7 @@ bool CalibrationWindow::calibration_area_exposed(GdkEventExpose* event) {
     set_led_state(m_thread_data.wiimotes.front().wiimote, leds[m_wiimote_blinking_lighted_up_led]);
     m_wiimote_blinking_lighted_up_led += m_wiimote_blinking_led_direction;
 
-    DEBUG_MSG(3, "Calibration window: Finished drawing\n");
+    DEBUG_MSG(5, "Calibration window: Finished drawing\n");
 
     return true;
 }
