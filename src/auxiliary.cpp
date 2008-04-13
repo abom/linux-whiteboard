@@ -33,7 +33,7 @@ point_t screen_size() {
     point_t const scr_size( DisplayWidth(display, screen), DisplayHeight(display, screen) );
     XCloseDisplay(display);
 
-    DEBUG_MSG(4, "Screen size: %dx%d\n", scr_size.x, scr_size.y);
+    DEBUG_MSG(5, "Screen size: %dx%d\n", scr_size.x, scr_size.y);
 
     return scr_size;
 }
@@ -99,7 +99,7 @@ delta_t_t get_delta_t(delta_t_t& last_time) {
     delta_t_t const current_time =
 	static_cast<delta_t_t>( static_cast<double>(current.tv_sec)*1000.0 + static_cast<double>(current.tv_usec)/1000.0 );
 
-    DEBUG_MSG(4, "Time stamps: Current %lld; Last %lld\n", current_time, last_time);
+    DEBUG_MSG(5, "Time stamps: Current %lld; Last %lld\n", current_time, last_time);
 
     ASSERT (current_time >= last_time, "Time is going backwards. omgwtf!!!1");
     delta_t_t const ret = current_time - last_time;
