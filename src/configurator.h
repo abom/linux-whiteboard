@@ -57,6 +57,7 @@ typedef std::vector<WiimoteData>::iterator WiimoteDataIterator;
 // Configuration key types
 #define CONFIG_RIGHT_CLICK_TIME "right_click_time"
 #define CONFIG_MATRIX "matrix"
+#define CONFIG_SHOW_INSTRUCTIONS_AT_START "show_instructions"
 
 // Handles configurations
 // NOTE: We should have a separate Configurator class
@@ -65,7 +66,8 @@ typedef std::vector<WiimoteData>::iterator WiimoteDataIterator;
 class Configurator {
 public:
     Configurator() :
-	m_gtk_right_click_time(0)
+	m_gtk_right_click_time(0),
+	m_gtk_show_instructions(0)
     { }
 
     // WARNING: This function must be called *after* 'refXml'
@@ -82,6 +84,9 @@ public:
     std::vector<WiimoteData>& wiimotes() {
 	return m_config_data.wiimotes;
     }
+    bool const& show_instructions() const {
+	return m_config_data.show_instructions;
+    }
 
     // NOTE: Should be Configurator class's members
     bool load_other_config();
@@ -93,19 +98,23 @@ private:
 	m_config_data.wait_tolerance = m_gtk_right_click_time->get_value_as_int();
 	DEBUG_MSG(2, "Right-click-time changed to %d\n", m_config_data.wait_tolerance);
     }
+    void show_instructions_toggled() {
+	m_config_data.show_instructions = m_gtk_show_instructions->get_active();
+	DEBUG_MSG(2, "Show-instructions changed to %d\n", m_config_data.show_instructions);
+    }
 
     /* Helpers */
-    std::string construct_matrix_key_name(unsigned int index) {
+    std::string construct_matrix_key_name(unsigned int index) const {
 	std::ostringstream ret;
 	ret << CONFIG_MATRIX << index;
 	return ret.str();
     }
-    std::string construct_matrix_key_value(matrix_t const& transform) {
+    std::string construct_matrix_key_value(matrix_t const& transform) const {
 	std::ostringstream ret;
 	ret << '\"' << transform << '\"';
 	return ret.str();
     }
-    matrix_t construct_matrix_from_key_value(std::string const& key_value) {
+    matrix_t construct_matrix_from_key_value(std::string const& key_value) const {
 	matrix_t ret(TRANSFORM_MATRIX_ROWS, TRANSFORM_MATRIX_COLS);
 	std::istringstream stream(key_value);
 	stream >> ret;
@@ -114,10 +123,12 @@ private:
 
     /* GUI */
     Gtk::SpinButton* m_gtk_right_click_time;
+    Gtk::CheckButton* m_gtk_show_instructions;
     /* Data */
     struct ConfigurationData { // Holds everything that can be saved/loaded
 	delta_t_t wait_tolerance;
 	std::vector<WiimoteData> wiimotes;
+	bool show_instructions;
     } m_config_data;
 };
 

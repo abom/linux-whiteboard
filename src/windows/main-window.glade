@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.2 on Mon Apr  7 18:50:56 2008 -->
+<!--Generated with glade3 3.4.2 on Thu Apr 17 02:24:17 2008 -->
 <glade-interface>
   <widget class="GtkWindow" id="main-window">
     <property name="visible">True</property>
@@ -53,6 +53,24 @@
                 <child>
                   <widget class="GtkMenu" id="menu-main-help">
                     <property name="visible">True</property>
+                    <child>
+                      <widget class="GtkImageMenuItem" id="menuitem-instructions">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">_Intructions</property>
+                        <property name="use_underline">True</property>
+                        <child internal-child="image">
+                          <widget class="GtkImage" id="menu-item-image1">
+                            <property name="visible">True</property>
+                            <property name="stock">gtk-help</property>
+                          </widget>
+                        </child>
+                      </widget>
+                    </child>
+                    <child>
+                      <widget class="GtkSeparatorMenuItem" id="mmh-sep1">
+                        <property name="visible">True</property>
+                      </widget>
+                    </child>
                     <child>
                       <widget class="GtkImageMenuItem" id="menuitem-about">
                         <property name="visible">True</property>
@@ -112,13 +130,11 @@
                   </widget>
                 </child>
                 <child>
-                  <widget class="GtkButton" id="toggle-activation">
+                  <widget class="GtkButton" id="calibrate">
                     <property name="visible">True</property>
                     <property name="sensitive">False</property>
-                    <property name="can_focus">True</property>
-                    <property name="receives_default">True</property>
-                    <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                    <property name="label" translatable="yes">_Activate</property>
+                    <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_KEY_PRESS_MASK | GDK_KEY_RELEASE_MASK</property>
+                    <property name="label" translatable="yes">Calib_rate</property>
                     <property name="use_underline">True</property>
                     <property name="response_id">0</property>
                   </widget>
@@ -127,11 +143,13 @@
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkButton" id="calibrate">
+                  <widget class="GtkButton" id="toggle-activation">
                     <property name="visible">True</property>
                     <property name="sensitive">False</property>
-                    <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_KEY_PRESS_MASK | GDK_KEY_RELEASE_MASK</property>
-                    <property name="label" translatable="yes">Calib_rate</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                    <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+                    <property name="label" translatable="yes">_Activate</property>
                     <property name="use_underline">True</property>
                     <property name="response_id">0</property>
                   </widget>
@@ -351,6 +369,71 @@ Matthias Gies &lt;matthiasgies@gmx.de&gt;</property>
           </widget>
           <packing>
             <property name="position">2</property>
+          </packing>
+        </child>
+      </widget>
+    </child>
+  </widget>
+  <widget class="GtkWindow" id="instructions-window">
+    <property name="title" translatable="yes">Instructions</property>
+    <property name="window_position">GTK_WIN_POS_CENTER</property>
+    <property name="destroy_with_parent">True</property>
+    <property name="icon_name">whiteboard</property>
+    <child>
+      <widget class="GtkVBox" id="vbox-instructions">
+        <property name="visible">True</property>
+        <property name="border_width">10</property>
+        <property name="spacing">10</property>
+        <child>
+          <widget class="GtkImage" id="image-arrangement">
+            <property name="visible">True</property>
+            <property name="stock">gtk-missing-image</property>
+          </widget>
+        </child>
+        <child>
+          <widget class="GtkLabel" id="label-arrangement">
+            <property name="visible">True</property>
+            <property name="label" translatable="yes">Please arrange the Wiimotes as given for best results</property>
+          </widget>
+          <packing>
+            <property name="position">1</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="GtkCheckButton" id="check-show-instructions">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="label" translatable="yes">_Show this instruction next time</property>
+            <property name="use_underline">True</property>
+            <property name="response_id">0</property>
+            <property name="active">True</property>
+            <property name="draw_indicator">True</property>
+          </widget>
+          <packing>
+            <property name="position">2</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="GtkAlignment" id="alignment-buttons">
+            <property name="visible">True</property>
+            <property name="xalign">1</property>
+            <property name="yalign">0</property>
+            <property name="xscale">0</property>
+            <property name="yscale">0</property>
+            <child>
+              <widget class="GtkButton" id="button-instructions-close">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="label" translatable="yes">gtk-close</property>
+                <property name="use_stock">True</property>
+                <property name="response_id">0</property>
+              </widget>
+            </child>
+          </widget>
+          <packing>
+            <property name="expand">False</property>
+            <property name="position">3</property>
           </packing>
         </child>
       </widget>

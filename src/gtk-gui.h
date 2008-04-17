@@ -67,11 +67,10 @@ private:
     bool connecting_window_progressbar_pulse();
     bool key_pressed(GdkEventKey* event);
 
-    /* Helpers */
-public:
     void print_to_output(char const* text);
     void print_to_output(char const* text, bool add_time_stamp);
-private:
+
+    /* Helpers */
     void sync_activation_state(bool activated);
     void sync_wiimote_state(bool wiimote_is_connected);
     void sync_wiimote_state_connection_phase(bool starting); // If false then it has finished
@@ -100,6 +99,7 @@ private:
     Gtk::MenuItem* m_gtk_menu_close;
     Gtk::MenuItem* m_gtk_menu_quit;
     Gtk::MenuItem* m_gtk_menu_about;
+    Gtk::MenuItem* m_gtk_menu_instructions;
     // About dialog box
     Gtk::AboutDialog* m_gtk_about_dialog;
     // Connecting window
@@ -107,6 +107,10 @@ private:
     Gtk::Label* m_gtk_label_wiimote_number;
     Gtk::ProgressBar* m_gtk_connecting_progress;
     sigc::connection m_progressbar_pulse_connection;
+    // Instructions window
+    Gtk::Window* m_gtk_instructions_window;
+    Gtk::Image* m_gtk_image_arrangement;
+    Gtk::Button* m_gtk_instructions_close;
 
     Glib::RefPtr<Gtk::TextTag> m_time_text_tag;
 
