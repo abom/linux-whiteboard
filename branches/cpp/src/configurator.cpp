@@ -41,12 +41,14 @@ void Configurator::init(Glib::RefPtr<Gnome::Glade::Xml>& refXml) {
     DEBUG_MSG(1, "Initializing configurator...\n");
 
     refXml->get_widget("spin-right-click", m_gtk_right_click_time);
+    refXml->get_widget("check-show-instructions", m_gtk_show_instructions);
 
     // Right click time
     right_click_time_changed();
     m_gtk_right_click_time->signal_value_changed().connect( sigc::mem_fun(*this, &Configurator::right_click_time_changed) );
-
-    DEBUG_MSG(1, "Set right-click-time widget to %d\n", m_config_data.wait_tolerance);
+    // Show-instructions
+    show_instructions_toggled();
+    m_gtk_show_instructions->signal_toggled().connect( sigc::mem_fun(*this, &Configurator::show_instructions_toggled) );
 
     DEBUG_MSG(1, "Configurator initialized\n");
 }
@@ -62,8 +64,19 @@ bool Configurator::load_other_config() {
 	try {
 	    DEBUG_MSG(1, "Reading right-click-time\n");
 	    m_gtk_right_click_time->set_value( config.getValue<int>(CONFIG_RIGHT_CLICK_TIME) );
+	    DEBUG_MSG(1, "Set right-click-time widget to %d\n", config.getValue<int>(CONFIG_RIGHT_CLICK_TIME) );
 	} catch(ConfigFileParser::KeyNotFound) {
 	    DEBUG_MSG(1, "Configuration key '%s' not found.\n", CONFIG_RIGHT_CLICK_TIME);
+	    ret = false;
+	}
+	// CONFIG_SHOW_INSTRUCTIONS_AT_START
+	try {
+	    DEBUG_MSG(1, "Reading show-instructions\n");
+	    // NOTE: I know this is not necessary, but to keep consistency with other settings. OK, I am paranoid.
+	    m_gtk_show_instructions->set_active( config.getValue<bool>(CONFIG_SHOW_INSTRUCTIONS_AT_START) );
+	    DEBUG_MSG(1, "Set show-instructions widget to %d\n", config.getValue<bool>(CONFIG_SHOW_INSTRUCTIONS_AT_START) );
+	} catch(ConfigFileParser::KeyNotFound) {
+	    DEBUG_MSG(1, "Configuration key '%s' not found.\n", CONFIG_SHOW_INSTRUCTIONS_AT_START);
 	    ret = false;
 	}
     } catch(ConfigFileParser::FileNotFound) {
@@ -120,6 +133,9 @@ bool Configurator::save_config() {
 	DEBUG_MSG(1, "%s is %s\n", new_matrix_name.c_str(), new_matrix_transform.c_str());
 	config.add<std::string>(new_matrix_name, new_matrix_transform);
     }
+    // CONFIG_SHOW_INSTRUCTIONS_AT_START
+    DEBUG_MSG(1, "Show-instructions is %d\n", m_config_data.show_instructions);
+    config.add<bool>(CONFIG_SHOW_INSTRUCTIONS_AT_START, m_config_data.show_instructions);
 
     config.saveCfgFile( config_file_path() );
 

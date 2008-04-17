@@ -55,13 +55,22 @@ void CalibrationWindow::calibration_begin_click_and_drag(WiiEventData const& dat
 
 
 void draw_calibration_points(
-    Cairo::RefPtr<Cairo::Context> cr,
+    Cairo::RefPtr<Cairo::Context>& cr,
     point_t const points[WIIMOTE_NUM_CALIBRATED_POINTS],
     unsigned int active, bool active_light_up)
 {
     // NOTE: Currently the number of points are not hard-coded,
     // but it is drawn to 4.
     // That number can be made configurable if needed.
+
+    // Translations of positions of 'Done' messages
+    // NOTE: Be careful about font size and stuff
+    double const done_size = 16.0;
+    Point<double> const trans_ratio(3.0, 2.0);
+    Point<double> const trans[4] = {
+	Point<double>(1.0, 1.0), Point<double>(-1.0, 1.0),
+	Point<double>(-1.0, -1.0), Point<double>(1.0, -1.0) };
+    std::string const done_message(_("Done!"));
 
     unsigned int const RADIUS = 10;
     for (unsigned int i = 0; i != sizeof(points); ++i) {
@@ -72,8 +81,15 @@ void draw_calibration_points(
 	    cr->line_to(points[i].x-RADIUS, points[i].y+RADIUS);
 	}
 	// Draws the bounding boxes if needed
+	Point<double> const point_center(points[i].x-RADIUS, points[i].y-RADIUS);
 	if ( (i < active) || ((i == active) && active_light_up) )
-	    cr->rectangle(points[i].x-RADIUS, points[i].y-RADIUS, RADIUS*2, RADIUS*2);
+	    cr->rectangle(point_center.x, point_center.y, RADIUS*2, RADIUS*2);
+	// Draws the messages for finished ones
+	/*if (i < active)*/ {
+	    Point<double> const msg_center( point_center.x+trans[i].x*trans_ratio.x*done_size,
+					    point_center.y+trans[i].y*trans_ratio.y*done_size );
+	    draw_text( cr, done_message, done_size, msg_center, Point<double>(), Point<double>(-1.0, -1.0) );
+	}
     }
 }
 
@@ -87,6 +103,23 @@ bool CalibrationWindow::calibration_area_key_pressed(GdkEventKey* event) {
 
     return true;
 }
+void draw_text( Cairo::RefPtr<Cairo::Context>& cr, std::string const& text, double size,
+		Point<double> const& translations, Point<double> const& justify, Point<double> const& align) {
+    point_t const scr_size = screen_size();
+    point_t const screen_center( scr_size.x/2, scr_size.y/2 );
+    point_t const& scr_half_size = screen_center;
+
+    cr->set_font_size(size);
+    Cairo::TextExtents text_extents;
+    cr->get_text_extents(text, text_extents);
+    Point<double> const text_half_size(text_extents.width/2.0, text_extents.height/2.0);
+    Point<double> const text_position(
+	screen_center.x+align.x*scr_half_size.x-text_extents.x_bearing-text_half_size.x+justify.x*text_half_size.x+translations.x,
+	screen_center.y+align.y*scr_half_size.y-text_extents.y_bearing-text_half_size.y+justify.y*text_half_size.y+translations.y);
+    cr->move_to(text_position.x, text_position.y);
+    cr->set_source_rgb(1.0, 1.0, 1.0);
+    cr->show_text(text);
+}
 bool CalibrationWindow::calibration_area_exposed(GdkEventExpose* event) {
     DEBUG_MSG(5, "Calibration window: Began drawing\n");
 
@@ -99,25 +132,14 @@ bool CalibrationWindow::calibration_area_exposed(GdkEventExpose* event) {
     // Improvements are welcome, I'm too lazy to clean it up.
 
     // Draws a custom user messages, controllable from outside
-    cr->set_font_size(32.0);
-    Cairo::TextExtents text_extents;
-    cr->get_text_extents(m_user_message, text_extents);
-    Point<double> const text_position_user_message(
-	screen_center.x-text_extents.x_bearing-text_extents.width/2.0,
-	screen_center.y-text_extents.y_bearing-text_extents.height/2.0-200.0);
-    cr->move_to(text_position_user_message.x, text_position_user_message.y);
-    cr->set_source_rgb(1.0, 1.0, 1.0);
-    cr->show_text(m_user_message);
-    // Draws a static informational message
+    draw_text( cr, m_user_message, 32.0, Point<double>(0.0, 200.0), Point<double>(), Point<double>(0.0, -1.0) );
+    /* Draws static informational messages */
+    // Calibrate
+    std::string const calibrate_message(_("Put the pen into each blinking point, turn it on and hold until a success message shows up."));
+    draw_text( cr, calibrate_message, 16.0, Point<double>(0.0, -70.0), Point<double>(), Point<double>(0.0, 1.0) );
+    // Escape
     std::string const escape_message(_("Press 'Escape' (Esc) to quit calibration"));
-    cr->set_font_size(16.0);
-    cr->get_text_extents(escape_message, text_extents);
-    Point<double> const text_position_escape_message(
-	screen_center.x-text_extents.x_bearing-text_extents.width/2.0,
-	scr_size.y-text_extents.y_bearing-text_extents.height/2.0-40.0);
-    cr->move_to(text_position_escape_message.x, text_position_escape_message.y);
-    cr->set_source_rgb(1.0, 1.0, 1.0);
-    cr->show_text(escape_message);
+    draw_text( cr, escape_message, 16.0, Point<double>(0.0, -40.0), Point<double>(), Point<double>(0.0, 1.0) );
 
     // Wiimote's viewing area
     cr->set_source_rgb(1.0, 1.0, 1.0);

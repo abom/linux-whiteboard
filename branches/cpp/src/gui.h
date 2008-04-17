@@ -37,9 +37,13 @@
  * active point a blinking square, and paints the
  * calibrated ones static squares */
 void draw_calibration_points(
-    Cairo::RefPtr<Cairo::Context> cr,
+    Cairo::RefPtr<Cairo::Context>& cr,
     point_t const points[WIIMOTE_NUM_CALIBRATED_POINTS],
     unsigned int active, bool active_light_up);
+// Draws a text on the Cairo window
+// NOTE: Ask me for the meaning of 'justify' and 'align'
+void draw_text( Cairo::RefPtr<Cairo::Context>& cr, std::string const& text, double size,
+		Point<double> const& translations, Point<double> const& justify, Point<double> const& align);
 
 class CalibrationWindow {
 public:
@@ -65,7 +69,7 @@ private:
     void calibration_begin_click_and_drag(WiiEventData const& data);
 
     /* Helpers */
-    point_t wii_ir_pos_to_screen_pos(point_t const& screen_center, unsigned int wii_area_radius, point_t const& ir_pos) {
+    point_t wii_ir_pos_to_screen_pos(point_t const& screen_center, unsigned int wii_area_radius, point_t const& ir_pos) const {
 	// NOTE: Needs improvement, it looks fugly
 	point_t const MAX_WII(1020, 760);
 	return point_t(

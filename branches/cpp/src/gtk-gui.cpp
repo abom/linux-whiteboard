@@ -73,10 +73,14 @@ MainGtkWindow::MainGtkWindow(int argc,char *argv[]) :
     m_gtk_sim_quit(0),
     m_gtk_menu_quit(0),
     m_gtk_menu_about(0),
+    m_gtk_menu_instructions(0),
     m_gtk_about_dialog(0),
     m_gtk_connecting_window(0),
     m_gtk_label_wiimote_number(0),
     m_gtk_connecting_progress(0),
+    m_gtk_instructions_window(0),
+    m_gtk_image_arrangement(0),
+    m_gtk_instructions_close(0),
     m_time_text_tag( m_output_buffer->create_tag("bold") ),
     m_configurator( get_configurator() ),
     m_wii_manager(m_connect_events)
@@ -110,10 +114,14 @@ MainGtkWindow::MainGtkWindow(int argc,char *argv[]) :
     refXml->get_widget("menuitem-close", m_gtk_menu_close);
     refXml->get_widget("menuitem-quit", m_gtk_menu_quit);
     refXml->get_widget("menuitem-about", m_gtk_menu_about);
+    refXml->get_widget("menuitem-instructions", m_gtk_menu_instructions);
     refXml->get_widget("about-dialog", m_gtk_about_dialog);
     refXml->get_widget("connecting-window", m_gtk_connecting_window);
     refXml->get_widget("connecting-window-label-wiimote-number", m_gtk_label_wiimote_number);
     refXml->get_widget("connecting-window-progress", m_gtk_connecting_progress);
+    refXml->get_widget("instructions-window", m_gtk_instructions_window);
+    refXml->get_widget("image-arrangement", m_gtk_image_arrangement);
+    refXml->get_widget("button-instructions-close", m_gtk_instructions_close);
     DEBUG_MSG(2, "Loaded GUI components\n");
 
     m_gtk_toggle_wiimote->signal_clicked().connect(sigc::mem_fun(*this, &MainGtkWindow::toggle_wiimote_clicked));
@@ -132,7 +140,9 @@ MainGtkWindow::MainGtkWindow(int argc,char *argv[]) :
     m_gtk_menu_close->signal_activate().connect(sigc::mem_fun(*this, &MainGtkWindow::menu_close_clicked));
     m_gtk_menu_quit->signal_activate().connect(sigc::mem_fun(*this, &MainGtkWindow::sim_quit_clicked));
     m_gtk_menu_about->signal_activate().connect(sigc::mem_fun(*this, &MainGtkWindow::menu_about_clicked));
+    m_gtk_menu_instructions->signal_activate().connect(sigc::mem_fun(*m_gtk_instructions_window, &Gtk::Window::show));
     m_gtk_about_dialog->signal_response().connect(sigc::mem_fun(*this, &MainGtkWindow::about_dialog_response));
+    m_gtk_instructions_close->signal_clicked().connect(sigc::mem_fun(*m_gtk_instructions_window, &Gtk::Window::hide));
     DEBUG_MSG(2, "All signals connected\n");
 
     /* Sets up widgets */
@@ -144,6 +154,9 @@ MainGtkWindow::MainGtkWindow(int argc,char *argv[]) :
     m_gtk_status_icon->set_from_file(ICON_FILE);
     m_gtk_about_dialog->set_icon_from_file(ICON_FILE);
     m_gtk_connecting_window->set_icon_from_file(ICON_FILE);
+    m_gtk_instructions_window->set_icon_from_file(ICON_FILE);
+    std::string const ARRANGEMENT_IMAGE(PIXMAPS_DIR + "/arrangement.svg");
+    m_gtk_image_arrangement->set(ARRANGEMENT_IMAGE);
     m_gtk_main_window->signal_key_press_event().connect( sigc::mem_fun(*this, &MainGtkWindow::key_pressed) );
 
     sync_wiimote_state(false); // Disconnected by default
@@ -166,6 +179,9 @@ MainGtkWindow::MainGtkWindow(int argc,char *argv[]) :
     m_wii_manager.events().begin_click_and_drag = sigc::ptr_fun(&wii_begin_click_and_drag);
     m_wii_manager.events().end_click_and_drag = sigc::ptr_fun(&wii_end_click_and_drag);
     m_wii_manager.events().mouse_moved = sigc::ptr_fun(&wii_mouse_moved);
+
+    if ( m_configurator.show_instructions() ) // Shows instructions window if true
+	m_gtk_instructions_window->show();
 
     DEBUG_MSG(2, "Mouse event handlers connected\n");
 
