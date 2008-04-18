@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.2 on Thu Apr 17 02:24:17 2008 -->
+<!--Generated with glade3 3.4.2 on Thu Apr 17 17:03:49 2008 -->
 <glade-interface>
   <widget class="GtkWindow" id="main-window">
     <property name="visible">True</property>
@@ -56,7 +56,7 @@
                     <child>
                       <widget class="GtkImageMenuItem" id="menuitem-instructions">
                         <property name="visible">True</property>
-                        <property name="label" translatable="yes">_Intructions</property>
+                        <property name="label" translatable="yes">_Instructions</property>
                         <property name="use_underline">True</property>
                         <child internal-child="image">
                           <widget class="GtkImage" id="menu-item-image1">
@@ -385,19 +385,87 @@ Matthias Gies &lt;matthiasgies@gmx.de&gt;</property>
         <property name="border_width">10</property>
         <property name="spacing">10</property>
         <child>
-          <widget class="GtkImage" id="image-arrangement">
+          <widget class="GtkNotebook" id="notebook-instructions">
             <property name="visible">True</property>
-            <property name="stock">gtk-missing-image</property>
+            <property name="can_focus">True</property>
+            <property name="scrollable">True</property>
+            <child>
+              <widget class="GtkVBox" id="notebook-vbox-arrangement">
+                <property name="visible">True</property>
+                <child>
+                  <widget class="GtkImage" id="image-arrangement">
+                    <property name="visible">True</property>
+                    <property name="stock">gtk-missing-image</property>
+                  </widget>
+                </child>
+                <child>
+                  <widget class="GtkLabel" id="label-arrangement">
+                    <property name="visible">True</property>
+                    <property name="label" translatable="yes">Please arrange the Wiimotes as given for best results</property>
+                  </widget>
+                  <packing>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+              </widget>
+              <packing>
+                <property name="position">2</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="GtkLabel" id="notebook-label-arrangement">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">_Arrangement</property>
+                <property name="use_underline">True</property>
+              </widget>
+              <packing>
+                <property name="type">tab</property>
+                <property name="tab_fill">False</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="GtkLabel" id="label1">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">how to use</property>
+              </widget>
+              <packing>
+                <property name="position">1</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="GtkLabel" id="notebook-label-usage">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">How To _Use</property>
+                <property name="use_underline">True</property>
+              </widget>
+              <packing>
+                <property name="type">tab</property>
+                <property name="position">1</property>
+                <property name="tab_fill">False</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="GtkLabel" id="label2">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">calibration</property>
+              </widget>
+              <packing>
+                <property name="position">2</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="GtkLabel" id="notebook-label-calibration">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">Calib_ration Window</property>
+                <property name="use_underline">True</property>
+              </widget>
+              <packing>
+                <property name="type">tab</property>
+                <property name="position">2</property>
+                <property name="tab_fill">False</property>
+              </packing>
+            </child>
           </widget>
-        </child>
-        <child>
-          <widget class="GtkLabel" id="label-arrangement">
-            <property name="visible">True</property>
-            <property name="label" translatable="yes">Please arrange the Wiimotes as given for best results</property>
-          </widget>
-          <packing>
-            <property name="position">1</property>
-          </packing>
         </child>
         <child>
           <widget class="GtkCheckButton" id="check-show-instructions">
@@ -410,7 +478,7 @@ Matthias Gies &lt;matthiasgies@gmx.de&gt;</property>
             <property name="draw_indicator">True</property>
           </widget>
           <packing>
-            <property name="position">2</property>
+            <property name="position">1</property>
           </packing>
         </child>
         <child>
@@ -433,7 +501,7 @@ Matthias Gies &lt;matthiasgies@gmx.de&gt;</property>
           </widget>
           <packing>
             <property name="expand">False</property>
-            <property name="position">3</property>
+            <property name="position">2</property>
           </packing>
         </child>
       </widget>
