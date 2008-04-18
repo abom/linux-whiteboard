@@ -203,8 +203,9 @@ void MainGtkWindow::toggle_wiimote_clicked() {
     if ( !m_wii_manager.connected() ) {
 	DEBUG_MSG(1, "Wiimotes not connected. Connecting\n");
 	// NOTE: This is mainly to force the GUI to update itself
-	// WARNING: Somehow I still feel the problem has not
-	// been completely solved.
+	// Probably because if it performs too fast, GTK wouldn't
+	// have a chance to update the GUI.
+	// NOTE: Better to call some update functions.
 	print_to_output(_("Preparing to connect...\n"));
 
 	sync_wiimote_state_connection_phase(true);
