@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.2 on Thu Apr 17 17:03:49 2008 -->
+<!--Generated with glade3 3.4.2 on Sun Apr 20 18:44:45 2008 -->
 <glade-interface>
   <widget class="GtkWindow" id="main-window">
     <property name="visible">True</property>
@@ -173,7 +173,7 @@
                     <child>
                       <widget class="GtkLabel" id="label-right-click">
                         <property name="visible">True</property>
-                        <property name="label" translatable="yes">Right-click waiting _time (in ms):</property>
+                        <property name="label" translatable="yes">Righ_t-click delay (in ms):</property>
                         <property name="use_underline">True</property>
                         <property name="mnemonic_widget">spin-right-click</property>
                       </widget>
@@ -299,7 +299,7 @@
     <property name="type_hint">GDK_WINDOW_TYPE_HINT_DIALOG</property>
     <property name="skip_taskbar_hint">True</property>
     <property name="program_name">whiteboard</property>
-    <property name="version">0.3.3</property>
+    <property name="version">0.3.3.5</property>
     <property name="copyright" translatable="yes">Copyright © 2007-2008 The Whiteboard authors</property>
     <property name="comments" translatable="yes">Control your mouse pointer with the Wiimote.</property>
     <property name="website">http://code.google.com/p/linux-whiteboard</property>
@@ -392,25 +392,24 @@ Matthias Gies &lt;matthiasgies@gmx.de&gt;</property>
             <child>
               <widget class="GtkVBox" id="notebook-vbox-arrangement">
                 <property name="visible">True</property>
+                <property name="border_width">10</property>
+                <property name="spacing">10</property>
                 <child>
                   <widget class="GtkImage" id="image-arrangement">
                     <property name="visible">True</property>
-                    <property name="stock">gtk-missing-image</property>
+                    <property name="pixbuf">../../pixmaps/arrangement.svg</property>
                   </widget>
                 </child>
                 <child>
                   <widget class="GtkLabel" id="label-arrangement">
                     <property name="visible">True</property>
-                    <property name="label" translatable="yes">Please arrange the Wiimotes as given for best results</property>
+                    <property name="label" translatable="yes">Please arrange the Wiimotes as given for best results.</property>
                   </widget>
                   <packing>
                     <property name="position">1</property>
                   </packing>
                 </child>
               </widget>
-              <packing>
-                <property name="position">2</property>
-              </packing>
             </child>
             <child>
               <widget class="GtkLabel" id="notebook-label-arrangement">
@@ -424,9 +423,180 @@ Matthias Gies &lt;matthiasgies@gmx.de&gt;</property>
               </packing>
             </child>
             <child>
-              <widget class="GtkLabel" id="label1">
+              <widget class="GtkScrolledWindow" id="notebook-scroll-usage">
                 <property name="visible">True</property>
-                <property name="label" translatable="yes">how to use</property>
+                <property name="can_focus">True</property>
+                <property name="hscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
+                <property name="vscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
+                <child>
+                  <widget class="GtkViewport" id="notebook-viewport-usage">
+                    <property name="visible">True</property>
+                    <property name="resize_mode">GTK_RESIZE_QUEUE</property>
+                    <property name="shadow_type">GTK_SHADOW_NONE</property>
+                    <child>
+                      <widget class="GtkVBox" id="notebook-vbox-usage">
+                        <property name="visible">True</property>
+                        <property name="border_width">10</property>
+                        <property name="spacing">10</property>
+                        <child>
+                          <widget class="GtkFrame" id="notebook-frame-usage-controls">
+                            <property name="visible">True</property>
+                            <property name="label_xalign">0</property>
+                            <property name="shadow_type">GTK_SHADOW_NONE</property>
+                            <child>
+                              <widget class="GtkTable" id="notebook-table-usage-controls">
+                                <property name="visible">True</property>
+                                <property name="border_width">10</property>
+                                <property name="n_rows">3</property>
+                                <property name="n_columns">2</property>
+                                <property name="column_spacing">10</property>
+                                <property name="row_spacing">10</property>
+                                <child>
+                                  <widget class="GtkButton" id="notebook-button-usage-connect">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="receives_default">True</property>
+                                    <property name="label" translatable="yes">gtk-connect</property>
+                                    <property name="use_stock">True</property>
+                                    <property name="image_position">GTK_POS_TOP</property>
+                                    <property name="response_id">0</property>
+                                  </widget>
+                                </child>
+                                <child>
+                                  <widget class="GtkButton" id="notebook-button-usage-calibrate">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="receives_default">True</property>
+                                    <property name="label" translatable="yes">Calib_rate</property>
+                                    <property name="use_underline">True</property>
+                                    <property name="response_id">0</property>
+                                  </widget>
+                                  <packing>
+                                    <property name="top_attach">1</property>
+                                    <property name="bottom_attach">2</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <widget class="GtkButton" id="notebook-button-usage-activate">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="receives_default">True</property>
+                                    <property name="label" translatable="yes">_Activate</property>
+                                    <property name="use_underline">True</property>
+                                    <property name="response_id">0</property>
+                                  </widget>
+                                  <packing>
+                                    <property name="top_attach">2</property>
+                                    <property name="bottom_attach">3</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <widget class="GtkLabel" id="notebook-label-usage-connect">
+                                    <property name="visible">True</property>
+                                    <property name="xalign">0</property>
+                                    <property name="label" translatable="yes">Connect all of your Wiimotes first.</property>
+                                    <property name="wrap">True</property>
+                                  </widget>
+                                  <packing>
+                                    <property name="left_attach">1</property>
+                                    <property name="right_attach">2</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <widget class="GtkLabel" id="notebook-label-usage-calibrate">
+                                    <property name="visible">True</property>
+                                    <property name="xalign">0</property>
+                                    <property name="label" translatable="yes">Calibrate all Wiimotes if you have not done it before, or if you have moved them since the last calibration.</property>
+                                    <property name="wrap">True</property>
+                                  </widget>
+                                  <packing>
+                                    <property name="left_attach">1</property>
+                                    <property name="right_attach">2</property>
+                                    <property name="top_attach">1</property>
+                                    <property name="bottom_attach">2</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <widget class="GtkLabel" id="notebook-label-usage-activate">
+                                    <property name="visible">True</property>
+                                    <property name="xalign">0</property>
+                                    <property name="label" translatable="yes">Activate to begin using your pen.</property>
+                                    <property name="wrap">True</property>
+                                  </widget>
+                                  <packing>
+                                    <property name="left_attach">1</property>
+                                    <property name="right_attach">2</property>
+                                    <property name="top_attach">2</property>
+                                    <property name="bottom_attach">3</property>
+                                  </packing>
+                                </child>
+                              </widget>
+                            </child>
+                            <child>
+                              <widget class="GtkLabel" id="notebook-label-usage-controls">
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">&lt;b&gt;Controls&lt;/b&gt;</property>
+                                <property name="use_markup">True</property>
+                              </widget>
+                              <packing>
+                                <property name="type">label_item</property>
+                              </packing>
+                            </child>
+                          </widget>
+                        </child>
+                        <child>
+                          <widget class="GtkFrame" id="notebook-frame-usage-settings">
+                            <property name="visible">True</property>
+                            <property name="label_xalign">0</property>
+                            <property name="shadow_type">GTK_SHADOW_NONE</property>
+                            <child>
+                              <widget class="GtkTable" id="notebook-table-usage-settings">
+                                <property name="visible">True</property>
+                                <property name="border_width">10</property>
+                                <property name="n_rows">1</property>
+                                <property name="n_columns">2</property>
+                                <property name="column_spacing">10</property>
+                                <property name="row_spacing">10</property>
+                                <child>
+                                  <widget class="GtkLabel" id="notebook-label-usage-right-click-explanation">
+                                    <property name="visible">True</property>
+                                    <property name="xalign">0</property>
+                                    <property name="label" translatable="yes">Specify how long you should hold the IR pointer still to do a right-click, in milliseconds. This also affects the calibration process.</property>
+                                    <property name="wrap">True</property>
+                                  </widget>
+                                  <packing>
+                                    <property name="left_attach">1</property>
+                                    <property name="right_attach">2</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <widget class="GtkLabel" id="notebook-label-usage-right-click">
+                                    <property name="visible">True</property>
+                                    <property name="label" translatable="yes">Righ_t-click delay (in ms):</property>
+                                    <property name="use_underline">True</property>
+                                  </widget>
+                                </child>
+                              </widget>
+                            </child>
+                            <child>
+                              <widget class="GtkLabel" id="notebook-label-usage-settings">
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">&lt;b&gt;Settings&lt;/b&gt;</property>
+                                <property name="use_markup">True</property>
+                              </widget>
+                              <packing>
+                                <property name="type">label_item</property>
+                              </packing>
+                            </child>
+                          </widget>
+                          <packing>
+                            <property name="position">1</property>
+                          </packing>
+                        </child>
+                      </widget>
+                    </child>
+                  </widget>
+                </child>
               </widget>
               <packing>
                 <property name="position">1</property>
@@ -445,9 +615,118 @@ Matthias Gies &lt;matthiasgies@gmx.de&gt;</property>
               </packing>
             </child>
             <child>
-              <widget class="GtkLabel" id="label2">
+              <widget class="GtkScrolledWindow" id="notebook-scroll-calibration">
                 <property name="visible">True</property>
-                <property name="label" translatable="yes">calibration</property>
+                <property name="can_focus">True</property>
+                <property name="hscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
+                <property name="vscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
+                <child>
+                  <widget class="GtkViewport" id="notebook-viewport-calibration">
+                    <property name="visible">True</property>
+                    <property name="resize_mode">GTK_RESIZE_QUEUE</property>
+                    <property name="shadow_type">GTK_SHADOW_NONE</property>
+                    <child>
+                      <widget class="GtkTable" id="notebook-table-calibration">
+                        <property name="visible">True</property>
+                        <property name="border_width">10</property>
+                        <property name="n_rows">4</property>
+                        <property name="n_columns">2</property>
+                        <property name="column_spacing">10</property>
+                        <property name="row_spacing">10</property>
+                        <child>
+                          <widget class="GtkLabel" id="label-calibration-strays">
+                            <property name="visible">True</property>
+                            <property name="xalign">0</property>
+                            <property name="label" translatable="yes">Shows how accurate and jitter-free your infrared pen is. If the yellow dot moves outside of the boundary, you should calibrate that point again.</property>
+                            <property name="wrap">True</property>
+                          </widget>
+                          <packing>
+                            <property name="left_attach">1</property>
+                            <property name="right_attach">2</property>
+                            <property name="top_attach">3</property>
+                            <property name="bottom_attach">4</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <widget class="GtkLabel" id="label-calibration-percentages">
+                            <property name="visible">True</property>
+                            <property name="xalign">0</property>
+                            <property name="label" translatable="yes">Shows how long you have been holding the infrared pen down. When the circle is full, move on to the next point.</property>
+                            <property name="wrap">True</property>
+                          </widget>
+                          <packing>
+                            <property name="left_attach">1</property>
+                            <property name="right_attach">2</property>
+                            <property name="top_attach">2</property>
+                            <property name="bottom_attach">3</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <widget class="GtkLabel" id="label-calibration-camera">
+                            <property name="visible">True</property>
+                            <property name="xalign">0</property>
+                            <property name="label" translatable="yes">Wiimote camera's point of view, the yellow square is the current location of your infrared pen.</property>
+                            <property name="wrap">True</property>
+                          </widget>
+                          <packing>
+                            <property name="left_attach">1</property>
+                            <property name="right_attach">2</property>
+                            <property name="top_attach">1</property>
+                            <property name="bottom_attach">2</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <widget class="GtkLabel" id="label-calibration-points">
+                            <property name="visible">True</property>
+                            <property name="xalign">0</property>
+                            <property name="label" translatable="yes">Calibration points, the blinking one is being calibrated.</property>
+                            <property name="wrap">True</property>
+                          </widget>
+                          <packing>
+                            <property name="left_attach">1</property>
+                            <property name="right_attach">2</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <widget class="GtkImage" id="image-calibration-strays">
+                            <property name="visible">True</property>
+                            <property name="pixbuf">../../pixmaps/calibration-strays.svg</property>
+                          </widget>
+                          <packing>
+                            <property name="top_attach">3</property>
+                            <property name="bottom_attach">4</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <widget class="GtkImage" id="image-calibration-percentages">
+                            <property name="visible">True</property>
+                            <property name="pixbuf">../../pixmaps/calibration-percentages.svg</property>
+                          </widget>
+                          <packing>
+                            <property name="top_attach">2</property>
+                            <property name="bottom_attach">3</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <widget class="GtkImage" id="image-calibration-camera">
+                            <property name="visible">True</property>
+                            <property name="pixbuf">../../pixmaps/calibration-camera.svg</property>
+                          </widget>
+                          <packing>
+                            <property name="top_attach">1</property>
+                            <property name="bottom_attach">2</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <widget class="GtkImage" id="image-calibration-points">
+                            <property name="visible">True</property>
+                            <property name="pixbuf">../../pixmaps/calibration-points.svg</property>
+                          </widget>
+                        </child>
+                      </widget>
+                    </child>
+                  </widget>
+                </child>
               </widget>
               <packing>
                 <property name="position">2</property>

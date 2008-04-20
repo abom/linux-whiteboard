@@ -79,7 +79,6 @@ MainGtkWindow::MainGtkWindow(int argc,char *argv[]) :
     m_gtk_label_wiimote_number(0),
     m_gtk_connecting_progress(0),
     m_gtk_instructions_window(0),
-    m_gtk_image_arrangement(0),
     m_gtk_instructions_close(0),
     m_time_text_tag( m_output_buffer->create_tag("bold") ),
     m_configurator( get_configurator() ),
@@ -120,7 +119,6 @@ MainGtkWindow::MainGtkWindow(int argc,char *argv[]) :
     refXml->get_widget("connecting-window-label-wiimote-number", m_gtk_label_wiimote_number);
     refXml->get_widget("connecting-window-progress", m_gtk_connecting_progress);
     refXml->get_widget("instructions-window", m_gtk_instructions_window);
-    refXml->get_widget("image-arrangement", m_gtk_image_arrangement);
     refXml->get_widget("button-instructions-close", m_gtk_instructions_close);
     DEBUG_MSG(2, "Loaded GUI components\n");
 
@@ -155,8 +153,6 @@ MainGtkWindow::MainGtkWindow(int argc,char *argv[]) :
     m_gtk_about_dialog->set_icon_from_file(ICON_FILE);
     m_gtk_connecting_window->set_icon_from_file(ICON_FILE);
     m_gtk_instructions_window->set_icon_from_file(ICON_FILE);
-    std::string const ARRANGEMENT_IMAGE(PIXMAPS_DIR + "/arrangement.svg");
-    m_gtk_image_arrangement->set(ARRANGEMENT_IMAGE);
     m_gtk_main_window->signal_key_press_event().connect( sigc::mem_fun(*this, &MainGtkWindow::key_pressed) );
 
     sync_wiimote_state(false); // Disconnected by default

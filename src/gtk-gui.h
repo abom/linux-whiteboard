@@ -109,7 +109,6 @@ private:
     sigc::connection m_progressbar_pulse_connection;
     // Instructions window
     Gtk::Window* m_gtk_instructions_window;
-    Gtk::Image* m_gtk_image_arrangement;
     Gtk::Button* m_gtk_instructions_close;
 
     Glib::RefPtr<Gtk::TextTag> m_time_text_tag;
