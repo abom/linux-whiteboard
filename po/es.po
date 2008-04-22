@@ -1,3 +1,4 @@
+# translation of es.po to español
 # Spanish translations for Wiimote Whiteboard package.
 # Copyright (C) 2008 THE Wiimote Whiteboard'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the Wiimote Whiteboard package.
@@ -8,63 +9,64 @@ msgid ""
 msgstr ""
 "Project-Id-Version: es\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-04-14 00:03+0100\n"
-"PO-Revision-Date: 2008-04-01 23:44+0200\n"
+"POT-Creation-Date: 2008-04-22 23:30+0100\n"
+"PO-Revision-Date: 2008-04-22 23:00+0200\n"
 "Last-Translator: Antoni Ubieto <antoni.ubieto@gmail.com>\n"
-"Language-Team: español\n"
+"Language-Team:\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: KBabel 1.11.4\n"
 
-#: ../src/gtk-gui.cpp:154
+#: ../src/gtk-gui.cpp:163
 msgid "Configurations successfully loaded.\n"
 msgstr "Configuraciones cargadas.\n"
 
-#: ../src/gtk-gui.cpp:155
+#: ../src/gtk-gui.cpp:164
 msgid "Failed to load configuration file.\n"
 msgstr "No se ha cargado el fichero de configuración.\n"
 
 #. NOTE: This is mainly to force the GUI to update itself
-#. WARNING: Somehow I still feel the problem has not
-#. been completely solved.
-#: ../src/gtk-gui.cpp:192
+#. Probably because if it performs too fast, GTK wouldn't
+#. have a chance to update the GUI.
+#. NOTE: Better to call some update functions.
+#: ../src/gtk-gui.cpp:205
 msgid "Preparing to connect...\n"
 msgstr "Preparando para conectar...\n"
 
-#: ../src/gtk-gui.cpp:213
+#: ../src/gtk-gui.cpp:226
 msgid "Successfully disconnected all Wiimotes.\n"
 msgstr "Se han desconectado todos los Wiimotes.\n"
 
-#: ../src/gtk-gui.cpp:214
+#: ../src/gtk-gui.cpp:227
 msgid ""
 "There was an error disconnecting the Wiimotes. Hell's broken loose!!1.\n"
 msgstr "Error en la desconnexión de los Wiimotes!!.\n"
 
-#: ../src/gtk-gui.cpp:237
+#: ../src/gtk-gui.cpp:250
 msgid "Calibration succeeded.\n"
 msgstr "Calibración correcta.\n"
 
-#: ../src/gtk-gui.cpp:238
+#: ../src/gtk-gui.cpp:251
 msgid "User escaped or there was an error during calibration.\n"
 msgstr ""
 "El usuario ha salido (Esc) o ha habido un error durante la calibración.\n"
 
-#: ../src/gtk-gui.cpp:291
+#: ../src/gtk-gui.cpp:304
 #, c-format
 msgid "Connecting to Wiimote #%d... "
 msgstr "Connectando con el Wiimote #%d... "
 
-#: ../src/gtk-gui.cpp:305
+#: ../src/gtk-gui.cpp:318
 msgid "Succeeded!.\n"
 msgstr "¡Correcto!.\n"
 
-#: ../src/gtk-gui.cpp:305
+#: ../src/gtk-gui.cpp:318
 msgid "Failed.\n"
 msgstr "Ha fallado.\n"
 
-#: ../src/gtk-gui.cpp:322
+#: ../src/gtk-gui.cpp:335
 #, c-format
 msgid ""
 "Successfully connected to %d Wiimote(s). Loading all Wiimotes's "
@@ -73,11 +75,11 @@ msgstr ""
 "Connectado correctamente con el(los) Wiimote(s) %d. Cargando las "
 "configuraciones de todos los Wiimotes....\n"
 
-#: ../src/gtk-gui.cpp:326
+#: ../src/gtk-gui.cpp:339
 msgid "Done!. Click 'Activate' to use your infrared pen.\n"
-msgstr "Hecho!. Clicad 'Activar' para utilizar el puntero infrarojo.\n"
+msgstr "¡Hecho!. Clicad 'Activar' para utilizar el puntero infrarojo.\n"
 
-#: ../src/gtk-gui.cpp:327
+#: ../src/gtk-gui.cpp:340
 msgid ""
 "Failed. Please check if you have the same number of Wiimotes as earlier. You "
 "need to calibrate before activating.\n"
@@ -85,15 +87,15 @@ msgstr ""
 "Ha fallado. Comprovad que haya el mismo número de Wimootes que "
 "anteriormente. Se tiene que calibrar antes que activar.\n"
 
-#: ../src/gtk-gui.cpp:333
+#: ../src/gtk-gui.cpp:346
 msgid "Unable to connect to any Wiimote.\n"
 msgstr "No se puede conectar con ningún Wiimote.\n"
 
-#: ../src/gtk-gui.cpp:386 ../src/windows/main-window.glade.h:7
+#: ../src/gtk-gui.cpp:399 ../src/windows/main-window.glade.h:14
 msgid "De_activate"
 msgstr "Des_activar"
 
-#: ../src/gtk-gui.cpp:386 ../src/windows/main-window.glade.h:16
+#: ../src/gtk-gui.cpp:399 ../src/windows/main-window.glade.h:30
 msgid "_Activate"
 msgstr "_Activar"
 
@@ -110,42 +112,112 @@ msgid "Wiimote Calibration"
 msgstr "Calibración del Wiimote"
 
 #: ../src/windows/main-window.glade.h:1
+msgid "<b>Controls</b>"
+msgstr "<b>Controles</b>"
+
+#: ../src/windows/main-window.glade.h:2
+msgid "<b>Settings</b>"
+msgstr "<b>Ajustes</b>"
+
+#: ../src/windows/main-window.glade.h:3
 msgid "<b>_Settings</b>"
 msgstr "<b>Ajuste_s</b>"
 
-#: ../src/windows/main-window.glade.h:2
+#: ../src/windows/main-window.glade.h:4
 msgid "About Whiteboard"
-msgstr "Acerca de Pizarra (Whiteboard)"
+msgstr "Acerca de la Pizarra (Whiteboard)"
 
-#: ../src/windows/main-window.glade.h:3
+#: ../src/windows/main-window.glade.h:5
+msgid "Activate to begin using your pen."
+msgstr "Activad para usar el puntero"
+
+#: ../src/windows/main-window.glade.h:6
 msgid "Calib_rate"
 msgstr "Calib_rar"
 
-#: ../src/windows/main-window.glade.h:4
-msgid "Connecting..."
-msgstr "Connectando..."
+#: ../src/windows/main-window.glade.h:7
+msgid "Calib_ration Window"
+msgstr "Ventana de calib_ración"
 
-#: ../src/windows/main-window.glade.h:5
+#: ../src/windows/main-window.glade.h:8
+msgid ""
+"Calibrate all Wiimotes if you have not done it before, or if you have moved "
+"them since the last calibration."
+msgstr ""
+"Calibrad todos los Wiimotes si no lo habeis hecho antes, o si los habeis "
+"movido desde la última calibración."
+
+#: ../src/windows/main-window.glade.h:9
+msgid "Calibration points, the blinking one is being calibrated."
+msgstr "Puntos de calibración, se està calibrando el intermitente."
+
+#: ../src/windows/main-window.glade.h:10
+msgid "Connect all of your Wiimotes first."
+msgstr "Conectad primero todos los Wiimotes."
+
+#: ../src/windows/main-window.glade.h:11
+msgid "Connecting..."
+msgstr "Conectando..."
+
+#: ../src/windows/main-window.glade.h:12
 msgid "Control your mouse pointer with the Wiimote."
 msgstr "Controlad el puntero del ratón con el Wiimote."
 
-#: ../src/windows/main-window.glade.h:6
+#: ../src/windows/main-window.glade.h:13
 msgid "Copyright © 2007-2008 The Whiteboard authors"
 msgstr "Copyright © 2007-2008 Los autores de Whiteboard (Pizarra)"
 
-#: ../src/windows/main-window.glade.h:8
+#: ../src/windows/main-window.glade.h:15
+msgid "How To _Use"
+msgstr "_Utilitzación"
+
+#: ../src/windows/main-window.glade.h:16
+msgid "Instructions"
+msgstr "Instrucciones"
+
+#: ../src/windows/main-window.glade.h:17
+msgid "Please arrange the Wiimotes as given for best results."
+msgstr ""
+"Disponed los Wiimotes como se muestra para obtener los mejores resultados"
+
+#: ../src/windows/main-window.glade.h:18
 msgid "Please press both <b>1</b> and <b>2</b> buttons on your Wiimote."
 msgstr "Pulsad a la vez los botones <b>1</b> y <b>2</b> del Wiimote."
 
-#: ../src/windows/main-window.glade.h:9
-msgid "Right-click waiting _time (in ms):"
+#: ../src/windows/main-window.glade.h:19
+msgid "Righ_t-click delay (in ms):"
 msgstr "_Tiempo de espera para el clic derecho (en ms):"
 
-#: ../src/windows/main-window.glade.h:10
+#: ../src/windows/main-window.glade.h:20
+msgid ""
+"Shows how accurate and jitter-free your infrared pen is. If the yellow dot "
+"moves outside of the boundary, you should calibrate that point again."
+msgstr ""
+"Muestra la precisión y la estabilidad del puntero infrarojo. Si el punto "
+"amarillo sale fuera tendríais que calibrar otra vez ese punto."
+
+#: ../src/windows/main-window.glade.h:21
+msgid ""
+"Shows how long you have been holding the infrared pen down. When the circle "
+"is full, move on to the next point."
+msgstr ""
+"Muestra cuanto ha transcurrido con del puntero activo. Cuando el círculo se "
+"llene, id al siguiente punto."
+
+#: ../src/windows/main-window.glade.h:22
+msgid ""
+"Specify how long you should hold the IR pointer still to do a right-click, "
+"in milliseconds. This also affects the calibration process."
+msgstr ""
+"Especifica cuanto tiempo se tiene que mantener activo el puntero IR para "
+"hacer un clic derecho, en milisegundos. Esto también afecta el proceso de "
+"calibración."
+
+#: ../src/windows/main-window.glade.h:23
 msgid "Whiteboard"
 msgstr "Pizarra (Whiteboard)"
 
-#: ../src/windows/main-window.glade.h:11
+#: ../src/windows/main-window.glade.h:24
 msgid ""
 "Whiteboard is free software; you can redistribute it and/or modify it under "
 "the terms of the GNU General Public Licence as published by the Free "
@@ -175,12 +247,46 @@ msgstr ""
 "Glade; if not, write to the Free Software Foundation, Inc., 51 Franklin "
 "Street, Fifth Floor, Boston, MA 02110-1301, USA."
 
-#: ../src/windows/main-window.glade.h:17
+#: ../src/windows/main-window.glade.h:29
+msgid ""
+"Wiimote camera's point of view, the yellow dot is the current location of "
+"your infrared pen."
+msgstr ""
+"Punto de vista de la cámara del Wiimote. El punto amarillo es la situación "
+"actual del puntero infrarojo."
+
+#: ../src/windows/main-window.glade.h:31
+msgid "_Arrangement"
+msgstr "Colocación (_A)"
+
+#: ../src/windows/main-window.glade.h:32
 msgid "_Help"
 msgstr "Ayuda (_H)"
 
-#. Draws a static informational message
-#: ../src/gui.cpp:112
+#: ../src/windows/main-window.glade.h:33
+msgid "_Instructions"
+msgstr "_Instrucciones"
+
+#: ../src/windows/main-window.glade.h:34
+msgid "_Show these instructions next time"
+msgstr "Mue_stra estas instrucciones la próxima vez"
+
+#: ../src/gui.cpp:74
+msgid "Done!"
+msgstr "¡Hecho!"
+
+#. Draws static informational messages
+#. Calibrate
+#: ../src/gui.cpp:148
+msgid ""
+"Put the pen at each blinking point, turn it on and hold until a success "
+"message shows up."
+msgstr ""
+"Situad el puntero sobre cada punto intermitente y mantenedlo activo y quieto "
+"hasta que aparezca un aviso."
+
+#. Escape
+#: ../src/gui.cpp:151
 msgid "Press 'Escape' (Esc) to quit calibration"
 msgstr "Pulsad 'Escape' (Esc) para salir de la calibración"
 

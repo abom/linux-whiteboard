@@ -345,6 +345,10 @@ bool CalibrationWindow::get_calibration_points(WiimoteCalibratedPoints& p_wii) {
     // NOTE: No need to finish_wiicursor_thread() here as it is handled by
     // quit() if user selected 'Quit' from the menu. It self-terminated (using quit()) otherwise.
 
+    // NOTE: The reason the app doesn't quit when user selects 'Quit'
+    // from the menu is because we call gtk_kit.run() twice.
+    // Perhaps I will merge the calibration window into the main window file.
+
     // Returns p_wii only if succeeded
     bool const succeeded = (m_cal_data.active_point == WIIMOTE_NUM_CALIBRATED_POINTS);
     if (succeeded) {

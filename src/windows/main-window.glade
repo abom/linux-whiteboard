@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.2 on Sun Apr 20 18:44:45 2008 -->
+<!--Generated with glade3 3.4.2 on Tue Apr 22 23:30:31 2008 -->
 <glade-interface>
   <widget class="GtkWindow" id="main-window">
     <property name="visible">True</property>
@@ -397,7 +397,7 @@ Matthias Gies &lt;matthiasgies@gmx.de&gt;</property>
                 <child>
                   <widget class="GtkImage" id="image-arrangement">
                     <property name="visible">True</property>
-                    <property name="pixbuf">../../pixmaps/arrangement.svg</property>
+                    <property name="pixbuf">arrangement.svg</property>
                   </widget>
                 </child>
                 <child>
@@ -456,7 +456,7 @@ Matthias Gies &lt;matthiasgies@gmx.de&gt;</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
                                     <property name="receives_default">True</property>
-                                    <property name="label" translatable="yes">gtk-connect</property>
+                                    <property name="label">gtk-connect</property>
                                     <property name="use_stock">True</property>
                                     <property name="image_position">GTK_POS_TOP</property>
                                     <property name="response_id">0</property>
@@ -665,7 +665,7 @@ Matthias Gies &lt;matthiasgies@gmx.de&gt;</property>
                           <widget class="GtkLabel" id="label-calibration-camera">
                             <property name="visible">True</property>
                             <property name="xalign">0</property>
-                            <property name="label" translatable="yes">Wiimote camera's point of view, the yellow square is the current location of your infrared pen.</property>
+                            <property name="label" translatable="yes">Wiimote camera's point of view, the yellow dot is the current location of your infrared pen.</property>
                             <property name="wrap">True</property>
                           </widget>
                           <packing>
@@ -690,7 +690,7 @@ Matthias Gies &lt;matthiasgies@gmx.de&gt;</property>
                         <child>
                           <widget class="GtkImage" id="image-calibration-strays">
                             <property name="visible">True</property>
-                            <property name="pixbuf">../../pixmaps/calibration-strays.svg</property>
+                            <property name="pixbuf">calibration-strays.svg</property>
                           </widget>
                           <packing>
                             <property name="top_attach">3</property>
@@ -700,7 +700,7 @@ Matthias Gies &lt;matthiasgies@gmx.de&gt;</property>
                         <child>
                           <widget class="GtkImage" id="image-calibration-percentages">
                             <property name="visible">True</property>
-                            <property name="pixbuf">../../pixmaps/calibration-percentages.svg</property>
+                            <property name="pixbuf">calibration-percentages.svg</property>
                           </widget>
                           <packing>
                             <property name="top_attach">2</property>
@@ -710,7 +710,7 @@ Matthias Gies &lt;matthiasgies@gmx.de&gt;</property>
                         <child>
                           <widget class="GtkImage" id="image-calibration-camera">
                             <property name="visible">True</property>
-                            <property name="pixbuf">../../pixmaps/calibration-camera.svg</property>
+                            <property name="pixbuf">calibration-camera.svg</property>
                           </widget>
                           <packing>
                             <property name="top_attach">1</property>
@@ -720,7 +720,7 @@ Matthias Gies &lt;matthiasgies@gmx.de&gt;</property>
                         <child>
                           <widget class="GtkImage" id="image-calibration-points">
                             <property name="visible">True</property>
-                            <property name="pixbuf">../../pixmaps/calibration-points.svg</property>
+                            <property name="pixbuf">calibration-points.svg</property>
                           </widget>
                         </child>
                       </widget>
@@ -750,7 +750,7 @@ Matthias Gies &lt;matthiasgies@gmx.de&gt;</property>
           <widget class="GtkCheckButton" id="check-show-instructions">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
-            <property name="label" translatable="yes">_Show this instruction next time</property>
+            <property name="label" translatable="yes">_Show these instructions next time</property>
             <property name="use_underline">True</property>
             <property name="response_id">0</property>
             <property name="active">True</property>
@@ -772,7 +772,7 @@ Matthias Gies &lt;matthiasgies@gmx.de&gt;</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
-                <property name="label" translatable="yes">gtk-close</property>
+                <property name="label">gtk-close</property>
                 <property name="use_stock">True</property>
                 <property name="response_id">0</property>
               </widget>
