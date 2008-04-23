@@ -397,7 +397,7 @@ Matthias Gies &lt;matthiasgies@gmx.de&gt;</property>
                 <child>
                   <widget class="GtkImage" id="image-arrangement">
                     <property name="visible">True</property>
-                    <property name="pixbuf">arrangement.svg</property>
+                    <property name="pixbuf">../../pixmaps/arrangement.svg</property>
                   </widget>
                 </child>
                 <child>
@@ -690,7 +690,7 @@ Matthias Gies &lt;matthiasgies@gmx.de&gt;</property>
                         <child>
                           <widget class="GtkImage" id="image-calibration-strays">
                             <property name="visible">True</property>
-                            <property name="pixbuf">calibration-strays.svg</property>
+                            <property name="pixbuf">../../pixmaps/calibration-strays.svg</property>
                           </widget>
                           <packing>
                             <property name="top_attach">3</property>
@@ -700,7 +700,7 @@ Matthias Gies &lt;matthiasgies@gmx.de&gt;</property>
                         <child>
                           <widget class="GtkImage" id="image-calibration-percentages">
                             <property name="visible">True</property>
-                            <property name="pixbuf">calibration-percentages.svg</property>
+                            <property name="pixbuf">../../pixmaps/calibration-percentages.svg</property>
                           </widget>
                           <packing>
                             <property name="top_attach">2</property>
@@ -710,7 +710,7 @@ Matthias Gies &lt;matthiasgies@gmx.de&gt;</property>
                         <child>
                           <widget class="GtkImage" id="image-calibration-camera">
                             <property name="visible">True</property>
-                            <property name="pixbuf">calibration-camera.svg</property>
+                            <property name="pixbuf">../../pixmaps/calibration-camera.svg</property>
                           </widget>
                           <packing>
                             <property name="top_attach">1</property>
@@ -720,7 +720,7 @@ Matthias Gies &lt;matthiasgies@gmx.de&gt;</property>
                         <child>
                           <widget class="GtkImage" id="image-calibration-points">
                             <property name="visible">True</property>
-                            <property name="pixbuf">calibration-points.svg</property>
+                            <property name="pixbuf">../../pixmaps/calibration-points.svg</property>
                           </widget>
                         </child>
                       </widget>
