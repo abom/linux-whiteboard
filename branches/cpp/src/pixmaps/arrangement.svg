@@ -28,8 +28,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="1.4"
-     inkscape:cx="217.31207"
-     inkscape:cy="147.78095"
+     inkscape:cx="317.44331"
+     inkscape:cy="101.24007"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -85,6 +85,13 @@
        inkscape:vp_y="0 : 1000 : 0"
        inkscape:vp_x="0 : 300 : 1"
        sodipodi:type="inkscape:persp3d" />
+    <inkscape:perspective
+       id="perspective2587"
+       inkscape:persp3d-origin="372.04724 : 350.78739 : 1"
+       inkscape:vp_z="744.09448 : 526.18109 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 526.18109 : 1"
+       sodipodi:type="inkscape:persp3d" />
   </defs>
   <metadata
      id="metadata7">
@@ -117,21 +124,37 @@
        inkscape:export-filename="/home/vanhtu1987/Temp/Tarballs/whiteboard/src/pixmaps/arrangement.png"
        inkscape:export-xdpi="101.05"
        inkscape:export-ydpi="101.05" />
-    <g
-       id="g3975"
+    <path
+       id="path3919"
+       d="M 393.7781,74.723855 C 393.7781,74.723855 261.65091,74.723705 261.65091,74.723705 C 257.25049,74.723705 253.34493,73.341585 252.88913,71.605785 C 252.88913,71.605785 241.63039,28.730395 241.63039,28.730395 C 241.01908,26.402425 244.69461,24.504535 249.87928,24.505035 C 249.87928,24.505035 405.54714,24.520085 405.54714,24.520085 C 410.72865,24.520585 414.40166,26.418565 413.79058,28.745655 C 413.79058,28.745655 402.53543,71.606845 402.53543,71.606845 C 402.07975,73.342135 398.17624,74.723855 393.7781,74.723855 C 393.7781,74.723855 393.7781,74.723855 393.7781,74.723855"
+       style="fill:#fffe00;fill-opacity:0.50196078;fill-rule:evenodd;stroke:#737373;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dashoffset:0;stroke-opacity:1"
        inkscape:export-filename="/home/vanhtu1987/Temp/Tarballs/whiteboard/src/pixmaps/arrangement.png"
        inkscape:export-xdpi="101.05"
-       inkscape:export-ydpi="101.05"
-       transform="translate(-50.860947,-570.71429)">
-      <image
-         xlink:href="/media/CACHE/Downloaded/Images/WiiMote.jpg"
-         sodipodi:absref="/media/CACHE/Downloaded/Images/WiiMote.jpg"
-         width="11.254874"
-         height="40.993362"
-         id="image3741"
-         x="159.58176"
-         y="784.13977" />
+       inkscape:export-ydpi="101.05" />
+    <path
+       sodipodi:type="arc"
+       style="opacity:1;fill:#fffe00;fill-opacity:1;fill-rule:evenodd;stroke:#6d6464;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="path4029"
+       sodipodi:cx="98.994949"
+       sodipodi:cy="786.69208"
+       sodipodi:rx="20.708128"
+       sodipodi:ry="20.708128"
+       d="M 119.70308,786.69208 A 20.708128,20.708128 0 1 1 78.286821,786.69208 A 20.708128,20.708128 0 1 1 119.70308,786.69208 z"
+       transform="translate(161.56652,-548.61561)"
+       inkscape:export-filename="/home/vanhtu1987/Temp/Tarballs/whiteboard/src/pixmaps/arrangement.png"
+       inkscape:export-xdpi="101.05"
+       inkscape:export-ydpi="101.05" />
+    <path
+       id="check"
+       style="fill:url(#radialGradient2256);fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 24.853339,240.96363 C 24.853339,240.96363 35.894969,253.3976 38.103295,258.47676 L 47.599095,258.47676 C 51.574083,246.33096 67.032363,217.33454 80.282313,207.17624 C 83.027563,203.64664 76.131083,202.18969 70.565683,204.52625 C 62.177813,208.04779 46.358045,234.93516 43.403275,241.4053 C 39.207459,242.50946 34.790806,234.33865 34.790806,234.33865 L 24.853339,240.96363 z"
+       inkscape:export-filename="/home/vanhtu1987/Temp/Tarballs/whiteboard/src/pixmaps/arrangement.png"
+       inkscape:export-xdpi="101.05"
+       inkscape:export-ydpi="101.05" />
+    <g
+       id="g2526">
       <g
+         transform="translate(-50.860947,-570.71429)"
          id="g3967">
         <path
            style="fill:none;fill-rule:evenodd;stroke:#cdcdcd;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
@@ -164,30 +187,19 @@
            id="path3773"
            sodipodi:nodetypes="cc" />
       </g>
-    </g>
-    <path
-       id="path3919"
-       d="M 393.7781,74.723855 C 393.7781,74.723855 261.65091,74.723705 261.65091,74.723705 C 257.25049,74.723705 253.34493,73.341585 252.88913,71.605785 C 252.88913,71.605785 241.63039,28.730395 241.63039,28.730395 C 241.01908,26.402425 244.69461,24.504535 249.87928,24.505035 C 249.87928,24.505035 405.54714,24.520085 405.54714,24.520085 C 410.72865,24.520585 414.40166,26.418565 413.79058,28.745655 C 413.79058,28.745655 402.53543,71.606845 402.53543,71.606845 C 402.07975,73.342135 398.17624,74.723855 393.7781,74.723855 C 393.7781,74.723855 393.7781,74.723855 393.7781,74.723855"
-       style="fill:#fffe00;fill-opacity:0.50196078;fill-rule:evenodd;stroke:#737373;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dashoffset:0;stroke-opacity:1"
-       inkscape:export-filename="/home/vanhtu1987/Temp/Tarballs/whiteboard/src/pixmaps/arrangement.png"
-       inkscape:export-xdpi="101.05"
-       inkscape:export-ydpi="101.05" />
-    <g
-       id="g3993"
-       inkscape:export-filename="/home/vanhtu1987/Temp/Tarballs/whiteboard/src/pixmaps/arrangement.png"
-       inkscape:export-xdpi="101.05"
-       inkscape:export-ydpi="101.05"
-       transform="translate(-50.860947,-570.71429)">
       <image
-         transform="matrix(0.7071068,-0.7071068,0.7071068,0.7071068,0,0)"
-         xlink:href="/media/CACHE/Downloaded/Images/WiiMote.jpg"
-         sodipodi:absref="/media/CACHE/Downloaded/Images/WiiMote.jpg"
-         width="11.254874"
-         height="40.993362"
-         id="image3923"
-         x="-180.6277"
-         y="896.5882" />
+         xlink:href="WiiMote.jpg"
+         sodipodi:absref="/home/vanhtu1987/Temp/Tarballs/whiteboard/src/pixmaps/WiiMote.jpg"
+         width="13.96301"
+         height="50.857143"
+         id="image2589"
+         x="106.94707"
+         y="214.21428" />
+    </g>
+    <g
+       id="g2536">
       <g
+         transform="translate(-50.860947,-570.71429)"
          id="g3985">
         <path
            style="fill:none;fill-rule:evenodd;stroke:#cdcdcd;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
@@ -221,26 +233,15 @@
            id="path3937"
            sodipodi:nodetypes="cc" />
       </g>
+      <image
+         transform="matrix(0.7071068,-0.7071068,0.7071068,0.7071068,0,0)"
+         xlink:href="WiiMote.jpg"
+         sodipodi:absref="/home/vanhtu1987/Temp/Tarballs/whiteboard/src/pixmaps/WiiMote.jpg"
+         width="13.96301"
+         height="50.857143"
+         id="image2601"
+         x="185.95764"
+         y="457.92947" />
     </g>
-    <path
-       sodipodi:type="arc"
-       style="opacity:1;fill:#fffe00;fill-opacity:1;fill-rule:evenodd;stroke:#6d6464;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
-       id="path4029"
-       sodipodi:cx="98.994949"
-       sodipodi:cy="786.69208"
-       sodipodi:rx="20.708128"
-       sodipodi:ry="20.708128"
-       d="M 119.70308,786.69208 A 20.708128,20.708128 0 1 1 78.286821,786.69208 A 20.708128,20.708128 0 1 1 119.70308,786.69208 z"
-       transform="translate(161.56652,-548.61561)"
-       inkscape:export-filename="/home/vanhtu1987/Temp/Tarballs/whiteboard/src/pixmaps/arrangement.png"
-       inkscape:export-xdpi="101.05"
-       inkscape:export-ydpi="101.05" />
-    <path
-       id="check"
-       style="fill:url(#radialGradient2256);fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       d="M 24.853339,240.96363 C 24.853339,240.96363 35.894969,253.3976 38.103295,258.47676 L 47.599095,258.47676 C 51.574083,246.33096 67.032363,217.33454 80.282313,207.17624 C 83.027563,203.64664 76.131083,202.18969 70.565683,204.52625 C 62.177813,208.04779 46.358045,234.93516 43.403275,241.4053 C 39.207459,242.50946 34.790806,234.33865 34.790806,234.33865 L 24.853339,240.96363 z"
-       inkscape:export-filename="/home/vanhtu1987/Temp/Tarballs/whiteboard/src/pixmaps/arrangement.png"
-       inkscape:export-xdpi="101.05"
-       inkscape:export-ydpi="101.05" />
   </g>
 </svg>
