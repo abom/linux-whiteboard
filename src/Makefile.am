@@ -1,7 +1,9 @@
 SUBDIRS = pixmaps windows
 
 whiteboarddatadir = ${datadir}/whiteboard
-whiteboardwindowsdir = ${whiteboarddatadir}/windows
+#whiteboardgtkwindowsdir = ${whiteboarddatadir}/windows/gtk
+#whiteboardqtwindowsdir = ${whiteboarddatadir}/windows/qt
+whiteboardwindowsdir = ${whiteboarddatadir}/windows/gtk
 whiteboardpixmapsdir = ${datadir}/pixmaps
 
 bin_PROGRAMS = whiteboard

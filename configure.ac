@@ -28,6 +28,8 @@ AC_CONFIG_FILES([
     src/Makefile
     src/pixmaps/Makefile
     src/windows/Makefile
+    src/windows/gtk/Makefile
+    src/windows/qt/Makefile
 ])
 
 AC_OUTPUT
