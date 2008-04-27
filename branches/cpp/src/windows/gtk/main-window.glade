@@ -312,7 +312,8 @@ You should have received a copy of the GNU General Public Licence along with Gla
 Tu Anh Vuong &lt;VAnhTu1987@gmail.com&gt;</property>
     <property name="translator_credits">Tu Anh Vuong &lt;VAnhTu1987@gmail.com&gt;
 Antoni Ubieto &lt;antoni.ubieto@gmail.com&gt;
-Matthias Gies &lt;matthiasgies@gmx.de&gt;</property>
+Matthias Gies &lt;matthiasgies@gmx.de&gt;
+Thomas Knott &lt;zulu9@sidux-ev.de&gt;</property>
     <property name="logo_icon_name">whiteboard</property>
     <property name="wrap_license">True</property>
     <child internal-child="vbox">
@@ -397,7 +398,7 @@ Matthias Gies &lt;matthiasgies@gmx.de&gt;</property>
                 <child>
                   <widget class="GtkImage" id="image-arrangement">
                     <property name="visible">True</property>
-                    <property name="pixbuf">../../pixmaps/arrangement.svg</property>
+                    <property name="pixbuf">../../../pixmaps/arrangement.svg</property>
                   </widget>
                 </child>
                 <child>
@@ -690,7 +691,7 @@ Matthias Gies &lt;matthiasgies@gmx.de&gt;</property>
                         <child>
                           <widget class="GtkImage" id="image-calibration-strays">
                             <property name="visible">True</property>
-                            <property name="pixbuf">../../pixmaps/calibration-strays.svg</property>
+                            <property name="pixbuf">../../../pixmaps/calibration-strays.svg</property>
                           </widget>
                           <packing>
                             <property name="top_attach">3</property>
@@ -700,7 +701,7 @@ Matthias Gies &lt;matthiasgies@gmx.de&gt;</property>
                         <child>
                           <widget class="GtkImage" id="image-calibration-percentages">
                             <property name="visible">True</property>
-                            <property name="pixbuf">../../pixmaps/calibration-percentages.svg</property>
+                            <property name="pixbuf">../../../pixmaps/calibration-percentages.svg</property>
                           </widget>
                           <packing>
                             <property name="top_attach">2</property>
@@ -710,7 +711,7 @@ Matthias Gies &lt;matthiasgies@gmx.de&gt;</property>
                         <child>
                           <widget class="GtkImage" id="image-calibration-camera">
                             <property name="visible">True</property>
-                            <property name="pixbuf">../../pixmaps/calibration-camera.svg</property>
+                            <property name="pixbuf">../../../pixmaps/calibration-camera.svg</property>
                           </widget>
                           <packing>
                             <property name="top_attach">1</property>
@@ -720,7 +721,7 @@ Matthias Gies &lt;matthiasgies@gmx.de&gt;</property>
                         <child>
                           <widget class="GtkImage" id="image-calibration-points">
                             <property name="visible">True</property>
-                            <property name="pixbuf">../../pixmaps/calibration-points.svg</property>
+                            <property name="pixbuf">../../../pixmaps/calibration-points.svg</property>
                           </widget>
                         </child>
                       </widget>

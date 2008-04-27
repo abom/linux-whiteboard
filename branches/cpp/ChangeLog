@@ -1,3 +1,9 @@
+2008/04/27:
+ - Version bumped to 0.3.4 .
+ - German translation updated, thanks to Thomas Knott <zulu9@sidux-ev.de> .
+ - All other translations updated.
+ - Began adding a Qt GUI.
+
 2008/04/14:
  - Version bumped to 0.3.3.1 .
  - Added lots of debugging messages. No oher code changes.

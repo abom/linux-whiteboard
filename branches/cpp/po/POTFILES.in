@@ -2,7 +2,8 @@
 src/auxiliary.cpp
 src/gtk-gui.cpp
 src/whiteboard.desktop.in
-src/windows/calibration-window.glade
-src/windows/main-window.glade
+src/windows/gtk/calibration-window.glade
+src/windows/gtk/main-window.glade
+src/windows/qt/main-window.ui
 src/gui.cpp
 src/wiicursormanager.cpp

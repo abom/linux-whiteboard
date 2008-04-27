@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Wiimote Whiteboard 0.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-04-25 17:27+0100\n"
+"POT-Creation-Date: 2008-04-27 19:55+0100\n"
 "PO-Revision-Date: 2008-03-09 17:16+0000\n"
 "Last-Translator: VAnhTu1987 <VAnhTu1987@gmail.com>\n"
 "Language-Team: Vietnamese\n"
@@ -85,11 +85,11 @@ msgstr ""
 msgid "Unable to connect to any Wiimote.\n"
 msgstr "Không kết nối được với Wiimote nào cả.\n"
 
-#: ../src/gtk-gui.cpp:399 ../src/windows/main-window.glade.h:14
+#: ../src/gtk-gui.cpp:399 ../src/windows/gtk/main-window.glade.h:14
 msgid "De_activate"
 msgstr "Giải hoạt (_A)"
 
-#: ../src/gtk-gui.cpp:399 ../src/windows/main-window.glade.h:30
+#: ../src/gtk-gui.cpp:399 ../src/windows/gtk/main-window.glade.h:30
 msgid "_Activate"
 msgstr "Kích hoạt (_A)"
 
@@ -101,39 +101,39 @@ msgstr "Điều khiển con trỏ chuột bằng Wiimote"
 msgid "Wiimote Whiteboard"
 msgstr "Màn Hình Cảm Ứng Dùng Wiimote"
 
-#: ../src/windows/calibration-window.glade.h:1
+#: ../src/windows/gtk/calibration-window.glade.h:1
 msgid "Wiimote Calibration"
 msgstr "Chỉnh Wiimote"
 
-#: ../src/windows/main-window.glade.h:1
+#: ../src/windows/gtk/main-window.glade.h:1
 msgid "<b>Controls</b>"
 msgstr "<b>Các Nút Bấm</b>"
 
-#: ../src/windows/main-window.glade.h:2
+#: ../src/windows/gtk/main-window.glade.h:2
 msgid "<b>Settings</b>"
 msgstr "<b>Tùy Chọn</b>"
 
-#: ../src/windows/main-window.glade.h:3
+#: ../src/windows/gtk/main-window.glade.h:3
 msgid "<b>_Settings</b>"
 msgstr "<b>Tùy Chọn (_S)</b>"
 
-#: ../src/windows/main-window.glade.h:4
+#: ../src/windows/gtk/main-window.glade.h:4
 msgid "About Whiteboard"
 msgstr "Thông Tin Về Chương Trình"
 
-#: ../src/windows/main-window.glade.h:5
+#: ../src/windows/gtk/main-window.glade.h:5
 msgid "Activate to begin using your pen."
 msgstr "Kích hoạt để sử dụng bút nhập."
 
-#: ../src/windows/main-window.glade.h:6
+#: ../src/windows/gtk/main-window.glade.h:6
 msgid "Calib_rate"
 msgstr "Chỉnh Wiimote (_R)"
 
-#: ../src/windows/main-window.glade.h:7
+#: ../src/windows/gtk/main-window.glade.h:7
 msgid "Calib_ration Window"
 msgstr "Chỉnh Wiimote (_R)"
 
-#: ../src/windows/main-window.glade.h:8
+#: ../src/windows/gtk/main-window.glade.h:8
 msgid ""
 "Calibrate all Wiimotes if you have not done it before, or if you have moved "
 "them since the last calibration."
@@ -141,47 +141,47 @@ msgstr ""
 "Chỉnh Wiimote của bạn nếu bạn chưa làm bao giờ, hoặc nếu bạn đã dịch chuyển "
 "các Wiimote đó so với lần sử dụng trước."
 
-#: ../src/windows/main-window.glade.h:9
+#: ../src/windows/gtk/main-window.glade.h:9
 msgid "Calibration points, the blinking one is being calibrated."
 msgstr "Các điểm cần chỉnh, điểm đang nhấp nháy là điểm hiện thời cần chỉnh."
 
-#: ../src/windows/main-window.glade.h:10
+#: ../src/windows/gtk/main-window.glade.h:10
 msgid "Connect all of your Wiimotes first."
 msgstr "Hãy kết nối tất cả Wiimote của bạn trước."
 
-#: ../src/windows/main-window.glade.h:11
+#: ../src/windows/gtk/main-window.glade.h:11
 msgid "Connecting..."
 msgstr "Đang Kết Nối..."
 
-#: ../src/windows/main-window.glade.h:12
+#: ../src/windows/gtk/main-window.glade.h:12
 msgid "Control your mouse pointer with the Wiimote."
 msgstr "Điều khiển con trỏ chuột bằng Wiimote."
 
-#: ../src/windows/main-window.glade.h:13
+#: ../src/windows/gtk/main-window.glade.h:13
 msgid "Copyright © 2007-2008 The Whiteboard authors"
 msgstr "Bản quyên năm 2007-2008 thuộc về các lập trình viên của Whiteboard"
 
-#: ../src/windows/main-window.glade.h:15
+#: ../src/windows/gtk/main-window.glade.h:15
 msgid "How To _Use"
 msgstr "Cách Sử Dụng (_U)"
 
-#: ../src/windows/main-window.glade.h:16
+#: ../src/windows/gtk/main-window.glade.h:16
 msgid "Instructions"
 msgstr "Hướng Dẫn"
 
-#: ../src/windows/main-window.glade.h:17
+#: ../src/windows/gtk/main-window.glade.h:17
 msgid "Please arrange the Wiimotes as given for best results."
 msgstr "Hãy bố trí các Wiimote của bạn theo hình vẽ để đạt kết quả tốt nhất."
 
-#: ../src/windows/main-window.glade.h:18
+#: ../src/windows/gtk/main-window.glade.h:18
 msgid "Please press both <b>1</b> and <b>2</b> buttons on your Wiimote."
 msgstr "Hãy bấm hai nút <b>1</b> và <b>2</b> trên Wiimote của bạn."
 
-#: ../src/windows/main-window.glade.h:19
+#: ../src/windows/gtk/main-window.glade.h:19
 msgid "Righ_t-click delay (in ms):"
 msgstr "Bấm nút phải chuột cần đợi trong (theo mili giây) (_T): "
 
-#: ../src/windows/main-window.glade.h:20
+#: ../src/windows/gtk/main-window.glade.h:20
 msgid ""
 "Shows how accurate and jitter-free your infrared pen is. If the yellow dot "
 "moves outside of the boundary, you should calibrate that point again."
@@ -189,7 +189,7 @@ msgstr ""
 "Cho biết độ chính xác của bút nhập bạn đang dùng. Nếu điểm màu vàng chạy ra "
 "ngoài vòng tròn, bạn cần chỉnh lại."
 
-#: ../src/windows/main-window.glade.h:21
+#: ../src/windows/gtk/main-window.glade.h:21
 msgid ""
 "Shows how long you have been holding the infrared pen down. When the circle "
 "is full, move on to the next point."
@@ -197,7 +197,7 @@ msgstr ""
 "Cho biết bạn đã giữ bút nhập cố định trong bao lâu. Khi vòng tròn được làm "
 "đầy, bạn có thể chuyển sang điểm kế tiếp."
 
-#: ../src/windows/main-window.glade.h:22
+#: ../src/windows/gtk/main-window.glade.h:22
 msgid ""
 "Specify how long you should hold the IR pointer still to do a right-click, "
 "in milliseconds. This also affects the calibration process."
@@ -205,11 +205,11 @@ msgstr ""
 "Cho biết bạn cần giữ bút cố định trong bao lâu để bấm chuột phải, theo mili "
 "giây. Thiết lập này cũng có tác dụng khi chỉnh Wiimote."
 
-#: ../src/windows/main-window.glade.h:23
+#: ../src/windows/gtk/main-window.glade.h:23
 msgid "Whiteboard"
 msgstr "Màn hình cảm ứng dùng Wiimote"
 
-#: ../src/windows/main-window.glade.h:24
+#: ../src/windows/gtk/main-window.glade.h:24
 msgid ""
 "Whiteboard is free software; you can redistribute it and/or modify it under "
 "the terms of the GNU General Public Licence as published by the Free "
@@ -228,7 +228,7 @@ msgstr ""
 "Bản quyền GPL 2 và các phiên bản sau của GPL. Xin vào trang Web của họ để "
 "biết thêm chi tiết."
 
-#: ../src/windows/main-window.glade.h:29
+#: ../src/windows/gtk/main-window.glade.h:29
 msgid ""
 "Wiimote camera's point of view, the yellow dot is the current location of "
 "your infrared pen."
@@ -236,19 +236,19 @@ msgstr ""
 "Hiện những gì Wiimote nhìn thấy, điểm màu vàng là vị trí hiện tại của bút "
 "nhập."
 
-#: ../src/windows/main-window.glade.h:31
+#: ../src/windows/gtk/main-window.glade.h:31
 msgid "_Arrangement"
 msgstr "Bố Trí (_A)"
 
-#: ../src/windows/main-window.glade.h:32
+#: ../src/windows/gtk/main-window.glade.h:32
 msgid "_Help"
 msgstr "Trợ giúp (_H)"
 
-#: ../src/windows/main-window.glade.h:33
+#: ../src/windows/gtk/main-window.glade.h:33
 msgid "_Instructions"
 msgstr "Hướng Dẫn (_I)"
 
-#: ../src/windows/main-window.glade.h:34
+#: ../src/windows/gtk/main-window.glade.h:34
 msgid "_Show these instructions next time"
 msgstr "Hiện hướng dẫn sử dụng lần kế tiếp (_S)"
 
