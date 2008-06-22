@@ -17,7 +17,7 @@ whiteboard_SOURCES = 	main.cpp common.cpp common.h matrix.h \
 			ConfigFileParser.cpp ConfigFileParser.h \
 			configurator.cpp configurator.h \
 			irfilter.cpp irfilter.h \
-			gui.cpp gui.h wiicontrol.cpp wiicontrol.h \
+			calibration.cpp calibration.h wiicontrol.cpp wiicontrol.h \
 			wiicursor.cpp wiicursor.h gtk-gui.cpp gtk-gui.h \
 			wiicursormanager.cpp wiicursormanager.h \
 			gettext.h

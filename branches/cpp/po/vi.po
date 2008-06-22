@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Wiimote Whiteboard 0.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-04-27 19:55+0100\n"
+"POT-Creation-Date: 2008-06-22 02:44+0100\n"
 "PO-Revision-Date: 2008-03-09 17:16+0000\n"
 "Last-Translator: VAnhTu1987 <VAnhTu1987@gmail.com>\n"
 "Language-Team: Vietnamese\n"
@@ -252,13 +252,13 @@ msgstr "Hướng Dẫn (_I)"
 msgid "_Show these instructions next time"
 msgstr "Hiện hướng dẫn sử dụng lần kế tiếp (_S)"
 
-#: ../src/gui.cpp:74
+#: ../src/calibration.cpp:74
 msgid "Done!"
 msgstr "Thành công!"
 
 #. Draws static informational messages
 #. Calibrate
-#: ../src/gui.cpp:148
+#: ../src/calibration.cpp:148
 msgid ""
 "Put the pen at each blinking point, turn it on and hold until a success "
 "message shows up."
@@ -267,7 +267,7 @@ msgstr ""
 "hiện lên."
 
 #. Escape
-#: ../src/gui.cpp:151
+#: ../src/calibration.cpp:151
 msgid "Press 'Escape' (Esc) to quit calibration"
 msgstr "Bấm nút 'Escape' (Esc) để dừng"
 

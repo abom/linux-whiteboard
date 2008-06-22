@@ -17,8 +17,8 @@
  */
 
 
-#ifndef  __GUI_H__
-#define  __GUI_H__
+#ifndef  __CALIBRATION_H__
+#define  __CALIBRATION_H__
 
 
 #include <gtkmm.h>
@@ -116,4 +116,4 @@ private:
 };
 
 
-#endif /* __GUI_H__ */
+#endif /* __CALIBRATION_H__ */

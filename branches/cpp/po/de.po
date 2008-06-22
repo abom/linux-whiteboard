@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-04-27 19:55+0100\n"
+"POT-Creation-Date: 2008-06-22 02:44+0100\n"
 "PO-Revision-Date: 2008-04-27 19:29+0200\n"
 "Last-Translator: Thomas Knott <zulu9@sidux-ev.de>\n"
 "Language-Team: \n"
@@ -274,13 +274,13 @@ msgstr "Anle_itung"
 msgid "_Show these instructions next time"
 msgstr "Die_se Anleitung beim nächsten mal wieder anzeigen"
 
-#: ../src/gui.cpp:74
+#: ../src/calibration.cpp:74
 msgid "Done!"
 msgstr "Fertig!"
 
 #. Draws static informational messages
 #. Calibrate
-#: ../src/gui.cpp:148
+#: ../src/calibration.cpp:148
 msgid ""
 "Put the pen at each blinking point, turn it on and hold until a success "
 "message shows up."
@@ -289,7 +289,7 @@ msgstr ""
 "warten Sie, bis eine Erfolgsmitteilung erscheint."
 
 #. Escape
-#: ../src/gui.cpp:151
+#: ../src/calibration.cpp:151
 msgid "Press 'Escape' (Esc) to quit calibration"
 msgstr "Escape drücken (Esc) zum Abbruch der Kalibrierung"
 

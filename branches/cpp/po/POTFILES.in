@@ -5,5 +5,5 @@ src/whiteboard.desktop.in
 src/windows/gtk/calibration-window.glade
 src/windows/gtk/main-window.glade
 src/windows/qt/main-window.ui
-src/gui.cpp
+src/calibration.cpp
 src/wiicursormanager.cpp
