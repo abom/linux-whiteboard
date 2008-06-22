@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: es\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-04-27 19:55+0100\n"
+"POT-Creation-Date: 2008-06-22 02:44+0100\n"
 "PO-Revision-Date: 2008-04-22 23:00+0200\n"
 "Last-Translator: Antoni Ubieto <antoni.ubieto@gmail.com>\n"
 "Language-Team:\n"
@@ -271,13 +271,13 @@ msgstr "_Instrucciones"
 msgid "_Show these instructions next time"
 msgstr "Mue_stra estas instrucciones la próxima vez"
 
-#: ../src/gui.cpp:74
+#: ../src/calibration.cpp:74
 msgid "Done!"
 msgstr "¡Hecho!"
 
 #. Draws static informational messages
 #. Calibrate
-#: ../src/gui.cpp:148
+#: ../src/calibration.cpp:148
 msgid ""
 "Put the pen at each blinking point, turn it on and hold until a success "
 "message shows up."
@@ -286,7 +286,7 @@ msgstr ""
 "hasta que aparezca un aviso."
 
 #. Escape
-#: ../src/gui.cpp:151
+#: ../src/calibration.cpp:151
 msgid "Press 'Escape' (Esc) to quit calibration"
 msgstr "Pulsad 'Escape' (Esc) para salir de la calibración"
 

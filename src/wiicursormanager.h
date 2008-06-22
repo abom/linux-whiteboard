@@ -23,7 +23,7 @@
 
 #include <vector>
 
-#include "gui.h"
+#include "calibration.h"
 #include "matrix.h"
 #include "wiicursor.h"
 #include "wiicontrol.h"

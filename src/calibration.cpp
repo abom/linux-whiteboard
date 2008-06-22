@@ -17,7 +17,7 @@
  */
 
 
-#include "gui.h"
+#include "calibration.h"
 
 
 void CalibrationWindow::calibration_right_button_down(WiiEventData const& data) {
