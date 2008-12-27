@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="128"
+   height="128"
+   id="svg2"
+   sodipodi:version="0.32"
+   inkscape:version="0.46"
+   sodipodi:docname="whiteboard.svg"
+   inkscape:output_extension="org.inkscape.output.svg.inkscape"
+   inkscape:export-filename="/home/vanhtu1987/Temp/Tarballs/whiteboard/src/icon.png"
+   inkscape:export-xdpi="101.05"
+   inkscape:export-ydpi="101.05"
+   version="1.0">
+  <defs
+     id="defs4">
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="-50 : 600 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_z="700 : 600 : 1"
+       inkscape:persp3d-origin="300 : 400 : 1"
+       id="perspective14" />
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="-50 : 600 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_z="700 : 600 : 1"
+       inkscape:persp3d-origin="300 : 400 : 1"
+       id="perspective2397" />
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="-50 : 600 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_z="700 : 600 : 1"
+       inkscape:persp3d-origin="300 : 400 : 1"
+       id="perspective10" />
+    <inkscape:perspective
+       id="perspective3316"
+       inkscape:persp3d-origin="300 : 400 : 1"
+       inkscape:vp_z="700 : 600 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="-50 : 600 : 1"
+       sodipodi:type="inkscape:persp3d" />
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     gridtolerance="10000"
+     guidetolerance="10"
+     objecttolerance="10"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="4.5275632"
+     inkscape:cx="66.950993"
+     inkscape:cy="66.522553"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="1081"
+     inkscape:window-height="814"
+     inkscape:window-x="127"
+     inkscape:window-y="24" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <image
+       y="33.593472"
+       x="-48.03199"
+       id="image3318"
+       height="103.55986"
+       width="25.29837"
+       sodipodi:absref="/media/CACHE/Downloaded/Images/WiiMote.png"
+       xlink:href="/media/CACHE/Downloaded/Images/WiiMote.png"
+       transform="matrix(0.4085861,-0.9127198,0.9116773,0.4109068,0,0)"
+       inkscape:export-xdpi="101.05"
+       inkscape:export-ydpi="101.05" />
+    <rect
+       style="opacity:1;fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:#2e2e2e;stroke-width:4.41566372;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect2388"
+       width="123.58434"
+       height="87.914452"
+       x="2.3313677"
+       y="20.569014"
+       rx="4.6998892"
+       ry="6.7189069"
+       inkscape:export-filename="/home/vanhtu1987/Temp/Tarballs/whiteboard/src/pixmaps/image3318.png"
+       inkscape:export-xdpi="101.05"
+       inkscape:export-ydpi="101.05" />
+    <text
+       xml:space="preserve"
+       style="font-size:69.82048798px;font-style:normal;font-weight:normal;fill:#404040;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Euclid Math One"
+       x="10.901558"
+       y="88.912704"
+       id="text2399"
+       inkscape:export-filename="/home/vanhtu1987/Temp/Tarballs/whiteboard/src/pixmaps/image3318.png"
+       inkscape:export-xdpi="101.05"
+       inkscape:export-ydpi="101.05"><tspan
+         sodipodi:role="line"
+         id="tspan2401"
+         x="10.901558"
+         y="88.912704">Wii</tspan></text>
+  </g>
+</svg>

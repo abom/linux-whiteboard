@@ -1,0 +1,12 @@
+Source: whiteboard
+Section: universe/utils
+Priority: optional
+Maintainer: pnegre <pere.negre@gmail.com>
+Build-Depends: debhelper (>= 7)
+Standards-Version: 3.7.3
+Homepage: http://code.google.com/p/linux-whiteboard
+
+Package: whiteboard
+Architecture: i386
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Turns a normal screen to a touch screen using the wiimote.

@@ -1,0 +1,70 @@
+2008/06/22:
+ - Version bumped to 0.3.4.1 .
+ - French translation updated, thanks to Sebastien Correard <sebastien@correard.net> .
+
+2008/04/27:
+ - Version bumped to 0.3.4 .
+ - German translation updated, thanks to Thomas Knott <zulu9@sidux-ev.de> .
+ - All other translations updated.
+ - Began adding a Qt GUI.
+ - Usability improvements, thanks to Antoni Ubieto <antoni.ubieto@gmail.com> .
+
+2008/04/14:
+ - Version bumped to 0.3.3.1 .
+ - Added lots of debugging messages. No oher code changes.
+
+2008/04/07:
+ - Version bumped to 0.3.3 .
+ - German translation added, thanks to Matthias Gies <matthiasgies@gmx.de> .
+
+2008/04/01:
+ - Version bumped to 0.3.2 .
+ - Spanish translation added, thanks to Antoni Ubieto
+ <antoni.ubieto@gmail.com> .
+
+2008/03/31:
+ - Version bumped to 0.3.1 .
+ - Draws a utilized tracking area in the calibration window.
+ - Fixed version number in the About dialog.
+ - Catalan translation added, thanks to Antoni Ubieto
+ <antoni.ubieto@gmail.com> .
+
+2008/03/27:
+ - Version bumped to 0.3 .
+ - Eliminated motion jerkiness.
+ - Can tolerate short disappearances of IR signals.
+ - Application's launcher now shows up on the GNOME and KDE menu, and others
+   which are compatible with the X Desktop Sepcification.
+ - Added a PNG icon for KDE users.
+ - Major GUI improvements.
+ - Configurations saving/loading are back.
+ - Some settings can be changed in real-time.
+ - Current Wiimotes being calibrated can blink to notice users.
+
+2008/03/13:
+ - Added supports for multiple Wiimotes.
+ - No loading/saving configuration file yet, this
+   will be fixed in the next version.
+
+2008/03/09:
+ - Now supports multiple languages.
+ - Added Vietnamese translation.
+
+2008/03/04:
+ - Now became entirely GUI-driven.
+ - Dropped SDL dependency, everything GUI-related is handled by GTK+ .
+ - Dependencies: gtkmm-2.4, libglademm-2.4, cairomm-1.0, xtst and sigc++-2.0 .
+ - Added real-time notification of IR inaccuracies when calibrating.
+
+2008/02/25:
+ - Icons and data files should now go into appropriate places when properly installed.
+
+2008/02/25:
+ - Added an icon in the notification area.
+ - Needs more polishing.
+
+2008/02/24:
+ - Built a GUI.
+
+2008/02/23:
+ - Updated the CPP branch to autoconf.

@@ -1,4 +1,4 @@
-/* Copyright (C) 2008 Pere Negre                                                                                                                              
+/* Copyright (C) 2008 Tu Anh Vuong
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -16,32 +16,21 @@
  *
  */
 
-#ifndef  __AUXILIARY_H__
-#define  __AUXILIARY_H__
 
-#include <SDL.h>
-#include <X11/extensions/XTest.h>
-#include <sys/time.h>
-#include <unistd.h>				/* sleep */
-
-#include "matrix.h"
 #include "common.h"
 
-extern point_t ir_pos;
-extern point_t p_wii[4];
 
-point_t screen_size ();
-int get_calibration_points ();
+void DEBUG_MSG(unsigned int level, char const* s, ...) {
+#ifdef DEBUG_LVL
+    unsigned int const current_debug_level = DEBUG_LVL;
+    if (current_debug_level >= level) {
+	std::string const padding(level, '-');
+	printf("%sDEBUG %d: ", padding.c_str(), level);
 
-void print_points ();
-
-matrix_t *calculate_transformation_matrix ();
-
-void fake_move (int x, int y);
-void fake_button (int button, int is_press);
-
-/* In microseconds
- * NOTE: Must be called ONCE before using */
-unsigned long get_ticks ();
-
-#endif /* __AUXILIARY_H__ */
+	va_list ap;
+	va_start(ap, s);
+	vprintf(s, ap);
+	va_end(ap);
+    }
+#endif // DEBUG_LVL
+}
