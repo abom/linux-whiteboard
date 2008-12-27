@@ -1,4 +1,4 @@
-/* Copyright (C) 2008 Pere Negre
+/* Copyright (C) 2008 Pere Negre                                                                                                                              
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -16,24 +16,21 @@
  *
  */
 
-#ifndef  __MATRIX_H__
-#define  __MATRIX_H__
 
-#include <stdio.h>
-#include <stdlib.h>
+#ifndef  __EVENTS_H__
+#define  __EVENTS_H__
 
-typedef struct
-{
-	float *d;
-	int h, v;
-} matrix_t;
 
-matrix_t *matrixNew (int h, int v);
-void matrixFree (matrix_t * m);
-float matrixGetElement (matrix_t * m, int i, int j);
-void matrixSetElement (matrix_t * m, float e, int i, int j);
-void matrixInverse (matrix_t * m);
-matrix_t *matrixMultiply (matrix_t * m, matrix_t * n);
-void matrixPrint (matrix_t * m);
+#include <X11/extensions/XTest.h>
 
-#endif // __MATRIX_H__
+#include "common.h"
+
+
+// Fakes mouse move and mouse buttons events
+void fake_move(int x, int y);
+void fake_button(int button, bool pressed);
+// Fakes key events
+// {to be implemented}
+
+
+#endif /* __EVENTS_H__ */

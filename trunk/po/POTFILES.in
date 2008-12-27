@@ -1,0 +1,9 @@
+[encoding: UTF-8]
+src/auxiliary.cpp
+src/gtk-gui.cpp
+src/whiteboard.desktop.in
+src/windows/gtk/calibration-window.glade
+src/windows/gtk/main-window.glade
+src/windows/qt/main-window.ui
+src/calibration.cpp
+src/wiicursormanager.cpp

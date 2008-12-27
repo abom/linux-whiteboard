@@ -1,6 +1,4 @@
-/* Copyright (C) 2007 L. Donnie Smith <cwiid@abstrakraft.org>
- * 
- *  (modified by Pere Negre)
+/* Copyright (C) 2008 Pere Negre                                                                                                                              
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -10,7 +8,7 @@
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.                                                                                                              
+ *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
  *  along with this program; if not, write to the Free Software
@@ -18,14 +16,23 @@
  *
  */
 
-#ifndef  __WII_H__
-#define  __WII_H__
 
-#include <cwiid.h>
+#include "events.h"
 
-#include "common.h"
 
-cwiid_wiimote_t *wii_connect (char *mac);
-int wii_disconnect (cwiid_wiimote_t * wiimote);
+void fake_move(int x, int y)
+{
+    Display* display = XOpenDisplay(0);
+    XTestFakeMotionEvent(display, -1, x, y, 0);
+    XCloseDisplay(display);
 
-#endif /* __WII_H__ */
+    DEBUG_MSG(4, "Mouse moved: %dx%d\n", x, y);
+}
+void fake_button(int button, bool pressed)
+{
+    Display* display = XOpenDisplay(0);
+    XTestFakeButtonEvent(display, button, pressed, 0);
+    XCloseDisplay(display);
+
+    DEBUG_MSG(4, "Mouse button #%d's state changed to %d\n", button, pressed);
+}
