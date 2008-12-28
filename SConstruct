@@ -84,6 +84,7 @@ whiteboard = env.Program('whiteboard', Glob('src/*.cpp'))
 # INSTALL ##########################################################################
 
 env.Install(dst_pixmapsdir, Glob('src/pixmaps/*'))
+env.Install(dst_windowsdir, Glob('src/pixmaps/*'))
 env.Install(dst_windowsdir, Glob('src/windows/gtk/*'))
 env.Alias('install',dst_pixmapsdir)
 env.Alias('install',dst_windowsdir)
