@@ -14,10 +14,3 @@ The new build system is scons-based. Simply issue these commands:
 scons PREFIX=/usr DESTDIR=/
 scons install
 }}}
-
-If you want to install the program in your home directory, you can do this:
-
-{{{
-scons PREFIX=/whiteboard DESTDIR=~
-scons install
-}}}
