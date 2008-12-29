@@ -38,7 +38,7 @@ clean:
 	rm -f build-stamp configure-stamp
 
 	# Add here commands to clean up after the build process.
-	scons -c PREFIX=/usr DESTDIR=/
+	scons -c 
 	rm -rf .sconf_temp
 	rm -rf .sconsign.dblite
 	dh_clean 

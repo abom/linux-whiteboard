@@ -5,8 +5,10 @@ env = Environment()
 
 opts = Options('options.conf')
 opts.AddOptions(
-	PathOption('DESTDIR','Set the intermediate install "prefix"', '/'),
-	PathOption('PREFIX', 'Set the install "prefix"', '/usr')
+	PathOption('DESTDIR','Set the intermediate install "prefix"', '/',
+		PathOption.PathAccept),
+	PathOption('PREFIX', 'Set the install "prefix"', '/usr',
+		PathOption.PathAccept)
 )
 opts.Update(env)
 opts.Save('options.conf',env)
@@ -83,14 +85,14 @@ whiteboard = env.Program('whiteboard', Glob('src/*.cpp'))
 
 # INSTALL ##########################################################################
 
-env.Install(dst_pixmapsdir, Glob('src/pixmaps/*'))
-env.Install(dst_windowsdir, Glob('src/pixmaps/*'))
-env.Install(dst_windowsdir, Glob('src/windows/gtk/*'))
-env.Alias('install',dst_pixmapsdir)
-env.Alias('install',dst_windowsdir)
+if 'install' in COMMAND_LINE_TARGETS:
+	env.Install(dst_pixmapsdir, Glob('src/pixmaps/*'))
+	env.Install(dst_windowsdir, Glob('src/pixmaps/*'))
+	env.Install(dst_windowsdir, Glob('src/windows/gtk/*'))
+	env.Alias('install',dst_pixmapsdir)
+	env.Alias('install',dst_windowsdir)
 
-
-env.Install(dst_bindir,whiteboard)
-env.Alias('install',dst_bindir)
+	env.Install(dst_bindir,whiteboard)
+	env.Alias('install',dst_bindir)
 
 #####################################################################################
