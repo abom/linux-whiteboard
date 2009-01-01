@@ -44,7 +44,7 @@ int main(int argc,char *argv[])
     // I don't want to pass those into the deepest bottom
     // of the code.
     get_configurator();
-    DEBUG_MSG(1, "Configurator initalized\n");
+    DEBUG_MSG(1, "Configurator initialized\n");
 
     MainGtkWindow main_window(argc, argv);
     return main_window.run();

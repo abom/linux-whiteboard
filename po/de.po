@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: de\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-06-22 02:44+0100\n"
+"POT-Creation-Date: 2008-12-27 21:09+0700\n"
 "PO-Revision-Date: 2008-04-27 19:29+0200\n"
 "Last-Translator: Thomas Knott <zulu9@sidux-ev.de>\n"
 "Language-Team: \n"
@@ -19,100 +19,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms:  nplurals=2; plural=(n != 1);\n"
 "X-Generator: KBabel 1.11.4\n"
-
-#: ../src/gtk-gui.cpp:163
-msgid "Configurations successfully loaded.\n"
-msgstr "Konfiguration erfolgreich geladen.\n"
-
-#: ../src/gtk-gui.cpp:164
-msgid "Failed to load configuration file.\n"
-msgstr "Laden der Konfigurationsdatei fehlgeschlagen.\n"
-
-#. NOTE: This is mainly to force the GUI to update itself
-#. Probably because if it performs too fast, GTK wouldn't
-#. have a chance to update the GUI.
-#. NOTE: Better to call some update functions.
-#: ../src/gtk-gui.cpp:205
-msgid "Preparing to connect...\n"
-msgstr "Vorbereiten auf Verbindung...\n"
-
-#: ../src/gtk-gui.cpp:226
-msgid "Successfully disconnected all Wiimotes.\n"
-msgstr "Erfolgreich alle verbundenen Wiimotes getrennt.\n"
-
-#: ../src/gtk-gui.cpp:227
-msgid ""
-"There was an error disconnecting the Wiimotes. Hell's broken loose!!1.\n"
-msgstr "Es gab einen Fehler bei der Verbindungstrennung der Wiimotes.\n"
-
-#: ../src/gtk-gui.cpp:250
-msgid "Calibration succeeded.\n"
-msgstr "Kalibrierung erfolgreich.\n"
-
-#: ../src/gtk-gui.cpp:251
-msgid "User escaped or there was an error during calibration.\n"
-msgstr ""
-"Abbruch durch den Benutzer oder es gab einen Fehler während der "
-"Kalbibrierung.\n"
-
-#: ../src/gtk-gui.cpp:304
-#, c-format
-msgid "Connecting to Wiimote #%d... "
-msgstr "Verbinde mit Wiimote #%d... "
-
-#: ../src/gtk-gui.cpp:318
-msgid "Succeeded!.\n"
-msgstr "Erfolgreich!\n"
-
-#: ../src/gtk-gui.cpp:318
-msgid "Failed.\n"
-msgstr "Fehlgeschlagen.\n"
-
-#: ../src/gtk-gui.cpp:335
-#, c-format
-msgid ""
-"Successfully connected to %d Wiimote(s). Loading all Wiimotes's "
-"configurations...\n"
-msgstr ""
-"Erfolgriech mit %d Wiimotes(s) verbunden. Lade Konfigurationsdatei(en)...\n"
-
-#: ../src/gtk-gui.cpp:339
-msgid "Done!. Click 'Activate' to use your infrared pen.\n"
-msgstr ""
-"Fertig! Klicken Sie auf 'Aktivieren' um ihren Infrarotstift zu benutzen.\n"
-
-#: ../src/gtk-gui.cpp:340
-msgid ""
-"Failed. Please check if you have the same number of Wiimotes as earlier. You "
-"need to calibrate before activating.\n"
-msgstr ""
-"Fehler beim Laden der Konfigurationsdatei. Bitte überprüfen Sie, ob sich die "
-"Anzahl der Wiimotes geändert hat. Sie müssen die Wiimote(s) kalibrieren "
-"bevor Sie sie aktivieren können.\n"
-
-#: ../src/gtk-gui.cpp:346
-msgid "Unable to connect to any Wiimote.\n"
-msgstr "Konnte mit keiner Wiimote verbinden.\n"
-
-#: ../src/gtk-gui.cpp:399 ../src/windows/gtk/main-window.glade.h:14
-msgid "De_activate"
-msgstr "De_aktivieren"
-
-#: ../src/gtk-gui.cpp:399 ../src/windows/gtk/main-window.glade.h:30
-msgid "_Activate"
-msgstr "_Aktivieren"
-
-#: ../src/whiteboard.desktop.in.h:1
-msgid "Control your mouse pointer with the Wiimote"
-msgstr "Steueren Sie den Mauszeiger mit der Wiimote"
-
-#: ../src/whiteboard.desktop.in.h:2
-msgid "Wiimote Whiteboard"
-msgstr "Wiimote Whiteboard"
-
-#: ../src/windows/gtk/calibration-window.glade.h:1
-msgid "Wiimote Calibration"
-msgstr "Wiimote Kalibrierung"
 
 #: ../src/windows/gtk/main-window.glade.h:1
 msgid "<b>Controls</b>"
@@ -150,17 +56,39 @@ msgstr ""
 "Alle Wiimotes müssen kalibiert werden, falls das noch nicht geschehen ist "
 "oder die Wiimote(s) in der Zwischenzeit bewegt wurden."
 
+#: ../src/wiicursormanager.cpp:79
+#, c-format
+msgid "Calibrating Wiimote #%d"
+msgstr "Kalibriere Wiimote #%d"
+
 #: ../src/windows/gtk/main-window.glade.h:9
 msgid "Calibration points, the blinking one is being calibrated."
 msgstr "Kalibrierungspunkte: Der blinkende Punkt wird gerade kalibriert."
+
+#: ../src/gtk-gui.cpp:250
+msgid "Calibration succeeded.\n"
+msgstr "Kalibrierung erfolgreich.\n"
+
+#: ../src/gtk-gui.cpp:163
+msgid "Configurations successfully loaded.\n"
+msgstr "Konfiguration erfolgreich geladen.\n"
 
 #: ../src/windows/gtk/main-window.glade.h:10
 msgid "Connect all of your Wiimotes first."
 msgstr "Verbinden zu zunächst alle Wiimotes."
 
+#: ../src/gtk-gui.cpp:304
+#, c-format
+msgid "Connecting to Wiimote #%d... "
+msgstr "Verbinde mit Wiimote #%d... "
+
 #: ../src/windows/gtk/main-window.glade.h:11
 msgid "Connecting..."
 msgstr "Verbinde..."
+
+#: ../src/whiteboard.desktop.in.h:1
+msgid "Control your mouse pointer with the Wiimote"
+msgstr "Steueren Sie den Mauszeiger mit der Wiimote"
 
 #: ../src/windows/gtk/main-window.glade.h:12
 msgid "Control your mouse pointer with the Wiimote."
@@ -169,6 +97,36 @@ msgstr "Steueren Sie den Mauszeiger mit der Wiimote."
 #: ../src/windows/gtk/main-window.glade.h:13
 msgid "Copyright © 2007-2008 The Whiteboard authors"
 msgstr "Copyright © 2007-2008 The Whiteboard authors"
+
+#: ../src/gtk-gui.cpp:399 ../src/windows/gtk/main-window.glade.h:14
+msgid "De_activate"
+msgstr "De_aktivieren"
+
+#: ../src/calibration.cpp:74
+msgid "Done!"
+msgstr "Fertig!"
+
+#: ../src/gtk-gui.cpp:339
+msgid "Done!. Click 'Activate' to use your infrared pen.\n"
+msgstr ""
+"Fertig! Klicken Sie auf 'Aktivieren' um ihren Infrarotstift zu benutzen.\n"
+
+#: ../src/gtk-gui.cpp:164
+msgid "Failed to load configuration file.\n"
+msgstr "Laden der Konfigurationsdatei fehlgeschlagen.\n"
+
+#: ../src/gtk-gui.cpp:318
+msgid "Failed.\n"
+msgstr "Fehlgeschlagen.\n"
+
+#: ../src/gtk-gui.cpp:340
+msgid ""
+"Failed. Please check if you have the same number of Wiimotes as earlier. You "
+"need to calibrate before activating.\n"
+msgstr ""
+"Fehler beim Laden der Konfigurationsdatei. Bitte überprüfen Sie, ob sich die "
+"Anzahl der Wiimotes geändert hat. Sie müssen die Wiimote(s) kalibrieren "
+"bevor Sie sie aktivieren können.\n"
 
 #: ../src/windows/gtk/main-window.glade.h:15
 msgid "How To _Use"
@@ -186,6 +144,29 @@ msgstr "Für optimale Resultate bitte die Wiimotes wie hier gezeigt ausrichten."
 msgid "Please press both <b>1</b> and <b>2</b> buttons on your Wiimote."
 msgstr ""
 "Bitte die Tasten <b>1</b> und <b>2</b> gleichzeitig auf der Wiimote drücken."
+
+#. NOTE: This is mainly to force the GUI to update itself
+#. Probably because if it performs too fast, GTK wouldn't
+#. have a chance to update the GUI.
+#. NOTE: Better to call some update functions.
+#: ../src/gtk-gui.cpp:205
+msgid "Preparing to connect...\n"
+msgstr "Vorbereiten auf Verbindung...\n"
+
+#. Escape
+#: ../src/calibration.cpp:151
+msgid "Press 'Escape' (Esc) to quit calibration"
+msgstr "Escape drücken (Esc) zum Abbruch der Kalibrierung"
+
+#. Draws static informational messages
+#. Calibrate
+#: ../src/calibration.cpp:148
+msgid ""
+"Put the pen at each blinking point, turn it on and hold until a success "
+"message shows up."
+msgstr ""
+"Halten Sie den Stift über jeden blinkenden Punkt, schalten Sie ihn an und "
+"warten Sie, bis eine Erfolgsmitteilung erscheint."
 
 #: ../src/windows/gtk/main-window.glade.h:19
 msgid "Righ_t-click delay (in ms):"
@@ -214,6 +195,37 @@ msgid ""
 msgstr ""
 "Legt fest, wie lange der Zeiger gehalten werden muss, um einen Rechtsklick "
 "auszuführen. Diese Einstellung wirkt sich auch auf die Kalibrierung aus. "
+
+#: ../src/gtk-gui.cpp:318
+msgid "Succeeded!.\n"
+msgstr "Erfolgreich!\n"
+
+#: ../src/gtk-gui.cpp:335
+#, c-format
+msgid ""
+"Successfully connected to %d Wiimote(s). Loading all Wiimotes's "
+"configurations...\n"
+msgstr ""
+"Erfolgriech mit %d Wiimotes(s) verbunden. Lade Konfigurationsdatei(en)...\n"
+
+#: ../src/gtk-gui.cpp:226
+msgid "Successfully disconnected all Wiimotes.\n"
+msgstr "Erfolgreich alle verbundenen Wiimotes getrennt.\n"
+
+#: ../src/gtk-gui.cpp:227
+msgid ""
+"There was an error disconnecting the Wiimotes. Hell's broken loose!!1.\n"
+msgstr "Es gab einen Fehler bei der Verbindungstrennung der Wiimotes.\n"
+
+#: ../src/gtk-gui.cpp:346
+msgid "Unable to connect to any Wiimote.\n"
+msgstr "Konnte mit keiner Wiimote verbinden.\n"
+
+#: ../src/gtk-gui.cpp:251
+msgid "User escaped or there was an error during calibration.\n"
+msgstr ""
+"Abbruch durch den Benutzer oder es gab einen Fehler während der "
+"Kalbibrierung.\n"
 
 #: ../src/windows/gtk/main-window.glade.h:23
 msgid "Whiteboard"
@@ -250,6 +262,14 @@ msgstr ""
 "erhalten haben; falls nicht, schreiben Sie der Free Software Foundation, "
 "Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA."
 
+#: ../src/windows/gtk/calibration-window.glade.h:1
+msgid "Wiimote Calibration"
+msgstr "Wiimote Kalibrierung"
+
+#: ../src/whiteboard.desktop.in.h:2
+msgid "Wiimote Whiteboard"
+msgstr "Wiimote Whiteboard"
+
 #: ../src/windows/gtk/main-window.glade.h:29
 msgid ""
 "Wiimote camera's point of view, the yellow dot is the current location of "
@@ -257,6 +277,10 @@ msgid ""
 msgstr ""
 "Die Sicht der Wiimote-Kamera: Der gelbe Punkt zeigt die momentane Position "
 "des Infrarotstifts."
+
+#: ../src/gtk-gui.cpp:399 ../src/windows/gtk/main-window.glade.h:30
+msgid "_Activate"
+msgstr "_Aktivieren"
 
 #: ../src/windows/gtk/main-window.glade.h:31
 msgid "_Arrangement"
@@ -273,27 +297,3 @@ msgstr "Anle_itung"
 #: ../src/windows/gtk/main-window.glade.h:34
 msgid "_Show these instructions next time"
 msgstr "Die_se Anleitung beim nächsten mal wieder anzeigen"
-
-#: ../src/calibration.cpp:74
-msgid "Done!"
-msgstr "Fertig!"
-
-#. Draws static informational messages
-#. Calibrate
-#: ../src/calibration.cpp:148
-msgid ""
-"Put the pen at each blinking point, turn it on and hold until a success "
-"message shows up."
-msgstr ""
-"Halten Sie den Stift über jeden blinkenden Punkt, schalten Sie ihn an und "
-"warten Sie, bis eine Erfolgsmitteilung erscheint."
-
-#. Escape
-#: ../src/calibration.cpp:151
-msgid "Press 'Escape' (Esc) to quit calibration"
-msgstr "Escape drücken (Esc) zum Abbruch der Kalibrierung"
-
-#: ../src/wiicursormanager.cpp:79
-#, c-format
-msgid "Calibrating Wiimote #%d"
-msgstr "Kalibriere Wiimote #%d"

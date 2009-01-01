@@ -299,7 +299,7 @@
     <property name="type_hint">GDK_WINDOW_TYPE_HINT_DIALOG</property>
     <property name="skip_taskbar_hint">True</property>
     <property name="program_name">whiteboard</property>
-    <property name="version">0.3.4.1</property>
+    <property name="version">0.3.4.2</property>
     <property name="copyright" translatable="yes">Copyright © 2007-2008 The Whiteboard authors</property>
     <property name="comments" translatable="yes">Control your mouse pointer with the Wiimote.</property>
     <property name="website">http://code.google.com/p/linux-whiteboard</property>
@@ -399,7 +399,7 @@ Sebastien Correard &lt;sebastien@correard.net&gt;</property>
                 <child>
                   <widget class="GtkImage" id="image-arrangement">
                     <property name="visible">True</property>
-                    <property name="pixbuf">arrangement.svg</property>
+                    <property name="pixbuf">../../../pixmaps/arrangement.svg</property>
                   </widget>
                 </child>
                 <child>
@@ -638,13 +638,13 @@ Sebastien Correard &lt;sebastien@correard.net&gt;</property>
                         <child>
                           <widget class="GtkImage" id="image-calibration-points">
                             <property name="visible">True</property>
-                            <property name="pixbuf">calibration-points.svg</property>
+                            <property name="pixbuf">../../../pixmaps/calibration-points.svg</property>
                           </widget>
                         </child>
                         <child>
                           <widget class="GtkImage" id="image-calibration-camera">
                             <property name="visible">True</property>
-                            <property name="pixbuf">calibration-camera.svg</property>
+                            <property name="pixbuf">../../../pixmaps/calibration-camera.svg</property>
                           </widget>
                           <packing>
                             <property name="top_attach">1</property>
@@ -654,7 +654,7 @@ Sebastien Correard &lt;sebastien@correard.net&gt;</property>
                         <child>
                           <widget class="GtkImage" id="image-calibration-percentages">
                             <property name="visible">True</property>
-                            <property name="pixbuf">calibration-percentages.svg</property>
+                            <property name="pixbuf">../../../pixmaps/calibration-percentages.svg</property>
                           </widget>
                           <packing>
                             <property name="top_attach">2</property>
@@ -664,7 +664,7 @@ Sebastien Correard &lt;sebastien@correard.net&gt;</property>
                         <child>
                           <widget class="GtkImage" id="image-calibration-strays">
                             <property name="visible">True</property>
-                            <property name="pixbuf">calibration-strays.svg</property>
+                            <property name="pixbuf">../../../pixmaps/calibration-strays.svg</property>
                           </widget>
                           <packing>
                             <property name="top_attach">3</property>
