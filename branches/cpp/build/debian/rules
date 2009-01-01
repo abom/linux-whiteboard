@@ -9,25 +9,10 @@
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
 
-
-# Impatiently waiting for gcc 4.3's core2 support
-# -mfpmath=sse: See http://gentoo-wiki.com/Safe_Cflags
-# See also: http://help.lockergnome.com/linux/gentoo-gcc-Core-Duo-ftopict481697.html
-#CFLAGS = -Wall -O2 -march=nocona -pipe -msse3
-CFLAGS = -Wall -O2 -pipe
-
-
-config.status: configure
+config.status:
 	dh_testdir
-	# Add here commands to configure the package.
-ifneq "$(wildcard /usr/share/misc/config.sub)" ""
-	cp -f /usr/share/misc/config.sub config.sub
-endif
-ifneq "$(wildcard /usr/share/misc/config.guess)" ""
-	cp -f /usr/share/misc/config.guess config.guess
-endif
-	./configure --prefix=/usr --mandir=\$${prefix}/share/man CFLAGS="$(CFLAGS)" CXXFLAGS="$(CFLAGS)"
 
+	#cmake .. -DCMAKE_INSTALL_PREFIX=/usr
 
 build: build-stamp
 
@@ -46,8 +31,7 @@ clean:
 	rm -f build-stamp 
 
 	# Add here commands to clean up after the build process.
-	$(MAKE) distclean
-	rm -f config.sub config.guess
+	#$(MAKE) clean
 
 	dh_clean 
 
@@ -58,7 +42,8 @@ install: build
 	dh_installdirs
 
 	# Add here commands to install the package into debian/whiteboard.
-	$(MAKE) DESTDIR=$(CURDIR)/debian/whiteboard install
+	cmake .. -DCMAKE_INSTALL_PREFIX=$(CURDIR)/debian/whiteboard
+	$(MAKE) CMAKE_INSTALL_PREFIX=$(CURDIR)/debian/whiteboard install
 
 
 # Build architecture-independent files here.
