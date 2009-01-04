@@ -1,3 +1,5 @@
+#summary Instructions for building WHITEBOARD from CPP branch
+
 To check out the CPP branch of Linux Whiteboard -which the dependencies below mostly apply to- issue the following command:
 {{{
 svn checkout http://linux-whiteboard.googlecode.com/svn/branches/cpp/ linux-whiteboard-read-only
