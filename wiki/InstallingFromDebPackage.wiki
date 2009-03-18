@@ -1,0 +1,20 @@
+#summary This page describes the installation process on DEB-based distros (e.g. Ubuntu and Debian)
+
+Credits to [http://code.google.com/u/Robert.Citek/ Robert.Citek]
+
+Nominal INSTALL
+1) open a terminal: Applications > Accessories > Terminal
+2) sudo apt-get install libbluetooth3 libc6 libcairomm-1.0-1 libcwiid1
+libgcc1 libglademm-2.4-1c2a libglib2.0-0 libglibmm-2.4-1c2a libgtk2.0-0
+libgtkmm-2.4-1c2a libsigc++-2.0-0c2a libstdc++6 libx11-6 libxtst6
+3) sudo dpkg -i whiteboard_0.3.4.2-0ubuntu2automated_i386.deb 
+4) dpkg -l whiteboard
+
+Alternately:
+1) System > Administration > Synaptic Package Manager
+2) install these packages: libbluetooth3 libc6 libcairomm-1.0-1 libcwiid1
+libgcc1 libglademm-2.4-1c2a libglib2.0-0 libglibmm-2.4-1c2a libgtk2.0-0
+libgtkmm-2.4-1c2a libsigc++-2.0-0c2a libstdc++6 libx11-6 libxtst6
+3) in Nautilus, right-click on
+whiteboard_0.3.4.2-0ubuntu2automated_i386.deb and open with GDebi Package
+Installer
